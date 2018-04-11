@@ -28,6 +28,9 @@ module.exports = {
     modules: [paths.nodeModules, paths.src],
     // treat .js, .json, .jsx, .. as potenital js modules
     extensions: ['.js', '.json', '.jsx'],
+    alias: {
+      assets: path.resolve('./app/assets')
+    }
   },
   // webpack plugins
   plugins: [],
@@ -83,6 +86,20 @@ module.exports = {
         }
       },
       {
+        test: /\.scss$/,
+        use: [{
+                loader: "style-loader"
+            }, {
+                loader: "css-loader", options: {
+                    sourceMap: true
+                }
+            }, {
+                loader: "sass-loader", options: {
+                    sourceMap: true
+                }
+            }]
+      },
+      {
         test: /\.css$/,
         use: [
           { loader: 'style-loader', options: { sourceMap: true } },
@@ -96,6 +113,18 @@ module.exports = {
               // CSS Nano
               //minimize: !debug
             }
+          }
+        ]
+      },
+      {
+        test: /\.(jpg|jpeg|png)(\?.*)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name][md5:hash].[ext]',
+              outputPath: 'images/'
+            }  
           }
         ]
       }

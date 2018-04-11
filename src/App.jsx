@@ -11,6 +11,8 @@ import './App.css';
 import Projects from './Projects';
 import Contents from './Contents';
 import { userSelector } from './selectors';
+import logo from './assets/images/logo.png';
+import './assets/scss/default.scss';
 
 
 class App extends React.Component {
@@ -50,7 +52,9 @@ class App extends React.Component {
     return (
       <div className="App">
         <Navbar color="light" light expand="md">
-          <NavbarBrand href="/">reactstrap</NavbarBrand>
+          <NavbarBrand href="/">
+            <img src={logo} alt="logo" />
+          </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto" navbar>
