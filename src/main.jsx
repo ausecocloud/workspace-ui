@@ -10,6 +10,7 @@ import workspace from './reducers';
 import rootSaga from './sagas';
 import App from './App';
 
+
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
   workspace,

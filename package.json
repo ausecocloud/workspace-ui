@@ -13,9 +13,7 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.44",
     "bootstrap": "^4.0.0",
-    "file-loader": "^1.1.11",
     "lodash": "^4.17.5",
-    "node-sass": "^4.8.3",
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
@@ -27,8 +25,7 @@
     "reactstrap": "^5.0.0",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
-    "redux-saga": "^0.16.0",
-    "sass-loader": "^6.0.7"
+    "redux-saga": "^0.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.44",
@@ -38,6 +35,7 @@
     "@babel/preset-stage-2": "^7.0.0-beta.44",
     "babel-eslint": "^8.2.2",
     "babel-loader": "^8.0.0-beta",
+    "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
@@ -45,6 +43,12 @@
     "eslint-plugin-import": "^2.10.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
+    "extract-loader": "^2.0.1",
+    "file-loader": "^1.1.11",
+    "html-loader": "^0.5.5",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.8.3",
+    "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14",
