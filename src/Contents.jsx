@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ListGroup, ListGroupItem, Col } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 import { contentsSelector } from './selectors';
 
 
@@ -60,4 +61,4 @@ class Contents extends React.PureComponent {
 
 const MappedContents = connect(mapStateToProps)(Contents);
 
-export default MappedContents;
+export default withRouter(MappedContents);

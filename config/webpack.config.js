@@ -43,9 +43,14 @@ module.exports = {
       {
         enforce: 'pre',
         test: /\.(js|jsx)$/,
-        use: [
-          'eslint-loader'
-        ],
+        use: {
+          loader: 'eslint-loader',
+          options: {
+            rules: {
+              "no-console": "warn"
+            }
+          }
+        },
         include: paths.src,
       },
       // Process JS with Babel.

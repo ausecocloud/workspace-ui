@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormGroup, Label, Input, Col } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 import { projectsSelector } from './selectors';
 import * as actions from './actions';
 
@@ -60,4 +61,4 @@ class Projects extends React.PureComponent {
 
 const MappedProjects = connect(mapStateToProps, mapDispatchToProps)(Projects);
 
-export default MappedProjects;
+export default withRouter(MappedProjects);
