@@ -37,9 +37,6 @@ class AccountTable extends React.PureComponent {
 
   render() {
     const isAuthenticated = !isEmpty(this.props.user);
-
-    console.log(this.props);
-
     const user = this.props.user.id_token;
 
     const userTable = () => (

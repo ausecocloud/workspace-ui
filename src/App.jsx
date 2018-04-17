@@ -39,8 +39,6 @@ class App extends React.Component {
   render() {
     const isAuthenticated = !isEmpty(this.props.user);
 
-    console.log(this.props);
-
     const userLinks = () => (
       <NavItem active>
         <NavLink href="/account">{this.props.user.id_token.name}</NavLink>
