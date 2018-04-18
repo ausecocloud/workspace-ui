@@ -12,10 +12,14 @@ export function listProjects() {
     .then(data => data);
 }
 
-export function listContents(project) {
+export function listContents(params) {
+  // params should be an object with {project:, path:}
   const url = new URL('/api/v1/folders', document.baseURI);
-  const params = { project };
-  Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+  Object.keys(params).forEach((key) => {
+    if (params[key]) {
+      url.searchParams.append(key, params[key]);
+    }
+  });
   return fetch(url, { credentials: 'same-origin' })
     .then(response => response.json())
     .then(data => data);

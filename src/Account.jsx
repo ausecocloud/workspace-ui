@@ -4,24 +4,16 @@ import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { userSelector } from './selectors';
-import * as actions from './actions';
+import { getUser } from './reducers';
 
 
 function mapStateToProps(state) {
-  const user = userSelector(state);
+  const user = getUser(state);
   if (user) {
     return { user };
   }
   return {
     user: null,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    onChange: e => dispatch(actions.projectsSelect(e.target.value)),
-    dispatch,
   };
 }
 
@@ -76,6 +68,6 @@ class AccountTable extends React.PureComponent {
   }
 }
 
-const userAccountDetails = connect(mapStateToProps, mapDispatchToProps)(AccountTable);
+const userAccountDetails = connect(mapStateToProps)(AccountTable);
 
 export default withRouter(userAccountDetails);

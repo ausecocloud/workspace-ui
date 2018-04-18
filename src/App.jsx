@@ -9,10 +9,10 @@ import {
   Collapse,
 } from 'reactstrap';
 import './App.css';
-import Projects from './Projects';
-import Contents from './Contents';
+import Projects from './projects/Projects';
+import Contents from './projects/Contents';
 import Account from './Account';
-import { userSelector } from './selectors';
+import { getUser } from './reducers';
 import logo from './assets/images/logo.png';
 import './assets/scss/default.scss';
 
@@ -102,7 +102,7 @@ class App extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    user: userSelector(state),
+    user: getUser(state),
   };
 }
 
