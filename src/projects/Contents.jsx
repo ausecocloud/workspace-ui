@@ -64,7 +64,6 @@ class Contents extends React.PureComponent {
 
   onPath = (path) => {
     const { project, onClick } = this.props;
-    console.log('Pathbar:', path);
     onClick(project, path);
   }
 
