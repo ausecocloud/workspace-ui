@@ -1,27 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { FormGroup, Label, Input, Col } from 'reactstrap';
-import { withRouter } from 'react-router-dom';
-// TODO: this is the weird bit here, we import selectors from app root
-//       that's the last bit that makes our components not reusable
-import { getProjects, getSelected } from '../reducers';
-import * as actions from './actions';
-
-
-function mapStateToProps(state) {
-  return {
-    projects: getProjects(state),
-    selected: getSelected(state),
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    onChange: project => dispatch(actions.projectsSelect({ project, path: '' })),
-    dispatch,
-  };
-}
 
 
 class Projects extends React.PureComponent {
@@ -34,11 +13,6 @@ class Projects extends React.PureComponent {
     selected: PropTypes.string,
     projects: PropTypes.arrayOf(PropTypes.any),
     onChange: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
-  }
-
-  componentDidMount() {
-    this.props.dispatch(actions.projectsList());
   }
 
   onChange = (e) => {
@@ -70,6 +44,4 @@ class Projects extends React.PureComponent {
   }
 }
 
-const MappedProjects = connect(mapStateToProps, mapDispatchToProps)(Projects);
-
-export default withRouter(MappedProjects);
+export default Projects;

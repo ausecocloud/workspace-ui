@@ -9,8 +9,7 @@ import {
   Collapse,
 } from 'reactstrap';
 import './App.css';
-import Projects from './projects/Projects';
-import Contents from './projects/Contents';
+import ProjectsController from './ProjectsController';
 import Account from './Account';
 import { getUser } from './reducers';
 import logo from './assets/images/logo.png';
@@ -81,8 +80,7 @@ class App extends React.Component {
             path="/"
             render={() => <h1>Dashboard</h1>}
           />
-          <Route exact path="/" component={Projects} />
-          <Route exact path="/" component={Contents} />
+          <Route exact path="/" component={ProjectsController} />
 
           {/* Dashboard */}
           <Route

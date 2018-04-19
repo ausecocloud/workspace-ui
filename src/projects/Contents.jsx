@@ -1,43 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Table } from 'reactstrap';
-import { withRouter } from 'react-router-dom';
-// TODO: this is the weird bit here, we import selectors from app root
-//       that's the last bit that makes our components not reusable
-import { getContents, getSelected, getPath } from '../reducers';
 import ContentRow from './ContentRow';
 import PathBar from './PathBar';
-import * as actions from './actions';
-
-
-function mapStateToProps(state) {
-  const contents = getContents(state);
-  const selected = getSelected(state);
-  const path = getPath(state);
-  if (contents) {
-    return {
-      contents,
-      project: selected,
-      path,
-    };
-  }
-  return {
-    contents: [],
-    project: '',
-    path: '',
-  };
-}
-
-
-function mapDispatchToProps(dispatch) {
-  return {
-    onClick: (project, path) => {
-      dispatch(actions.contentsPath({ project, path }));
-    },
-    // dispatch,
-  };
-}
 
 
 class Contents extends React.PureComponent {
@@ -96,6 +61,4 @@ class Contents extends React.PureComponent {
   }
 }
 
-const MappedContents = connect(mapStateToProps, mapDispatchToProps)(Contents);
-
-export default withRouter(MappedContents);
+export default Contents;
