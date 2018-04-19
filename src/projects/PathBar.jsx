@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
 import { Breadcrumb } from 'reactstrap';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faHome from '@fortawesome/fontawesome-free-solid/faHome';
 import PathBarItem from './PathBarItem';
 
 
@@ -31,6 +33,7 @@ class PathBar extends React.PureComponent {
 
     return (
       <Breadcrumb tag="nav">
+        <FontAwesomeIcon icon={faHome} />&nbsp;
         <PathBarItem path="" name={project} onClick={this.onClick} />
         { parts.map((part, idx) => (
           <PathBarItem key={part} path={parts.slice(0, idx + 1).join('/')} name={part} onClick={this.onClick} />
