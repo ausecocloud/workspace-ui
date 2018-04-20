@@ -14,6 +14,11 @@ function* projectsTask() {
 }
 
 
+function* projectsSelectTask(action) {
+  yield put(actions.contentsPath({ project: action.payload, path: '/' }));
+}
+
+
 function* contentsTask(action) {
   let contents;
   try {
@@ -24,9 +29,24 @@ function* contentsTask(action) {
   }
 }
 
+
+function* addFolderTask(action) {
+  try {
+    // let response =
+    yield call(API.addFolder, action.payload);
+    console.log('Folder created');
+    yield put(actions.contentsPath(action.payload));
+    console.log('Path reloaded');
+  } catch (error) {
+    yield put(actions.addFolderFailed(error));
+  }
+}
+
+
 export default function* projectsSaga() {
   // start yourself
   yield takeEvery(actions.PROJECTS_LIST, projectsTask);
-  yield takeEvery(actions.PROJECTS_SELECT, contentsTask);
+  yield takeEvery(actions.PROJECTS_SELECT, projectsSelectTask);
   yield takeEvery(actions.CONTENTS_PATH, contentsTask);
+  yield takeEvery(actions.FOLDER_ADD, addFolderTask);
 }

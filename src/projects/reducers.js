@@ -16,7 +16,7 @@ function projects(state = [], action) {
 function selected(state = '', action) {
   switch (action.type) {
     case actions.PROJECTS_SELECT:
-      return action.payload.project;
+      return action.payload;
     default:
       return state;
   }
@@ -34,10 +34,8 @@ function contents(state = [], action) {
   }
 }
 
-function path(state = '', action) {
+function path(state = '/', action) {
   switch (action.type) {
-    case actions.PROJECTS_SELECT:
-      return '';
     case actions.CONTENTS_PATH:
       return action.payload.path;
     default:

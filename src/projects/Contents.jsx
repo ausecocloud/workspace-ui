@@ -21,9 +21,9 @@ class Contents extends React.PureComponent {
   }
 
   onClick = (item) => {
-    const { project, onClick } = this.props;
+    const { project, path, onClick } = this.props;
     if (item.content_type === 'application/directory') {
-      onClick(project, item.name);
+      onClick(project, [path, item.name].join('/'));
     }
   }
 

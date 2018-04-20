@@ -29,7 +29,7 @@ class PathBar extends React.PureComponent {
 
   render() {
     const { project, path } = this.props;
-    const parts = path.split('/');
+    const parts = path.split('/').filter(s => s);
 
     return (
       <Breadcrumb tag="nav">
