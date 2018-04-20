@@ -16,6 +16,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.10",
     "@fortawesome/react-fontawesome": "^0.0.18",
     "bootstrap": "^4.0.0",
+    "font-awesome": "^4.7.0",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
@@ -28,7 +29,8 @@
     "reactstrap": "^5.0.0",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
-    "redux-saga": "^0.16.0"
+    "redux-saga": "^0.16.0",
+    "svgr": "^1.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.44",

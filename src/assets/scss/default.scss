@@ -1,7 +1,105 @@
-$font-stack:    Helvetica, sans-serif;
-$primary-color: #333;
+@import url('https://fonts.googleapis.com/css?family=Cabin');
+@import url('https://use.fontawesome.com/releases/v5.0.10/css/all.css');
+
+$font-stack:    'Cabin', sans-serif;
+$body-color: #333;
+$primary-color: #A9CB79;
+$brown-black: #3B3333;
 
 body {
   font: 100% $font-stack;
-  color: $primary-color;
+  text-rendering: optimizeLegibility;
+  color: $body-color;
+  letter-spacing: .01rem;
+  background:$brown-black;
+}
+h1 {
+    font-weight: 700;
+    font-size:36px;
+}
+.logo-text h1 {
+	color:$primary-color;
+	display: inline;
+    margin-left: .5rem;
+    font-weight: 800;
+    font-style: italic;
+    vertical-align: top;
+    line-height: 2rem;
+
+	&:hover {
+
+	}
+}
+h2 {
+    font-size:24px;
+    font-weight: 700;
+}
+a {
+  color:$primary-color;
+}
+.row-fluid.header {
+	background:#FFF;
+
+	.navbar {
+		height:100px;
+		padding-left:0;
+		padding-right:0;
+
+		.navbar-brand {
+			width: 192px;
+		    height: 42px;
+		    padding-top:0;
+
+		    img {
+		    	vertical-align: top;
+		    }
+		}
+		 a {
+			color:$body-color;
+
+			&:hover, &.active {
+				color:$primary-color;
+			}
+		}
+		.nav-item {
+			a {
+				padding:0rem .75rem;
+			}
+			.dropdown-item {
+				text-align: right;
+				padding: 0.25rem 1rem;
+
+				&:active{
+					a {
+						color:white;
+					}
+					background:$primary-color;
+				}
+			}
+		}
+	}
+}
+section#main {
+    padding:2rem 0 3rem;
+    background:#F7F7F7;
+}
+footer#footer {
+    color:white;
+    padding:2.5rem 0;
+
+	h3 {
+	    font-size:16px;
+	    color:#FFF;
+	    font-weight:700;
+	    margin-bottom:1.5rem;
+	}
+	ul {
+	    list-style-type: none;
+	    padding-left:0;
+	    padding-right:1em;
+	} 
+	li {
+	    line-height: 1.2em;
+	    margin-bottom: .6em;
+	}
 }

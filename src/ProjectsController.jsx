@@ -50,10 +50,12 @@ class ProjectsController extends React.Component {
       onChange, onClick,
     } = this.props;
 
-    return [
-      <Projects selected={selected} projects={projects} onChange={onChange} />,
-      <Contents contents={contents} project={selected} path={path} onClick={onClick} />,
-    ];
+    return (
+      <div className="container">
+        <Projects selected={selected} projects={projects} onChange={onChange} />
+        <Contents contents={contents} project={selected} path={path} onClick={onClick} />
+      </div>
+    );
   }
 }
 

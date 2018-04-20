@@ -61,7 +61,7 @@ class AccountTable extends React.PureComponent {
     );
 
     return (
-      <div className="user-table">
+      <div className="container user-table">
         { isAuthenticated ? userTable() : noContent }
       </div>
     );

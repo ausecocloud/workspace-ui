@@ -123,12 +123,12 @@ module.exports = {
         ],
       },
       {
-        test: /\.(jpg|jpeg|png)(\?.*)?$/,
+        test: /\.(jpg|jpeg|png|ico|svg)(\?.*)?$/,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: '[name][md5:hash].[ext]',
+              name: '[name].[ext]',
               outputPath: 'images/',
             },
           },

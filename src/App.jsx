@@ -3,17 +3,17 @@ import { hot } from 'react-hot-loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import {
-  Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink,
-  Collapse,
-} from 'reactstrap';
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
+import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
 import Account from './Account';
 import { getUser } from './reducers';
-import logo from './assets/images/logo.png';
+import Logo from './assets/images/logo.svg';
+import Footer from './Footer';
 import './assets/scss/default.scss';
+
+require('./assets/images/favicon.ico');
 
 
 class App extends React.Component {
@@ -38,59 +38,88 @@ class App extends React.Component {
   render() {
     const isAuthenticated = !isEmpty(this.props.user);
 
-    const userLinks = () => (
-      <NavItem active>
-        <NavLink href="/account">{this.props.user.id_token.name}</NavLink>
-        <NavLink href="/oidc/logout">Logout</NavLink>
-      </NavItem>
+    const anonLinks = (
+      <Nav className="ml-auto" navbar>
+        <NavItem>
+          <NavLink to="/oidc/login">Login <i className="fa fa-user-circle" /></NavLink>
+        </NavItem>
+      </Nav>
     );
 
-    const anonLinks = (
-      <NavItem>
-        <NavLink href="/oidc/login">Login</NavLink>
-      </NavItem>
+    const userLinks = () => (
+      <Nav className="ml-auto" navbar>
+        <NavItem active>
+          <NavLink exact to="/">Dashboard</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink exact to="/drive">Drive</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink exact to="/explorer">Explorer</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink exact to="/compute">Compute</NavLink>
+        </NavItem>
+        <UncontrolledDropdown nav inNavbar>
+          <DropdownToggle nav>
+            {this.props.user.id_token.name} <i className="fa fa-user-circle" />
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem>
+              <NavLink exact to="/account">Account</NavLink>
+            </DropdownItem>
+            <DropdownItem>
+              <NavLink to="/oidc/logout">Logout</NavLink>
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      </Nav>
+    );
+
+    const MainNavbar = () => (
+      <Navbar expand="md">
+        <NavbarBrand href="/">
+          <img src={Logo} alt="ecocloud Logo" />
+          <Route exact path="/drive" render={() => <span className="logo-text"><h1>Drive</h1></span>} />
+          <Route exact path="/explorer" render={() => <span className="logo-text"><h1>Explorer</h1></span>} />
+          <Route exact path="/compute" render={() => <span className="logo-text"><h1>Compute</h1></span>} />
+        </NavbarBrand>
+        <NavbarToggler onClick={this.toggle} />
+        <Collapse isOpen={this.state.isOpen} navbar>
+          { isAuthenticated ? userLinks() : anonLinks }
+        </Collapse>
+      </Navbar>
     );
 
     return (
       <Router>
         <div className="App">
-          <Navbar color="light" light expand="md">
-            <NavbarBrand href="/">
-              <img src={logo} alt="logo" />
-            </NavbarBrand>
-            <NavbarToggler onClick={this.toggle} />
-            <Collapse isOpen={this.state.isOpen} navbar>
-              <Nav className="mr-auto" navbar>
-                <NavItem active>
-                  <NavLink href="/">Dashboard</NavLink>
-                </NavItem>
-                <NavItem active>
-                  <NavLink href="/explorer">Explorer</NavLink>
-                </NavItem>
-              </Nav>
-              <Nav className="ml-auto" navbar>
-                { isAuthenticated ? userLinks() : anonLinks }
-              </Nav>
-            </Collapse>
-          </Navbar>
+          <div className="row-fluid header">
+            <div className="container">
+              <MainNavbar />
+            </div>
+          </div>
+          <section id="main" className="row-fluid">
+            {/* Dashboard */}
+            <Route
+              exact
+              path="/"
+              render={() => <div className="container"><h1>Dashboard</h1></div>}
+            />
 
-          {/* Dashboard */}
-          <Route
-            exact
-            path="/"
-            render={() => <h1>Dashboard</h1>}
-          />
-          <Route exact path="/" component={ProjectsController} />
+            {/* Drive */}
+            <Route exact path="/drive" component={ProjectsController} />
 
-          {/* Dashboard */}
-          <Route
-            path="/explorer"
-            render={() => <h1>ecocloud Explorer</h1>}
-          />
+            {/* Explorer */}
+            <Route
+              path="/explorer"
+              render={() => <div className="col-md-12"><h1>ecocloud Explorer</h1></div>}
+            />
 
-          {/* Account */}
-          <Route exact path="/account" component={Account} />
-
+            {/* Account */}
+            <Route exact path="/account" component={Account} />
+          </section>
+          <Footer />
         </div>
       </Router>
     );
