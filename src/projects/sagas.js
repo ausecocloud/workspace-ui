@@ -34,9 +34,7 @@ function* addFolderTask(action) {
   try {
     // let response =
     yield call(API.addFolder, action.payload);
-    console.log('Folder created');
     yield put(actions.contentsPath(action.payload));
-    console.log('Path reloaded');
   } catch (error) {
     yield put(actions.addFolderFailed(error));
   }
