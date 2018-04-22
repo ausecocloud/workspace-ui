@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
-import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink as NavLinkReact, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
 import Account from './Account';
@@ -41,7 +41,7 @@ class App extends React.Component {
     const anonLinks = (
       <Nav className="ml-auto" navbar>
         <NavItem>
-          <NavLink to="/oidc/login">Login <i className="fa fa-user-circle" /></NavLink>
+          <NavLinkReact href="/oidc/login">Login <i className="fa fa-user-circle" /></NavLinkReact>
         </NavItem>
       </Nav>
     );
@@ -69,7 +69,7 @@ class App extends React.Component {
               <NavLink exact to="/account">Account</NavLink>
             </DropdownItem>
             <DropdownItem>
-              <NavLink to="/oidc/logout">Logout</NavLink>
+              <NavLinkReact href="/oidc/logout">Logout</NavLinkReact>
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
