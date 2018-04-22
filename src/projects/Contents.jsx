@@ -8,7 +8,7 @@ import PathBar from './PathBar';
 class Contents extends React.PureComponent {
   static defaultProps = {
     project: '',
-    path: '',
+    path: '/',
     contents: [],
   }
 
@@ -22,8 +22,14 @@ class Contents extends React.PureComponent {
 
   onClick = (item) => {
     const { project, path, onClick } = this.props;
+    let newPath;
     if (item.content_type === 'application/directory') {
-      onClick(project, [path, item.name].join('/'));
+      if (path.endsWith('/')) {
+        newPath = [path.slice(0, -1), item.name].join('/');
+      } else {
+        newPath = [path, item.name].join('/');
+      }
+      onClick(project, newPath);
     }
   }
 

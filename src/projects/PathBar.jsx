@@ -34,9 +34,9 @@ class PathBar extends React.PureComponent {
     return (
       <Breadcrumb tag="nav">
         <FontAwesomeIcon icon={faHome} />&nbsp;
-        <PathBarItem path="" name={project} onClick={this.onClick} />
+        <PathBarItem path="/" name={project} onClick={this.onClick} />
         { parts.map((part, idx) => (
-          <PathBarItem key={part} path={parts.slice(0, idx + 1).join('/')} name={part} onClick={this.onClick} />
+          <PathBarItem key={part} path={`/${parts.slice(0, idx + 1).join('/')}`} name={part} onClick={this.onClick} />
           ))
         }
       </Breadcrumb>
