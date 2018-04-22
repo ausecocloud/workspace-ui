@@ -130,6 +130,7 @@ module.exports = {
             options: {
               name: '[name].[ext]',
               outputPath: 'images/',
+              publicPath: '/images/',
             },
           },
         ],
