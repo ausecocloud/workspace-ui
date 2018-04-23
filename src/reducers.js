@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux';
 import * as actions from './actions';
 import projectsReducer, * as projects from './projects/reducers';
 
@@ -14,12 +13,12 @@ function userReducer(state = {}, action) {
   }
 }
 
-const rootReducer = combineReducers({
+const rootReducers = {
   user: userReducer,
   projects: projectsReducer,
-});
+};
 
-export default rootReducer;
+export default rootReducers;
 
 // redefine selectors to match our mapping in rootReducer
 export const getProjects = state => projects.getProjects(state.projects);

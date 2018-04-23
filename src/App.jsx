@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
-import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
+import { Route, NavLink, withRouter } from 'react-router-dom';
 import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink as NavLinkReact, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
@@ -92,36 +92,31 @@ class App extends React.Component {
     );
 
     return (
-      <Router>
-        <div className="App">
-          <div className="row-fluid header">
-            <div className="container">
-              <MainNavbar />
-            </div>
+      <div className="App">
+        <div className="row-fluid header">
+          <div className="container">
+            <MainNavbar />
           </div>
-          <section id="main" className="row-fluid">
-            {/* Dashboard */}
-            <Route
-              exact
-              path="/"
-              render={() => <div className="container"><h1>Dashboard</h1></div>}
-            />
-
-            {/* Drive */}
-            <Route exact path="/drive" component={ProjectsController} />
-
-            {/* Explorer */}
-            <Route
-              path="/explorer"
-              render={() => <div className="col-md-12"><h1>ecocloud Explorer</h1></div>}
-            />
-
-            {/* Account */}
-            <Route exact path="/account" component={Account} />
-          </section>
-          <Footer />
         </div>
-      </Router>
+        <section id="main" className="row-fluid">
+          {/* Dashboard */}
+          <Route
+            exact
+            path="/"
+            render={() => <div className="container"><h1>Dashboard</h1></div>}
+          />
+          {/* Drive */}
+          <Route exact path="/drive" component={ProjectsController} />
+          {/* Explorer */}
+          <Route
+            path="/explorer"
+            render={() => <div className="col-md-12"><h1>ecocloud Explorer</h1></div>}
+          />
+          {/* Account */}
+          <Route exact path="/account" component={Account} />
+        </section>
+        <Footer />
+      </div>
     );
   }
 }
@@ -135,5 +130,5 @@ function mapStateToProps(state) {
 
 // make App hot reloadable
 // export default connect(mapStateToProps)(hot(module)((App)));
-export default hot(module)(connect(mapStateToProps)(App));
+export default hot(module)(withRouter(connect(mapStateToProps)(App)));
 // export default connect(mapStateToProps)(App);
