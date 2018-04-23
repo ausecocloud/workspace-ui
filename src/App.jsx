@@ -109,12 +109,12 @@ class App extends React.Component {
           <Route
             exact
             path="/drive"
-            render={() => [<ProjectsController />, <Meta pagetitle="Drive" pagedesc="Welcome to ecocloud Drive!" />]}
+            render={() => [<ProjectsController key="projects" />, <Meta key="meta" pagetitle="Drive" pagedesc="Welcome to ecocloud Drive!" />]}
           />
           {/* Explorer */}
           <Route
             path="/explorer"
-            render={() => [<Col md="12"><h1>ecocloud Explorer</h1></Col>, <Meta pagetitle="Explorer" pagedesc="Welcome to ecocloud Drive!" />]}
+            render={() => [<Col key="explorer" md="12"><h1>ecocloud Explorer</h1></Col>, <Meta key="meta" pagetitle="Explorer" pagedesc="Welcome to ecocloud Drive!" />]}
           />
           {/* Account */}
           <Route exact path="/account" component={Account} />
