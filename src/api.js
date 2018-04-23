@@ -1,3 +1,4 @@
+import axios from 'axios';
 
 
 export function fetchToken() {
@@ -49,6 +50,40 @@ export function addFolder(params) {
 export function deleteFolder(params) {
   // project, path, name
   const url = new URL('/api/v1/folders', document.baseURI);
+  // TODO: see addFolder
+  Object.keys(params).forEach((key) => {
+    if (params[key]) {
+      url.searchParams.append(key, params[key]);
+    }
+  });
+  return fetch(
+    url,
+    {
+      credentials: 'same-origin',
+      method: 'DELETE',
+    },
+  );
+}
+
+export function uploadFile(params) {
+  // project, path, files: FileList
+  const url = new URL('/api/v1/files', document.baseURI);
+  const data = new FormData();
+  data.append('project', params.project);
+  data.append('path', params.path);
+  data.append('file', params.files[0]);
+  const config = {
+    onUploadProgress: progressEvent => (
+      console.log('Upload Progress', progressEvent, Math.round((progressEvent.loaded * 100) / progressEvent.total))
+    ),
+  };
+  return axios.post(url, data, config)
+    .then(res => res.data);
+}
+
+export function deleteFile(params) {
+  // project, path, name
+  const url = new URL('/api/v1/files', document.baseURI);
   // TODO: see addFolder
   Object.keys(params).forEach((key) => {
     if (params[key]) {

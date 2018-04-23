@@ -36,3 +36,19 @@ export const FOLDER_DELETE_FAILED = 'CONTENTS/FOLDER/DELETE/FAILED';
 export const deleteFolder = action(FOLDER_DELETE);
 export const deleteFolderSucceeded = action(FOLDER_DELETE_SUCCEEDED);
 export const deleteFolderFailed = action(FOLDER_DELETE_FAILED, true);
+
+export const FILE_UPLOAD = 'CONTENTS/FILE/UPLOAD';
+export const FILE_UPLOAD_SUCCEEDED = 'CONTENTS/FILE/UPLOAD/SUCCEEDED';
+export const FILE_UPLOAD_FAILED = 'CONTENTS/FILE/UPLOAD/FAILED';
+
+export const uploadFile = action(FILE_UPLOAD);
+export const uploadFileSucceeded = action(FILE_UPLOAD_SUCCEEDED);
+export const uploadFileFailed = action(FILE_UPLOAD_FAILED);
+
+export const FILE_DELETE = 'CONTENTS/FILE/DELETE';
+export const FILE_DELETE_SUCCEEDED = 'CONTENTS/FILE/DELETE/SUCCEDED';
+export const FILE_DELETE_FAILED = 'CONTENTS/FILE/DELETE/FAILED';
+
+export const deleteFile = action(FILE_DELETE);
+export const deleteFileSucceeded = action(FILE_DELETE_SUCCEEDED);
+export const deleteFileFailed = action(FILE_DELETE_FAILED, true);

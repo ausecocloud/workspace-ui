@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 import ContentRow from './ContentRow';
-import PathBar from './PathBar';
 
 
 class Contents extends React.PureComponent {
@@ -36,26 +35,19 @@ class Contents extends React.PureComponent {
 
   onDelete = (item) => {
     const { project, path, onDelete } = this.props;
-    if (item.content_type === 'application/directory') {
-      onDelete(project, [path, item.name].join('/'));
-    }
-  }
-
-  onPath = (path) => {
-    const { project, onClick } = this.props;
-    onClick(project, path);
+    onDelete(project, path, item);
   }
 
   render() {
     const {
-      project, path, contents,
+      contents,
     } = this.props;
 
     return (
       <Table hover>
         <thead>
           <tr>
-            <th colSpan="2"><PathBar project={project} path={path} onClick={this.onPath} /></th>
+            <th colSpan="2">Name</th>
             <th>Last modifed</th>
             <th>Size</th>
             <th>Actions</th>

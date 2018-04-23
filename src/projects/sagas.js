@@ -53,6 +53,27 @@ function* deleteFolderTask(action) {
 }
 
 
+function* uploadFileTask(action) {
+  // project, payload, filelist obj.
+  try {
+    yield call(API.uploadFile, action.payload);
+    yield put(actions.contentsPath(action.payload));
+  } catch (error) {
+    yield put(actions.uploadFileFailed(error));
+  }
+}
+
+
+function* deleteFileTask(action) {
+  try {
+    yield call(API.deleteFile, action.payload);
+    yield put(actions.contentsPath(action.payload));
+  } catch (error) {
+    yield put(actions.deleteFileFailed(error));
+  }
+}
+
+
 export default function* projectsSaga() {
   // start yourself
   yield takeEvery(actions.PROJECTS_LIST, projectsTask);
@@ -60,4 +81,6 @@ export default function* projectsSaga() {
   yield takeEvery(actions.CONTENTS_PATH, contentsTask);
   yield takeEvery(actions.FOLDER_ADD, addFolderTask);
   yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);
+  yield takeEvery(actions.FILE_UPLOAD, uploadFileTask);
+  yield takeEvery(actions.FILE_DELETE, deleteFileTask);
 }
