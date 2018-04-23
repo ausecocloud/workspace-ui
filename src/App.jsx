@@ -4,17 +4,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import { Route, NavLink, withRouter } from 'react-router-dom';
-import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink as NavLinkReact, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Col, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink as NavLinkReact, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
 import Account from './Account';
 import { getUser } from './reducers';
+import Meta from './Meta';
 import Logo from './assets/images/logo.svg';
 import Footer from './Footer';
 import './assets/scss/default.scss';
 
 require('./assets/images/favicon.ico');
-
 
 class App extends React.Component {
   static defaultProps = {
@@ -93,24 +93,28 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <div className="row-fluid header">
-          <div className="container">
+        <header id="header">
+          <Container>
             <MainNavbar />
-          </div>
-        </div>
+          </Container>
+        </header>
         <section id="main" className="row-fluid">
           {/* Dashboard */}
           <Route
             exact
             path="/"
-            render={() => <div className="container"><h1>Dashboard</h1></div>}
+            render={() => <Container><h1>Dashboard</h1></Container>}
           />
           {/* Drive */}
-          <Route exact path="/drive" component={ProjectsController} />
+          <Route
+            exact
+            path="/drive"
+            render={() => [<ProjectsController />, <Meta pagetitle="Drive" pagedesc="Welcome to ecocloud Drive!" />]}
+          />
           {/* Explorer */}
           <Route
             path="/explorer"
-            render={() => <div className="col-md-12"><h1>ecocloud Explorer</h1></div>}
+            render={() => [<Col md="12"><h1>ecocloud Explorer</h1></Col>, <Meta pagetitle="Explorer" pagedesc="Welcome to ecocloud Drive!" />]}
           />
           {/* Account */}
           <Route exact path="/account" component={Account} />
