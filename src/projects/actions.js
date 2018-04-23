@@ -27,4 +27,12 @@ export const FOLDER_ADD_FAILED = 'CONTENTS/FOLDER/ADD/FAILED';
 
 export const addFolder = action(FOLDER_ADD);
 export const addFolderSucceeded = action(FOLDER_ADD_SUCCEEDED);
-export const addFolderFailed = action(FOLDER_ADD_FAILED);
+export const addFolderFailed = action(FOLDER_ADD_FAILED, true);
+
+export const FOLDER_DELETE = 'CONTENTS/FOLDER/DELETE';
+export const FOLDER_DELETE_SUCCEEDED = 'CONTENTS/FOLDER/DELETE/SUCCEDED';
+export const FOLDER_DELETE_FAILED = 'CONTENTS/FOLDER/DELETE/FAILED';
+
+export const deleteFolder = action(FOLDER_DELETE);
+export const deleteFolderSucceeded = action(FOLDER_DELETE_SUCCEEDED);
+export const deleteFolderFailed = action(FOLDER_DELETE_FAILED, true);

@@ -17,6 +17,7 @@ class Contents extends React.PureComponent {
     path: PropTypes.string,
     contents: PropTypes.arrayOf(PropTypes.any),
     onClick: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
     // dispatch: PropTypes.func.isRequired,
   }
 
@@ -30,6 +31,13 @@ class Contents extends React.PureComponent {
         newPath = [path, item.name].join('/');
       }
       onClick(project, newPath);
+    }
+  }
+
+  onDelete = (item) => {
+    const { project, path, onDelete } = this.props;
+    if (item.content_type === 'application/directory') {
+      onDelete(project, [path, item.name].join('/'));
     }
   }
 
@@ -59,6 +67,7 @@ class Contents extends React.PureComponent {
               item={item}
               key={item.name}
               onClick={this.onClick}
+              onDelete={this.onDelete}
             />))
           }
         </tbody>

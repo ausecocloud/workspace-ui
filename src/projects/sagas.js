@@ -41,10 +41,23 @@ function* addFolderTask(action) {
 }
 
 
+function* deleteFolderTask(action) {
+  try {
+    yield call(API.deleteFolder, action.payload);
+    // TODO: re-think API ... delete path or delete path/name
+    const newPath = action.payload.path.split('/').slice(0, -1).join('/');
+    yield put(actions.contentsPath({ ...action.payload, path: newPath }));
+  } catch (error) {
+    yield put(actions.deleteFolderFailed(error));
+  }
+}
+
+
 export default function* projectsSaga() {
   // start yourself
   yield takeEvery(actions.PROJECTS_LIST, projectsTask);
   yield takeEvery(actions.PROJECTS_SELECT, projectsSelectTask);
   yield takeEvery(actions.CONTENTS_PATH, contentsTask);
   yield takeEvery(actions.FOLDER_ADD, addFolderTask);
+  yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);
 }

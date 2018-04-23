@@ -31,6 +31,9 @@ function mapDispatchToProps(dispatch) {
     onAddFolder: (project, path, folder) => {
       dispatch(actions.addFolder({ project, path, folder }));
     },
+    onDelete: (project, path) => {
+      dispatch(actions.deleteFolder({ project, path }));
+    },
     dispatch,
   };
 }
@@ -46,6 +49,7 @@ class ProjectsController extends React.Component {
     onChange: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
     onAddFolder: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
   }
 
@@ -84,7 +88,7 @@ class ProjectsController extends React.Component {
   render() {
     const {
       projects, selected, contents, path,
-      onChange, onClick, // onAddFolder,
+      onChange, onClick, onDelete,
     } = this.props;
 
     const {
@@ -94,7 +98,7 @@ class ProjectsController extends React.Component {
     return (
       <div className="container">
         <Projects key="projects" selected={selected} projects={projects} onChange={onChange} />
-        <Contents key="contents" contents={contents} project={selected} path={path} onClick={onClick} />
+        <Contents key="contents" contents={contents} project={selected} path={path} onClick={onClick} onDelete={onDelete} />
         { addFolder ? (
           <InputGroup key="input">
             <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
