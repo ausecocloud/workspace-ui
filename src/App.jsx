@@ -2,13 +2,12 @@ import React from 'react';
 import { hot } from 'react-hot-loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import isEmpty from 'lodash/isEmpty';
 import { Route, NavLink, withRouter } from 'react-router-dom';
 import { Container, Col, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink as NavLinkReact, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
 import Account from './Account';
-import { getUser } from './reducers';
+import { getUser, getAuthenticated } from './reducers';
 import Meta from './Meta';
 import Logo from './assets/images/logo.svg';
 import Footer from './Footer';
@@ -19,10 +18,12 @@ require('./assets/images/favicon.ico');
 class App extends React.Component {
   static defaultProps = {
     user: {},
+    isAuthenticated: false,
   }
 
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any),
+    isAuthenticated: PropTypes.boolean,
   }
 
   state = {
@@ -36,7 +37,7 @@ class App extends React.Component {
   }
 
   render() {
-    const isAuthenticated = !isEmpty(this.props.user);
+    const { isAuthenticated, user } = this.props;
 
     const anonLinks = (
       <Nav className="ml-auto" navbar>
@@ -62,7 +63,7 @@ class App extends React.Component {
         </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>
-            {this.props.user.id_token.name} <i className="fa fa-user-circle" />
+            {user.id_token.name} <i className="fa fa-user-circle" />
           </DropdownToggle>
           <DropdownMenu right>
             <DropdownItem>
@@ -129,6 +130,7 @@ class App extends React.Component {
 function mapStateToProps(state) {
   return {
     user: getUser(state),
+    isAuthenticated: getAuthenticated(state),
   };
 }
 

@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import * as actions from './actions';
 import projectsReducer, * as projects from './projects/reducers';
 
@@ -30,3 +31,6 @@ export const getSelected = state => projects.getSelected(state.projects);
 export const getPath = state => projects.getPath(state.projects);
 
 export const getUser = state => state.user;
+
+export const getAuthenticated = state => !isEmpty(state.user);
+
