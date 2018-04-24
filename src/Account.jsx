@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Container } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { getUser } from './reducers';
 
@@ -61,9 +61,9 @@ class AccountTable extends React.PureComponent {
     );
 
     return (
-      <div className="container user-table">
+      <Container className="container user-table">
         { isAuthenticated ? userTable() : noContent }
-      </div>
+      </Container>
     );
   }
 }

@@ -8,10 +8,9 @@ import './App.css';
 import ProjectsController from './ProjectsController';
 import Account from './Account';
 import { getUser, getAuthenticated } from './reducers';
-import Meta from './Meta';
-import PrivateRoute from './privateRoute';
 import Logo from './assets/images/logo.svg';
 import Footer from './Footer';
+import Meta from './Meta';
 import './assets/scss/default.scss';
 
 require('./assets/images/favicon.ico');
@@ -82,9 +81,37 @@ class App extends React.Component {
       <Navbar expand="md">
         <NavbarBrand href="/">
           <img src={Logo} alt="ecocloud Logo" />
-          <Route exact path="/drive" render={() => <span className="logo-text"><h1>Drive</h1></span>} />
-          <Route exact path="/explorer" render={() => <span className="logo-text"><h1>Explorer</h1></span>} />
-          <Route exact path="/compute" render={() => <span className="logo-text"><h1>Compute</h1></span>} />
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <Meta pagetitle="Dashboard" pagedesc="ecocloud Dashboard" />
+            )}
+          />
+          <Route
+            exact
+            path="/drive"
+            render={() => ([
+              <span key="drive-text" className="logo-text"><h1>Drive</h1></span>,
+              <Meta key="drive-meta" pagetitle="Drive" pagedesc="ecocloud Drive" />,
+            ])}
+          />
+          <Route
+            exact
+            path="/explorer"
+            render={() => ([
+              <span key="explorer-text" className="logo-text"><h1>Explorer</h1></span>,
+              <Meta key="explorer-meta" pagetitle="Explorer" pagedesc="ecocloud Explorer" />,
+            ])}
+          />
+          <Route
+            exact
+            path="/compute"
+            render={() => ([
+              <span key="compute-text" className="logo-text"><h1>Compute</h1></span>,
+              <Meta key="compute-meta" pagetitle="Compute" pagedesc="ecocloud Compute" />,
+            ])}
+          />
         </NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
@@ -101,27 +128,31 @@ class App extends React.Component {
           </Container>
         </header>
         <section id="main" className="row-fluid">
-          {/* Dashboard */}
-          <Route
-            exact
-            path="/"
-            render={() => <Container><h1>Dashboard</h1></Container>}
-          />
-          {/* Drive */}
-          <PrivateRoute
-            exact
-            path="/drive"
-            component={ProjectsController}
-            pagetitle="Drive"
-            pagedesc="Welcome to Drive"
-          />
-          {/* Explorer */}
-          <Route
-            path="/explorer"
-            render={() => [<Col md="12"><h1>ecocloud Explorer</h1></Col>, <Meta pagetitle="Explorer" pagedesc="Welcome to ecocloud Explorer!" />]}
-          />
-          {/* Account */}
-          <Route exact path="/account" component={Account} />
+          { isAuthenticated ? ([
+            <Route
+              key="Dashboard"
+              exact
+              path="/"
+              render={() => <Container><h1>Dashboard</h1></Container>}
+            />,
+            <Route
+              key="Drive"
+              exact
+              path="/drive"
+              component={ProjectsController}
+            />,
+            <Route
+              key="Explorer"
+              path="/explorer"
+              render={() => <Col md="12"><h1>ecocloud Explorer</h1></Col>}
+            />,
+            <Route key="Account" exact path="/account" component={Account} />,
+          ]) : (
+            <Container>
+              <h1>You are not logged in.</h1>
+              <p>Please <a href="/oidc/login">log in</a> to continue</p>
+            </Container>
+          )}
         </section>
         <Footer />
       </div>
