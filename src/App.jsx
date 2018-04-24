@@ -9,6 +9,7 @@ import ProjectsController from './ProjectsController';
 import Account from './Account';
 import { getUser, getAuthenticated } from './reducers';
 import Meta from './Meta';
+import PrivateRoute from './privateRoute';
 import Logo from './assets/images/logo.svg';
 import Footer from './Footer';
 import './assets/scss/default.scss';
@@ -23,7 +24,7 @@ class App extends React.Component {
 
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any),
-    isAuthenticated: PropTypes.boolean,
+    isAuthenticated: PropTypes.bool,
   }
 
   state = {
@@ -107,15 +108,17 @@ class App extends React.Component {
             render={() => <Container><h1>Dashboard</h1></Container>}
           />
           {/* Drive */}
-          <Route
+          <PrivateRoute
             exact
             path="/drive"
-            render={() => [<ProjectsController key="projects" />, <Meta key="meta" pagetitle="Drive" pagedesc="Welcome to ecocloud Drive!" />]}
+            component={ProjectsController}
+            pagetitle="Drive"
+            pagedesc="Welcome to Drive"
           />
           {/* Explorer */}
           <Route
             path="/explorer"
-            render={() => [<Col key="explorer" md="12"><h1>ecocloud Explorer</h1></Col>, <Meta key="meta" pagetitle="Explorer" pagedesc="Welcome to ecocloud Drive!" />]}
+            render={() => [<Col md="12"><h1>ecocloud Explorer</h1></Col>, <Meta pagetitle="Explorer" pagedesc="Welcome to ecocloud Explorer!" />]}
           />
           {/* Account */}
           <Route exact path="/account" component={Account} />
