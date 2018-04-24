@@ -23,7 +23,7 @@ class App extends React.Component {
 
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any),
-    isAuthenticated: PropTypes.boolean,
+    isAuthenticated: PropTypes.bool,
   }
 
   state = {
