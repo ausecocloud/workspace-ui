@@ -13,6 +13,7 @@ if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
 
 module.exports = {
   "parser": "babel-eslint",
+  // see: https://github.com/airbnb/javascript
   "extends": "airbnb",
   "env": {
     "browser": true
