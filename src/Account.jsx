@@ -1,19 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import isEmpty from 'lodash/isEmpty';
 import { Button, Form, FormGroup, Label, Input, Container } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { getUser } from './reducers';
+import { getUser, getAuthenticated } from './reducers';
 
 
 function mapStateToProps(state) {
-  const user = getUser(state);
-  if (user) {
-    return { user };
-  }
   return {
-    user: null,
+    user: getUser(state),
+    isAuthenticated: getAuthenticated(state),
   };
 }
 
@@ -21,15 +17,16 @@ function mapStateToProps(state) {
 class AccountTable extends React.PureComponent {
   static defaultProps = {
     user: {},
+    isAuthenticated: false,
   }
 
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any),
+    isAuthenticated: PropTypes.bool,
   }
 
   render() {
-    const isAuthenticated = !isEmpty(this.props.user);
-    const user = this.props.user.id_token;
+    const { isAuthenticated, user } = this.props;
 
     const userTable = () => (
       <section className="user-details">
@@ -37,19 +34,19 @@ class AccountTable extends React.PureComponent {
         <Form>
           <FormGroup>
             <Label for="userFullName">Name</Label>
-            <Input type="text" name="user-fullname" id="userFullName" value={user.name} />
+            <Input type="text" name="user-fullname" id="userFullName" defaultValue={user.name} />
           </FormGroup>
           <FormGroup>
             <Label for="userEmail">Email</Label>
-            <Input type="email" name="email" id="userEmail" value={user.email} />
+            <Input type="email" name="email" id="userEmail" defaultValue={user.email} />
           </FormGroup>
           <FormGroup>
             <Label for="userName">Username</Label>
-            <Input type="text" name="userName" id="userName" value={user.preferred_username} />
+            <Input type="text" name="userName" id="userName" defaultValue={user.preferred_username} />
           </FormGroup>
           <FormGroup>
             <Label for="userAuth">Identity Issued By</Label>
-            <Input type="text" name="userAuth" id="userAuth" disabled value={user.iss} />
+            <Input type="text" name="userAuth" id="userAuth" disabled defaultValue={user.iss} />
           </FormGroup>
           <Button>Submit</Button>
         </Form>
