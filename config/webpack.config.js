@@ -2,6 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
 function resolve(dest) {
@@ -20,7 +21,7 @@ const paths = {
 
 module.exports = (env, options) => {
   // set NODE_ENV based on webpack mode option
-  process.env.NODE_ENV = options.mode || 'production';
+  process.env.NODE_ENV = (options && options.mode) || 'production';
   // some variables to dhelp with conditional build options
   const debug = process.env.npm_lifecycle_event === 'start';
 
@@ -29,7 +30,6 @@ module.exports = (env, options) => {
     // input modules
     entry: [
       resolve('src/main.jsx'),
-      resolve('src/index.html'),
     ],
     // output bundles
     output: {
@@ -140,30 +140,6 @@ module.exports = (env, options) => {
             },
           ],
         },
-        {
-          test: /\.(html)$/,
-          use: [
-            {
-              // write file to dist
-              loader: 'file-loader',
-              options: {
-                name: '[name].[ext]',
-              },
-            },
-            {
-              // get html back from module
-              loader: 'extract-loader',
-            },
-            {
-              // import html as module
-              loader: 'html-loader',
-              options: {
-                // attrs: ['img:src', 'link:href'],
-                interpolate: true,
-              },
-            },
-          ],
-        },
       ],
     },
 
@@ -184,6 +160,17 @@ module.exports = (env, options) => {
       new UglifyJsPlugin({
         sourceMap: true,
       }),
+      new CopyWebpackPlugin([
+        {
+          from: resolve('./src/keycloak.json'),
+          to: resolve('./dist/keycloak.json'),
+        },
+        {
+          from: resolve('./src/*.html'),
+          to: resolve('./dist/'),
+          flatten: true,
+        },
+      ], {}),
     ],
 
     // see https://webpack.js.org/configuration/devtool/
@@ -210,4 +197,4 @@ module.exports = (env, options) => {
       ],
     },
   };
-}
+};
