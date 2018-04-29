@@ -1,12 +1,12 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import * as API from '../api';
+import { workspace } from '../api';
 import * as actions from './actions';
 
 
 function* projectsTask() {
   let projects;
   try {
-    projects = yield call(API.listProjects);
+    projects = yield call(workspace.listProjects);
     yield put(actions.projectsSucceeded(projects));
   } catch (error) {
     yield put(actions.projectsFailed(error));
@@ -22,7 +22,7 @@ function* projectsSelectTask(action) {
 function* contentsTask(action) {
   let contents;
   try {
-    contents = yield call(API.listContents, action.payload);
+    contents = yield call(workspace.listContents, action.payload);
     yield put(actions.contentsSucceeded(contents));
   } catch (error) {
     yield put(actions.contentsFailed(error));
@@ -33,7 +33,7 @@ function* contentsTask(action) {
 function* addFolderTask(action) {
   try {
     // let response =
-    yield call(API.addFolder, action.payload);
+    yield call(workspace.addFolder, action.payload);
     yield put(actions.contentsPath(action.payload));
   } catch (error) {
     yield put(actions.addFolderFailed(error));
@@ -43,7 +43,7 @@ function* addFolderTask(action) {
 
 function* deleteFolderTask(action) {
   try {
-    yield call(API.deleteFolder, action.payload);
+    yield call(workspace.deleteFolder, action.payload);
     // TODO: re-think API ... delete path or delete path/name
     const newPath = action.payload.path.split('/').slice(0, -1).join('/');
     yield put(actions.contentsPath({ ...action.payload, path: newPath }));
@@ -56,7 +56,7 @@ function* deleteFolderTask(action) {
 function* uploadFileTask(action) {
   // project, payload, filelist obj.
   try {
-    yield call(API.uploadFile, action.payload);
+    yield call(workspace.uploadFile, action.payload);
     yield put(actions.contentsPath(action.payload));
   } catch (error) {
     yield put(actions.uploadFileFailed(error));
@@ -66,7 +66,7 @@ function* uploadFileTask(action) {
 
 function* deleteFileTask(action) {
   try {
-    yield call(API.deleteFile, action.payload);
+    yield call(workspace.deleteFile, action.payload);
     yield put(actions.contentsPath(action.payload));
   } catch (error) {
     yield put(actions.deleteFileFailed(error));

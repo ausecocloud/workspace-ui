@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, NavLink, withRouter } from 'react-router-dom';
-import { Container, Col, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink as NavLinkReact, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Col, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
 import Account from './Account';
@@ -11,6 +11,7 @@ import { getUser, getAuthenticated } from './reducers';
 import Logo from './assets/images/logo.svg';
 import Footer from './Footer';
 import Meta from './Meta';
+import * as actions from './actions';
 import './assets/scss/default.scss';
 
 require('./assets/images/favicon.ico');
@@ -24,11 +25,22 @@ class App extends React.Component {
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any),
     isAuthenticated: PropTypes.bool,
+    dispatch: PropTypes.func.isRequired,
   }
 
   state = {
     isOpen: false,
   };
+
+  onLogin = (e) => {
+    e.preventDefault();
+    this.props.dispatch(actions.login());
+  }
+
+  onLogout = (e) => {
+    e.preventDefault();
+    this.props.dispatch(actions.logout());
+  }
 
   toggle = () => {
     this.setState({
@@ -42,7 +54,7 @@ class App extends React.Component {
     const anonLinks = (
       <Nav className="ml-auto" navbar>
         <NavItem>
-          <NavLinkReact href="/oidc/login">Login <i className="fa fa-user-circle" /></NavLinkReact>
+          <NavLink to="/login" onClick={this.onLogin}>Login <i className="fa fa-user-circle" /></NavLink>
         </NavItem>
       </Nav>
     );
@@ -63,14 +75,14 @@ class App extends React.Component {
         </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>
-            {user.id_token.name} <i className="fa fa-user-circle" />
+            {user.name} <i className="fa fa-user-circle" />
           </DropdownToggle>
           <DropdownMenu right>
             <DropdownItem>
               <NavLink exact to="/account">Account</NavLink>
             </DropdownItem>
             <DropdownItem>
-              <NavLinkReact href="/oidc/logout">Logout</NavLinkReact>
+              <NavLink to="/logout" onClick={this.onLogout}>Logout</NavLink>
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
@@ -150,7 +162,7 @@ class App extends React.Component {
           ]) : (
             <Container>
               <h1>You are not logged in.</h1>
-              <p>Please <a href="/oidc/login">log in</a> to continue</p>
+              <p>Please <NavLink to="/login" onClick={this.onLogin}>log in</NavLink> to continue</p>
             </Container>
           )}
         </section>
@@ -168,7 +180,11 @@ function mapStateToProps(state) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
 // make App hot reloadable
-// export default connect(mapStateToProps)(hot(module)((App)));
-export default hot(module)(withRouter(connect(mapStateToProps)(App)));
-// export default connect(mapStateToProps)(App);
+export default hot(module)(withRouter(connect(mapStateToProps, mapDispatchToProps)(App)));

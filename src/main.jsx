@@ -10,7 +10,7 @@ import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import createSagaMiddleware from 'redux-saga';
 import reducers from './reducers';
 import rootSaga from './sagas';
-
+import { initAuth } from './api';
 import App from './App';
 
 
@@ -45,5 +45,8 @@ const load = () => render(
   ), root,
 );
 
+// TODO: should we rather start a saga here? ... dispatch init/login action?
+// init keycloak client, and delay mounting of App, to avoid at least one page flicker
+initAuth(store).then(() => load());
 
-load();
+// load();

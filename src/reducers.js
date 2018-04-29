@@ -1,21 +1,31 @@
-import isEmpty from 'lodash/isEmpty';
 import * as actions from './actions';
 import projectsReducer, * as projects from './projects/reducers';
 
 
-function userReducer(state = {}, action) {
+function userReducer(state = { idTokenParsed: {}, authenticated: false }, action) {
   switch (action.type) {
-    case actions.TOKEN_SUCCEEDED:
-      return action.payload;
-    case actions.TOKEN_FAILED:
-      return {};
+    case actions.LOGIN_SUCCEEDED:
+      return {
+        idTokenParsed: action.payload.idTokenParsed,
+        authenticated: action.payload.authenticated,
+      };
+    case actions.LOGIN_FAILED:
+      return {
+        idTokenParsed: {},
+        authenticated: false,
+      };
+    case actions.LOGOUT_SUCCEEDED:
+      return {
+        idTokenParsed: {},
+        authenticated: false,
+      };
     default:
       return state;
   }
 }
 
 const rootReducers = {
-  user: userReducer,
+  auth: userReducer,
   projects: projectsReducer,
 };
 
@@ -30,7 +40,6 @@ export const getSelected = state => projects.getSelected(state.projects);
 
 export const getPath = state => projects.getPath(state.projects);
 
-export const getUser = state => state.user;
+export const getUser = state => state.auth && state.auth.idTokenParsed;
 
-export const getAuthenticated = state => !isEmpty(state.user);
-
+export const getAuthenticated = state => state.auth && state.auth.authenticated;

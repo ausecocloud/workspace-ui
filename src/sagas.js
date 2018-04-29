@@ -1,33 +1,48 @@
-import { call, put, takeEvery, fork } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
-import * as API from './api';
+import { select, put, takeEvery, fork } from 'redux-saga/effects';
 import * as actions from './actions';
 import projectsSaga from './projects/sagas';
-
+import { keycloak } from './api';
 
 // the task to fetch an access token
 export function* loginTask() {
-  let tokens;
   try {
-    tokens = yield call(API.fetchToken);
-    yield put(actions.tokenSucceeded(tokens));
+    if (!keycloak.authenticated) {
+      yield keycloak.login();
+    }
+    console.log('AUTH:', keycloak.authenticated);
+    if (keycloak.authenticated) {
+      yield put(actions.loginSucceeded(keycloak));
+    } else {
+      yield put(actions.loginFailed());
+    }
   } catch (error) {
-    yield put(actions.tokenFailed(error));
+    console.log('AUTH:', error);
+    yield put(actions.loginFailed());
   }
-  if (tokens && tokens.expires_in) {
-    yield call(delay, tokens.expires_in * 500);
-  } else {
-    yield call(delay, 10000);
-  }
-  yield put(actions.tokenFetch());
 }
 
 
-// lanch above task on every ACCES_TOKEN_FETCH
+export function* logoutTask() {
+  try {
+    if (keycloak.authenticated) {
+      yield keycloak.logout();
+    }
+    if (!keycloak.authenticated) {
+      yield put(actions.logoutSucceeded());
+    } else {
+      yield put(actions.logoutFailed());
+    }
+  } catch (error) {
+    console.log('LOGOUT:', error);
+    yield put(actions.logoutFailed());
+  }
+}
+
+
+// lanch above task on every LOGIN
 export default function* rootSaga() {
   // start yourself
-  yield takeEvery(actions.TOKEN_FETCH, loginTask);
+  yield takeEvery(actions.LOGIN, loginTask);
+  yield takeEvery(actions.LOGOUT, logoutTask);
   yield fork(projectsSaga);
-  // start token fetcher
-  yield put(actions.tokenFetch());
 }

@@ -1,0 +1,8 @@
+{
+  "realm": "test",
+  "auth-server-url": "https://auth.ecocloud.org.au/auth",
+  "ssl-required": "external",
+  "resource": "public",
+  "public-client": true,
+  "confidential-port": 0
+}
