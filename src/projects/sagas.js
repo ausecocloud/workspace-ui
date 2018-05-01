@@ -2,6 +2,7 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import { workspace } from '../api';
 import * as actions from './actions';
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 function* projectsTask() {
   let projects;
@@ -16,6 +17,17 @@ function* projectsTask() {
 
 function* projectsSelectTask(action) {
   yield put(actions.contentsPath({ project: action.payload, path: '/' }));
+}
+
+
+function* projectCreateTask() {
+  let project;
+  try {
+    project = yield call(workspace.createProject);
+    yield put(actions.addProject(project));
+  } catch (error) {
+    yield put(actions.addProjectFailed(error));
+  }
 }
 
 
@@ -78,6 +90,7 @@ export default function* projectsSaga() {
   // start yourself
   yield takeEvery(actions.PROJECTS_LIST, projectsTask);
   yield takeEvery(actions.PROJECTS_SELECT, projectsSelectTask);
+  yield takeEvery(actions.PROJECTS_ADD, projectCreateTask);
   yield takeEvery(actions.CONTENTS_PATH, contentsTask);
   yield takeEvery(actions.FOLDER_ADD, addFolderTask);
   yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);

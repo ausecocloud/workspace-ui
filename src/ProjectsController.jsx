@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container } from 'reactstrap';
+import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container, Form, FormGroup } from 'reactstrap';
+import ReduxBlockUi from 'react-block-ui/redux';
+import 'react-block-ui/style.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import { Projects, Contents, PathBar } from './projects';
+import BasicModal from './BasicModal';
 import * as actions from './projects/actions';
 import { getContents, getSelected, getProjects, getPath } from './reducers';
 
@@ -67,6 +70,7 @@ class ProjectsController extends React.Component {
     newFolder: '',
     addFile: false,
     newFile: [],
+    projectModalActive: false,
   }
 
   componentDidMount() {
@@ -132,6 +136,29 @@ class ProjectsController extends React.Component {
 
   changeNewFile = e => this.setState({ newFile: Array.from(e.target.files) });
 
+  toggleProjectModal = () => {
+    this.setState({ projectModalActive: !this.state.projectModalActive });
+  }
+
+  newProjectSubmit = () => {
+    console.log('modal submit');
+
+    this.setState({ projectModalActive: false });
+  }
+
+  newProjectForm = (
+    <Form>
+      <FormGroup>
+        <Label for="projName">Project Name</Label>
+        <Input name="projName" id="projName" />
+      </FormGroup>
+      <FormGroup>
+        <Label for="projDesc">Description</Label>
+        <Input type="textarea" name="projDesc" id="projDesc" />
+      </FormGroup>
+    </Form>
+  );
+
   render() {
     const {
       projects, selected, contents, path,
@@ -148,59 +175,70 @@ class ProjectsController extends React.Component {
         <Row>
           <Col>
             <Projects key="projects" selected={selected} projects={projects} onChange={onChange} />
+            <Button color="success" onClick={this.toggleProjectModal}><FontAwesomeIcon icon={faPlusCircle} /> New Project</Button>
+            <BasicModal
+              title="Create A Project"
+              desc="You can create a new project to organise your work using this form."
+              contents={this.newProjectForm}
+              submit={this.newProjectSubmit}
+              active={this.state.projectModalActive}
+              close={this.toggleProjectModal}
+            />
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <PathBar project={selected} path={path} onClick={this.onPath} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Contents key="contents" contents={contents} project={selected} path={path} onClick={onClick} onDelete={this.onDelete} />
-          </Col>
-        </Row>
-        { addFolder &&
+        <ReduxBlockUi tag="div" block="CONTENTS/PATH" unblock={['CONTENTS/SUCCEEDED', 'CONTENTS/FAILED']} className="loader">
           <Row>
             <Col>
-              <InputGroup key="folder">
-                <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
-                <InputGroupAddon addonType="append">
-                  <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
-                  <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
-                </InputGroupAddon>
-              </InputGroup>
+              <PathBar project={selected} path={path} onClick={this.onPath} />
             </Col>
           </Row>
-        }
-        { addFile &&
           <Row>
             <Col>
-              <InputGroup key="file">
-                <Label for="uploads" className="btn btn-primary">Choose Files</Label>
-                <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
-                <InputGroupAddon addonType="append">
-                  <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
-                  <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
-                </InputGroupAddon>
-              </InputGroup>
-              { newFile.map(file => (
-                <Row key={file.name}>
-                  <Col>{file.name}</Col>
-                </Row>
-                ))
-              }
+              <Contents key="contents" contents={contents} project={selected} path={path} onClick={onClick} onDelete={this.onDelete} />
             </Col>
           </Row>
-        }
-        { (!addFile && !addFolder) &&
-          <Row>
-            <Col>
-              <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
-              <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
-            </Col>
-          </Row>
-        }
+          { addFolder &&
+            <Row>
+              <Col>
+                <InputGroup key="folder">
+                  <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
+                  <InputGroupAddon addonType="append">
+                    <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
+                    <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
+                  </InputGroupAddon>
+                </InputGroup>
+              </Col>
+            </Row>
+          }
+          { addFile &&
+            <Row>
+              <Col>
+                <InputGroup key="file">
+                  <Label for="uploads" className="btn btn-primary">Choose Files</Label>
+                  <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
+                  <InputGroupAddon addonType="append">
+                    <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
+                    <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
+                  </InputGroupAddon>
+                </InputGroup>
+                { newFile.map(file => (
+                  <Row key={file.name}>
+                    <Col>{file.name}</Col>
+                  </Row>
+                  ))
+                }
+              </Col>
+            </Row>
+          }
+          { (!addFile && !addFolder) &&
+            <Row>
+              <Col>
+                <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
+                <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
+              </Col>
+            </Row>
+          }
+        </ReduxBlockUi>
       </Container>
     );
   }

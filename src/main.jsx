@@ -3,7 +3,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { applyMiddleware, createStore, combineReducers } from 'redux';
+import blockUiMiddleware from 'react-block-ui/reduxMiddleware';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
@@ -21,6 +22,7 @@ const history = createHistory();
 // Build the middleware for intercepting and dispatching navigation actions
 const middleware = [
   sagaMiddleware,
+  blockUiMiddleware,
   routerMiddleware(history),
 ];
 

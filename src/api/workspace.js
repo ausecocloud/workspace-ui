@@ -66,3 +66,14 @@ export function deleteFile(params) {
   // project, path, name
   return axios.delete('/api/v1/files', { params });
 }
+
+export function createProject(params) {
+  // project, path, name
+  const { name, ...rest } = params;
+  return axios.post(
+    '/api/v1/project',
+    { params: rest },
+  // We get a NoContent 204 respoense here
+  ).then(response => response);
+}
+

@@ -5,6 +5,7 @@ $font-stack:    'Cabin', sans-serif;
 $body-color: #333;
 $primary-color: #A9CB79;
 $brown-black: #3B3333;
+$misc-border: #E2E2E2;
 
 body {
   font: 100% $font-stack;
@@ -49,6 +50,13 @@ h2 {
 }
 a {
   color:$primary-color;
+}
+
+input, textarea, select {
+	&.form-control {
+		border-radius: 0px;
+		border: 1px solid $misc-border;
+	}
 }
 header#header {
 	background:#FFF;
@@ -114,5 +122,23 @@ footer#footer {
 	li {
 	    line-height: 1.2em;
 	    margin-bottom: .6em;
+	}
+}
+
+.loading-bullet {
+	color:$primary-color;
+}
+.modal-content { 
+	border-radius: 0px;
+	border:none;
+
+	.modal-header {
+		background-color: $primary-color;
+		color:white;
+		border-radius: 0px;
+
+		.close {
+			text-shadow:none;
+		}
 	}
 }
