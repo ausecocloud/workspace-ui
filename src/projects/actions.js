@@ -22,12 +22,12 @@ export const contentsFailed = action(CONTENTS_FAILED, true);
 export const contentsPath = action(CONTENTS_PATH);
 
 export const PROJECTS_ADD = 'PROJECTS/ADD';
-export const PROJECTS_ADD_SUCCEEDED = 'PROJECTS/SUCCEEDED';
-export const PROJECTS_ADD_FAILED = 'PROJECTS/FAILED';
+export const PROJECTS_ADD_SUCCEEDED = 'PROJECTS/ADD/SUCCEEDED';
+export const PROJECTS_ADD_FAILED = 'PROJECTS/ADD/FAILED';
 
-export const addProject = 'PROJECTS/ADD';
-export const addProjectSucceeded = 'PROJECTS/SUCCEEDED';
-export const addProjectFailed = 'PROJECTS/FAILED';
+export const createProject = 'PROJECTS/ADD';
+export const createProjectSucceeded = 'PROJECTS/ADD/SUCCEEDED';
+export const createProjectFailed = 'PROJECTS/ADD/FAILED';
 
 export const FOLDER_ADD = 'CONTENTS/FOLDER/ADD';
 export const FOLDER_ADD_SUCCEEDED = 'CONTENTS/FOLDER/ADD/SUCCEEDED';

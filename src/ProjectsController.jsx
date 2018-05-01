@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container, Form, FormGroup } from 'reactstrap';
+import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
 import 'react-block-ui/style.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -9,7 +9,7 @@ import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
-import { Projects, Contents, PathBar } from './projects';
+import { Projects, Contents, PathBar, CreateProjectForm } from './projects';
 import BasicModal from './BasicModal';
 import * as actions from './projects/actions';
 import { getContents, getSelected, getProjects, getPath } from './reducers';
@@ -44,6 +44,9 @@ function mapDispatchToProps(dispatch) {
     onDeleteFile: (project, path, name) => {
       dispatch(actions.deleteFile({ project, path, name }));
     },
+    onCreateProject: (name) => {
+      dispatch(actions.createProject({ name }));
+    },
     dispatch,
   };
 }
@@ -62,6 +65,7 @@ class ProjectsController extends React.Component {
     onDeleteFolder: PropTypes.func.isRequired,
     onAddFile: PropTypes.func.isRequired,
     onDeleteFile: PropTypes.func.isRequired,
+    onCreateProject: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
   }
 
@@ -71,6 +75,7 @@ class ProjectsController extends React.Component {
     addFile: false,
     newFile: [],
     projectModalActive: false,
+    newProject: {},
   }
 
   componentDidMount() {
@@ -88,6 +93,31 @@ class ProjectsController extends React.Component {
     } else {
       this.props.onDeleteFile(project, path, item.name);
     }
+  }
+
+  getNewProjectForm = (formstate) => {
+    this.setState({ newProject: formstate });
+  }
+
+  toggleProjectModal = () => {
+    this.setState({ projectModalActive: !this.state.projectModalActive });
+  }
+
+  newProjectSubmit = (e) => {
+    console.log(this.state.createNewProjectData);
+    const { onCreateProject } = this.props;
+    const { newProject } = this.state;
+    console.log(newProject);
+    if (newProject) {
+      onCreateProject(newProject);
+    }
+    this.setState({
+      newProject: {},
+    });
+    // onCreateProject();
+
+    // close modal
+    this.setState({ projectModalActive: false });
   }
 
   addFolder = () => {
@@ -136,29 +166,6 @@ class ProjectsController extends React.Component {
 
   changeNewFile = e => this.setState({ newFile: Array.from(e.target.files) });
 
-  toggleProjectModal = () => {
-    this.setState({ projectModalActive: !this.state.projectModalActive });
-  }
-
-  newProjectSubmit = () => {
-    console.log('modal submit');
-
-    this.setState({ projectModalActive: false });
-  }
-
-  newProjectForm = (
-    <Form>
-      <FormGroup>
-        <Label for="projName">Project Name</Label>
-        <Input name="projName" id="projName" />
-      </FormGroup>
-      <FormGroup>
-        <Label for="projDesc">Description</Label>
-        <Input type="textarea" name="projDesc" id="projDesc" />
-      </FormGroup>
-    </Form>
-  );
-
   render() {
     const {
       projects, selected, contents, path,
@@ -179,11 +186,12 @@ class ProjectsController extends React.Component {
             <BasicModal
               title="Create A Project"
               desc="You can create a new project to organise your work using this form."
-              contents={this.newProjectForm}
               submit={this.newProjectSubmit}
               active={this.state.projectModalActive}
               close={this.toggleProjectModal}
-            />
+            >
+              <CreateProjectForm data={this.getNewProjectForm} />
+            </BasicModal>
           </Col>
         </Row>
         <ReduxBlockUi tag="div" block="CONTENTS/PATH" unblock={['CONTENTS/SUCCEEDED', 'CONTENTS/FAILED']} className="loader">

@@ -68,6 +68,7 @@ export function deleteFile(params) {
 }
 
 export function createProject(params) {
+  console.log(params);
   // project, path, name
   const { name, ...rest } = params;
   return axios.post(

@@ -15,7 +15,7 @@ class BasicModal extends React.Component {
     active: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,
     submit: PropTypes.func.isRequired,
-    contents: PropTypes.element.isRequired,
+    children: PropTypes.element.isRequired,
   }
 
   constructor(props) {
@@ -30,7 +30,6 @@ class BasicModal extends React.Component {
   }
 
   closeHandler(e) {
-    console.log(this.props);
     this.props.close(e.target.value);
   }
 
@@ -41,7 +40,7 @@ class BasicModal extends React.Component {
           <ModalHeader toggle={this.closeHandler}>{this.props.title}</ModalHeader>
           <ModalBody>
             <p>{this.props.desc}</p>
-            {this.props.contents}
+            {this.props.children}
           </ModalBody>
           <ModalFooter>
             <Button color="success" onClick={this.submitHandler}>Submit</Button>{' '}

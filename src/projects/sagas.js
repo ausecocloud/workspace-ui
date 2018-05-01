@@ -24,9 +24,9 @@ function* projectCreateTask() {
   let project;
   try {
     project = yield call(workspace.createProject);
-    yield put(actions.addProject(project));
+    yield put(actions.createProjectSucceeded(project));
   } catch (error) {
-    yield put(actions.addProjectFailed(error));
+    yield put(actions.createProjectFailed(error));
   }
 }
 
