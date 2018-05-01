@@ -7,6 +7,8 @@ $primary-color: #A9CB79;
 $brown-black: #3B3333;
 $misc-border: #E2E2E2;
 
+::selection { background: rgba(red($primary-color), green($primary-color), blue($primary-color), 0.4); }
+
 body {
   font: 100% $font-stack;
   text-rendering: optimizeLegibility;
@@ -51,11 +53,15 @@ h2 {
 a {
   color:$primary-color;
 }
-
 input, textarea, select {
 	&.form-control {
 		border-radius: 0px;
 		border: 1px solid $misc-border;
+
+		&:focus{
+			border-color: rgba(red($primary-color), green($primary-color), blue($primary-color), 0.5);
+			box-shadow:0 0 0 0.2rem rgba(red($primary-color), green($primary-color), blue($primary-color), 0.25)
+		}
 	}
 }
 header#header {

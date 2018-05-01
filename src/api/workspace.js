@@ -70,7 +70,7 @@ export function deleteFile(params) {
 export function createProject(params) {
   const { name, ...rest } = params;
   return axios.post(
-    '/api/v1/project',
+    '/api/v1/projects',
     name,
     { params },
   // We get a NoContent 204 respoense here

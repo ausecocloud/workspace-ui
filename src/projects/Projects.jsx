@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, Label, Input, Col } from 'reactstrap';
+import { Input, Col } from 'reactstrap';
 
 
 class Projects extends React.PureComponent {
@@ -31,15 +31,12 @@ class Projects extends React.PureComponent {
     const { selected } = this.props;
 
     return (
-      <FormGroup row>
-        <Label for="exampleSelect" sm={2}>Project</Label>
-        <Col sm={8}>
-          <Input type="select" name="project" id="projectSelect" defaultValue={selected || ''} onChange={this.onChange}>
-            <option value="" disabled>Please select</option>
-            { this.renderProjectOptions() }
-          </Input>
-        </Col>
-      </FormGroup>
+      <Col sm={8}>
+        <Input type="select" name="project" id="projectSelect" defaultValue={selected || ''} onChange={this.onChange}>
+          <option value="" disabled>Please select</option>
+          { this.renderProjectOptions() }
+        </Input>
+      </Col>
     );
   }
 }

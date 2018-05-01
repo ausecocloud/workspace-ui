@@ -1,3 +1,11 @@
 .App {
 }
-
+select {
+	appearance:none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	-webkit-border-radius: 0px;
+	background-image:url('assets/images/select-arrow.png');
+	background-position: right center;
+	background-repeat:no-repeat;
+}

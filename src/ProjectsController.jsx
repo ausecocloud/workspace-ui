@@ -179,17 +179,20 @@ class ProjectsController extends React.Component {
       <Container>
         <Row>
           <Col>
-            <Projects key="projects" selected={selected} projects={projects} onChange={onChange} />
-            <Button color="success" onClick={this.toggleProjectModal}><FontAwesomeIcon icon={faPlusCircle} /> New Project</Button>
-            <BasicModal
-              title="Create A Project"
-              desc="You can create a new project to organise your work using this form."
-              submit={this.newProjectSubmit}
-              active={this.state.projectModalActive}
-              close={this.toggleProjectModal}
-            >
-              <CreateProjectForm data={this.getNewProjectForm} />
-            </BasicModal>
+            <h1>Your Projects</h1>
+            <Row>
+              <Projects key="projects" selected={selected} projects={projects} onChange={onChange} />
+              <Button color="success" onClick={this.toggleProjectModal}><FontAwesomeIcon icon={faPlusCircle} /> New Project</Button>
+              <BasicModal
+                title="Create A Project"
+                desc="You can create a new project to organise your work using this form."
+                submit={this.newProjectSubmit}
+                active={this.state.projectModalActive}
+                close={this.toggleProjectModal}
+              >
+                <CreateProjectForm data={this.getNewProjectForm} />
+              </BasicModal>
+            </Row>
           </Col>
         </Row>
         <ReduxBlockUi tag="div" block="CONTENTS/PATH" unblock={['CONTENTS/SUCCEEDED', 'CONTENTS/FAILED']} className="loader">
