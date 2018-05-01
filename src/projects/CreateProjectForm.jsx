@@ -24,7 +24,6 @@ class CreateProjectForm extends React.PureComponent {
     this.setState({
       [name]: value,
     });
-    console.log(this.state);
     this.props.data(this.state);
   }
 

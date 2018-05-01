@@ -103,18 +103,16 @@ class ProjectsController extends React.Component {
     this.setState({ projectModalActive: !this.state.projectModalActive });
   }
 
-  newProjectSubmit = (e) => {
-    console.log(this.state.createNewProjectData);
+  newProjectSubmit = () => {
     const { onCreateProject } = this.props;
     const { newProject } = this.state;
-    console.log(newProject);
+
     if (newProject) {
-      onCreateProject(newProject);
+      onCreateProject(newProject.name);
     }
     this.setState({
       newProject: {},
     });
-    // onCreateProject();
 
     // close modal
     this.setState({ projectModalActive: false });

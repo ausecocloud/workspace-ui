@@ -25,9 +25,9 @@ export const PROJECTS_ADD = 'PROJECTS/ADD';
 export const PROJECTS_ADD_SUCCEEDED = 'PROJECTS/ADD/SUCCEEDED';
 export const PROJECTS_ADD_FAILED = 'PROJECTS/ADD/FAILED';
 
-export const createProject = 'PROJECTS/ADD';
-export const createProjectSucceeded = 'PROJECTS/ADD/SUCCEEDED';
-export const createProjectFailed = 'PROJECTS/ADD/FAILED';
+export const createProject = action(PROJECTS_ADD);
+export const createProjectSucceeded = action(PROJECTS_ADD_SUCCEEDED);
+export const createProjectFailed = action(PROJECTS_ADD_FAILED);
 
 export const FOLDER_ADD = 'CONTENTS/FOLDER/ADD';
 export const FOLDER_ADD_SUCCEEDED = 'CONTENTS/FOLDER/ADD/SUCCEEDED';
