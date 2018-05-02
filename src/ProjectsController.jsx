@@ -9,6 +9,7 @@ import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
+import faServer from '@fortawesome/fontawesome-free-solid/faServer';
 import { Projects, Contents, PathBar, CreateProjectForm } from './projects';
 import BasicModal from './BasicModal';
 import * as actions from './projects/actions';
@@ -191,64 +192,89 @@ class ProjectsController extends React.Component {
                 active={this.state.projectModalActive}
                 close={this.toggleProjectModal}
               >
-                <CreateProjectForm data={this.getNewProjectForm} submit={this.newProjectSubmit} close={this.toggleProjectModal} />
+                <CreateProjectForm
+                  data={this.getNewProjectForm}
+                  submit={this.newProjectSubmit}
+                  close={this.toggleProjectModal}
+                />
               </BasicModal>
+              <hr />
             </Row>
           </Col>
         </Row>
-        <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
-          <Row>
-            <Col>
-              <PathBar project={selected} path={path} onClick={this.onPath} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Contents key="contents" contents={contents} project={selected} path={path} onClick={onClick} onDelete={this.onDelete} />
-            </Col>
-          </Row>
-          { addFolder &&
+        { selected &&
+          <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
             <Row>
               <Col>
-                <InputGroup key="folder">
-                  <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
-                  <InputGroupAddon addonType="append">
-                    <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
-                    <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
-                  </InputGroupAddon>
-                </InputGroup>
+                <h2>{selected}</h2>
+                <p><strong>Date Created:</strong> 11 Apr, 2018</p>
+                <p>Project description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
               </Col>
             </Row>
-          }
-          { addFile &&
             <Row>
               <Col>
-                <InputGroup key="file">
-                  <Label for="uploads" className="btn btn-primary">Choose Files</Label>
-                  <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
-                  <InputGroupAddon addonType="append">
-                    <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
-                    <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
-                  </InputGroupAddon>
-                </InputGroup>
-                { newFile.map(file => (
-                  <Row key={file.name}>
-                    <Col>{file.name}</Col>
-                  </Row>
-                  ))
-                }
+                <h3>Project Contents</h3>
+                <div className="project-pathbar">
+                  <PathBar project={selected} path={path} onClick={this.onPath} />
+                </div>
               </Col>
             </Row>
-          }
-          { (!addFile && !addFolder) &&
+            <div className="project-contents-table">
+              <Row>
+                <Col>
+                  <Contents key="contents" contents={contents} project={selected} path={path} onClick={onClick} onDelete={this.onDelete} />
+                </Col>
+              </Row>
+              { addFolder &&
+                <Row>
+                  <Col>
+                    <InputGroup key="folder">
+                      <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
+                      <InputGroupAddon addonType="append">
+                        <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
+                        <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Col>
+                </Row>
+              }
+              { addFile &&
+                <Row>
+                  <Col>
+                    <InputGroup key="file">
+                      <Label for="uploads" className="btn btn-primary">Choose Files</Label>
+                      <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
+                      <InputGroupAddon addonType="append">
+                        <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
+                        <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    { newFile.map(file => (
+                      <Row key={file.name}>
+                        <Col>{file.name}</Col>
+                      </Row>
+                      ))
+                    }
+                  </Col>
+                </Row>
+              }
+              { (!addFile && !addFolder) &&
+                <Row>
+                  <Col>
+                    <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
+                    <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
+                  </Col>
+                </Row>
+              }
+            </div>
             <Row>
-              <Col>
-                <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
-                <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
+              <Col className="footerCallToAction">
+                <a className="btn btn-xl btn-secondary" href={`compute/${selected}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></a>
+                <p>Need additional datasets? Find them in <a href="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></a></p>
               </Col>
             </Row>
-          }
-        </ReduxBlockUi>
+          </ReduxBlockUi>
+        }
       </Container>
     );
   }

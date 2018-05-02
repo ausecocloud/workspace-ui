@@ -4,8 +4,10 @@
 $font-stack:    'Cabin', sans-serif;
 $body-color: #333;
 $primary-color: #A9CB79;
+$secondary-color: #DEAC5D;
 $brown-black: #3B3333;
 $misc-border: #E2E2E2;
+$dull-header:#C6CBB9;
 
 ::selection { background: rgba(red($primary-color), green($primary-color), blue($primary-color), 0.4); }
 
@@ -18,21 +20,71 @@ body {
 }
 h1 {
     font-weight: 700;
-    font-size:36px;
+    font-size:2.25rem;
+    margin-bottom:1rem;
+}
+h2 {
+    font-size:1.5rem;
+    font-weight: 700;
+    margin-bottom:1rem;
+}
+h3 {
+    font-size:1.125rem;
+    font-weight: 700;
+    margin-bottom:1rem;
+}
+p {
+	font-size:1rem;
+	line-height: 1.3rem;
+	margin-bottom:1.2rem;
+	strong {
+		font-weight: 600;
+	}
 }
 .btn {
 	border-radius:0px;
+	border: 0px solid transparent;
 	padding: 0.375rem 1.5rem;
 
 	&.btn-success {
 	    background-color: $primary-color;
 	    border-color: $primary-color;
+	    &:hover {
+			background-color: darken( $primary-color, 10% );
+		}
 	}
 
-	&:hover {
-		background-color: darken( $primary-color, 10% );
+	&.btn-secondary {
+	    background-color: $secondary-color;
+	    border-color: $secondary-color;
+	    &:hover {
+			background-color: darken( $secondary-color, 15% );
+		}
+	}
+
+	&.btn-xl {
+		padding: 1rem 3rem;
+	    font-size: 1.25rem;
+	    line-height: 1.5;
+
+	    svg {
+	    	margin-right:.35rem;
+	    }
 	}
 }
+.footerCallToAction {
+	text-align: center;
+
+	a.btn {
+		display:inline-block;
+		margin-bottom:1.5rem;
+	}
+
+	p {
+		font-size:1.3rem;
+	}
+}
+
 .logo-text h1 {
 	color:$primary-color;
 	display: inline;
@@ -46,12 +98,12 @@ h1 {
 
 	}
 }
-h2 {
-    font-size:24px;
-    font-weight: 700;
-}
 a {
   color:$primary-color;
+
+  &:hover{
+  	color: darken($primary-color, 20%);
+  }
 }
 input, textarea, select {
 	&.form-control {
@@ -63,6 +115,10 @@ input, textarea, select {
 			box-shadow:0 0 0 0.2rem rgba(red($primary-color), green($primary-color), blue($primary-color), 0.25)
 		}
 	}
+}
+hr {
+	width:100%;
+	margin:2rem 15px;
 }
 header#header {
 	background:#FFF;
@@ -107,8 +163,58 @@ header#header {
 	}
 }
 section#main {
-    padding:2rem 0 3rem;
+    padding:2rem 0 2rem;
     background:#F7F7F7;
+
+    .project-pathbar {
+    	.breadcrumb {
+    		background-color:$dull-header;
+    		border-radius:0px;
+    		margin-bottom:0;
+    		svg.fa-home {
+    			margin-right:.5rem;
+    		}
+    		a {
+    			color:white;
+    		}
+    	}
+    }
+    .project-contents-table {
+    	background:white;
+    	margin-bottom:2rem;
+    	padding:1rem;
+    	table {
+	    	thead th {
+	    		border-top:0px solid white;
+	    	}
+	    }
+	    button {
+	    	margin-right:.5rem;
+	    }
+    }
+    .table {
+	    thead th {
+	    	font-weight:700;
+	    	border-bottom:0px solid white;
+	    }
+	 	th, td {
+		    padding: .5rem .75rem;
+		    border-top: 1px solid lighten(black, 90%);
+
+		    button.btn {
+		    	padding: .25rem .5rem;
+		    	border:0px solid transparent;
+		    	&.btn-danger {
+		    		color:#dc3545;
+		    		background-color:transparent;
+		    		&:hover {
+		    			background-color:#dc3545;
+		    			color:white;
+		    		};
+		    	}
+		    }
+		}
+	}
 }
 footer#footer {
     color:white;
