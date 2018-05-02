@@ -196,7 +196,7 @@ class ProjectsController extends React.Component {
             </Row>
           </Col>
         </Row>
-        <ReduxBlockUi tag="div" block="CONTENTS/PATH" unblock={['CONTENTS/SUCCEEDED', 'CONTENTS/FAILED']} className="loader">
+        <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
           <Row>
             <Col>
               <PathBar project={selected} path={path} onClick={this.onPath} />
