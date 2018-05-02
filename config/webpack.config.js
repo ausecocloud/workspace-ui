@@ -55,7 +55,7 @@ module.exports = (env, options) => {
       },
     },
 
-  // build plugins
+    // build plugins
     module: {
       rules: [
         // First, run the linter.
@@ -171,10 +171,6 @@ module.exports = (env, options) => {
         sourceMap: true,
       }),
       new CopyWebpackPlugin([
-        {
-          from: resolve('./src/keycloak.json'),
-          to: resolve('./dist/keycloak.json'),
-        },
         {
           from: resolve('./src/*.html'),
           to: resolve('./dist/'),
