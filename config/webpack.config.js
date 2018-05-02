@@ -28,7 +28,7 @@ module.exports = (env, options) => {
   // set NODE_ENV based on webpack mode option
   process.env.NODE_ENV = (options && options.mode) || 'production';
   // some variables to dhelp with conditional build options
-  const debug = process.env.npm_lifecycle_event === 'start';
+  const debug = process.env.NODE_ENV === 'development';
 
   return {
 
