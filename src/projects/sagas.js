@@ -2,7 +2,6 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import { workspace } from '../api';
 import * as actions from './actions';
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
 
 function* projectsTask() {
   let projects;
@@ -20,10 +19,9 @@ function* projectsSelectTask(action) {
 }
 
 
-function* projectCreateTask() {
-  let project;
+function* projectCreateTask(action) {
   try {
-    project = yield call(workspace.createProject);
+    const project = yield call(workspace.createProject, action.payload);
     yield put(actions.createProjectSucceeded(project));
   } catch (error) {
     yield put(actions.createProjectFailed(error));
