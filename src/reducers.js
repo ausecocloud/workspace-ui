@@ -1,5 +1,6 @@
 import * as actions from './actions';
 import projectsReducer, * as projects from './projects/reducers';
+import computeReducer, * as compute from './compute/reducers';
 
 
 function userReducer(state = { idTokenParsed: {}, authenticated: false }, action) {
@@ -27,6 +28,7 @@ function userReducer(state = { idTokenParsed: {}, authenticated: false }, action
 const rootReducers = {
   auth: userReducer,
   projects: projectsReducer,
+  compute: computeReducer,
 };
 
 export default rootReducers;
@@ -43,3 +45,5 @@ export const getPath = state => projects.getPath(state.projects);
 export const getUser = state => state.auth && state.auth.idTokenParsed;
 
 export const getAuthenticated = state => state.auth && state.auth.authenticated;
+
+export const getServers = state => compute.getServers(state.compute);

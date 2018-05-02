@@ -1,8 +1,13 @@
 const path = require('path');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const GenerateJsonPlugin = require('generate-json-webpack-plugin');
+
+const pkgConfig = require('../package.json');
+const keycloak = require('./keycloak.json');
 
 
 function resolve(dest) {
@@ -50,7 +55,7 @@ module.exports = (env, options) => {
       },
     },
 
-  // build plugins
+    // build plugins
     module: {
       rules: [
         // First, run the linter.
@@ -145,6 +150,11 @@ module.exports = (env, options) => {
 
     // webpack plugins
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        },
+      }),
       new CleanWebpackPlugin(
         [paths.dist],
         {
@@ -162,15 +172,23 @@ module.exports = (env, options) => {
       }),
       new CopyWebpackPlugin([
         {
-          from: resolve('./src/keycloak.json'),
-          to: resolve('./dist/keycloak.json'),
-        },
-        {
           from: resolve('./src/*.html'),
           to: resolve('./dist/'),
           flatten: true,
         },
       ], {}),
+      new GenerateJsonPlugin('config.json', {
+        version: pkgConfig.version,
+        workspace: {
+          url: 'http://localhost:6543',
+          client_id: 'local',
+        },
+        jupyterhub: {
+          url: 'http://localhost:8010',
+          client_id: 'jupyterhub',
+        },
+      }),
+      new GenerateJsonPlugin('keycloak.json', keycloak),
     ],
 
     // see https://webpack.js.org/configuration/devtool/

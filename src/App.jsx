@@ -11,6 +11,7 @@ import { getUser, getAuthenticated } from './reducers';
 import Logo from './assets/images/logo.svg';
 import Footer from './Footer';
 import Meta from './Meta';
+import ComputeController from './ComputeController';
 import * as actions from './actions';
 import './assets/scss/default.scss';
 
@@ -147,17 +148,13 @@ class App extends React.Component {
               path="/"
               render={() => <Container><h1>Dashboard</h1></Container>}
             />,
-            <Route
-              key="Drive"
-              exact
-              path="/drive"
-              component={ProjectsController}
-            />,
+            <Route key="Drive" exact path="/drive" component={ProjectsController} />,
             <Route
               key="Explorer"
               path="/explorer"
               render={() => <Col md="12"><h1>ecocloud Explorer</h1></Col>}
             />,
+            <Route key="Compute" exact path="/compute" component={ComputeController} />,
             <Route key="Account" exact path="/account" component={Account} />,
           ]) : (
             <Container>
