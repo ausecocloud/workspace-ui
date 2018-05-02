@@ -167,9 +167,6 @@ module.exports = (env, options) => {
         filename: '[name].css',
         chunkFilename: '[id].css',
       }),
-      new UglifyJsPlugin({
-        sourceMap: true,
-      }),
       new CopyWebpackPlugin([
         {
           from: resolve('./src/*.html'),
@@ -192,6 +189,7 @@ module.exports = (env, options) => {
     ],
 
     // see https://webpack.js.org/configuration/devtool/
+    // eval-source-map may be better for development, but is slower
     devtool: debug ? 'cheap-module-eval-source-map' : 'source-map',
     // configure dev server
     devServer: {
