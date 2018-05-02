@@ -3,41 +3,22 @@
 // which means, that it is a mutable object and should not be stored in the
 // redux state tree.
 import axios from 'axios';
+import * as Keycloak from 'keycloak-js';
 import * as actions from '../actions';
 
-// TODO: NEXT: create a little helper, to manage axios instances
-//       with custom interceptors....
-//       One to manage login (public client) and token exchange to other clients
-//       Another to talk to local/workpsace client
-//       Another etc.....
-
-// TODO: ideally we'd include external keycloak.js like this, but I can't
-//       get webpack and eslint to pass or properly compile it.
-// import * as Keycloak from './keycloak';
-// export const keycloak = Keycloak('/keycloak.json');
-export const keycloak = window.Keycloak('/keycloak.json');
-
-// TODO: starting with Keycloak 4 we'll get a real Promise back.
-//       for now wrap in real Promise
-function wrapKeycloakPromise(kcpromise) {
-  return new Promise((resolve, reject) => {
-    kcpromise
-      .success(result => resolve(result))
-      .error(result => reject(result));
-  });
-}
+export const keycloak = Keycloak('/keycloak.json');
 
 export function initAuth(store) {
   // TODO: do a retry / backoff loop here ... until keycloak init succeeds (no error)
   //       or if moved into an init saga, do it there.
 
   // setup token refresh
-  keycloak.onTokenExpired = () => wrapKeycloakPromise(keycloak.updateToken())
+  keycloak.onTokenExpired = () => keycloak.updateToken()
     .then(refreshed => console.log('refresh on expire:', refreshed))
     .catch(error => console.log('refresh on expire failed'));
 
   // init keycloak
-  return wrapKeycloakPromise(keycloak.init({ onLoad: 'check-sso' }))
+  return keycloak.init({ onLoad: 'check-sso' })
     .then(x => x && store.dispatch(actions.loginSucceeded(keycloak)))
     .catch(e => console.log('E KC:', e));
 }
@@ -55,7 +36,7 @@ export function initAuth(store) {
 // returns a promise
 function fetchClientToken(clientid) {
   // 1. make sure our access token is valid:
-  return wrapKeycloakPromise(keycloak.updateToken())
+  return keycloak.updateToken()
     // 2. exchange current token for client access token
     .then(() => {
       // token should be up to date, buld token exchange request

@@ -19,6 +19,7 @@
     "bootstrap": "^4.0.0",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
+    "keycloak-js": "^4.0.0-beta.2",
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "react-block-ui": "^1.1.1",
