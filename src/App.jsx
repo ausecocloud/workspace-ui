@@ -79,10 +79,10 @@ class App extends React.Component {
             {user.name} <i className="fa fa-user-circle" />
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem>
+            <DropdownItem tag="span">
               <NavLink exact to="/account">Account</NavLink>
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem tag="span">
               <NavLink to="/logout" onClick={this.onLogout}>Logout</NavLink>
             </DropdownItem>
           </DropdownMenu>
