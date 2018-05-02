@@ -4,9 +4,8 @@ import * as actions from './actions';
 
 
 function* projectsTask() {
-  let projects;
   try {
-    projects = yield call(workspace.listProjects);
+    const projects = yield call(workspace.listProjects);
     yield put(actions.projectsSucceeded(projects));
   } catch (error) {
     yield put(actions.projectsFailed(error));
@@ -15,7 +14,11 @@ function* projectsTask() {
 
 
 function* projectsSelectTask(action) {
-  yield put(actions.contentsPath({ project: action.payload, path: '/' }));
+  try {
+    yield put(actions.contentsPath({ project: action.payload, path: '/' }));
+  } catch (error) {
+    console.log('Projects Select Task failed', error);
+  }
 }
 
 
@@ -30,9 +33,8 @@ function* projectCreateTask(action) {
 
 
 function* contentsTask(action) {
-  let contents;
   try {
-    contents = yield call(workspace.listContents, action.payload);
+    const contents = yield call(workspace.listContents, action.payload);
     yield put(actions.contentsSucceeded(contents));
   } catch (error) {
     yield put(actions.contentsFailed(error));
