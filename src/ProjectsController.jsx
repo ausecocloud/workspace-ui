@@ -106,16 +106,18 @@ class ProjectsController extends React.Component {
   newProjectSubmit = () => {
     const { onCreateProject } = this.props;
     const { newProject } = this.state;
-
-    if (newProject) {
+    if (newProject && Object.keys(newProject).length > 0) {
       onCreateProject(newProject.name);
-    }
-    this.setState({
-      newProject: {},
-    });
 
-    // close modal
-    this.setState({ projectModalActive: false });
+      this.setState({
+        newProject: {},
+      });
+
+      // close modal
+      this.setState({ projectModalActive: false });
+    } else {
+      console.log('return invalid here');
+    }
   }
 
   addFolder = () => {
@@ -186,11 +188,10 @@ class ProjectsController extends React.Component {
               <BasicModal
                 title="Create A Project"
                 desc="You can create a new project to organise your work using this form."
-                submit={this.newProjectSubmit}
                 active={this.state.projectModalActive}
                 close={this.toggleProjectModal}
               >
-                <CreateProjectForm data={this.getNewProjectForm} />
+                <CreateProjectForm data={this.getNewProjectForm} submit={this.newProjectSubmit} close={this.toggleProjectModal} />
               </BasicModal>
             </Row>
           </Col>
