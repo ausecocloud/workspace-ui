@@ -1,6 +1,8 @@
 
 // override rules
 const rules = {
+    // TODO: enable this rule again
+    'react-redux/prefer-separate-component-file': 'off',
 }
 
 if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
