@@ -15,9 +15,17 @@ if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
 module.exports = {
   "parser": "babel-eslint",
   // see: https://github.com/airbnb/javascript
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:react-redux/recommended",
+    "plugin:redux-saga/recommended",
+  ],
   "env": {
     "browser": true
   },
-  "rules": rules
+  "rules": rules,
+  "plugins": [
+    "react-redux",
+    "redux-saga",
+  ],
 };
