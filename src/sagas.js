@@ -1,6 +1,7 @@
-import { select, put, takeEvery, fork } from 'redux-saga/effects';
+import { put, takeEvery, fork } from 'redux-saga/effects';
 import * as actions from './actions';
 import projectsSaga from './projects/sagas';
+import computeSaga from './compute/sagas';
 import { keycloak } from './api';
 
 // the task to fetch an access token
@@ -45,4 +46,5 @@ export default function* rootSaga() {
   yield takeEvery(actions.LOGIN, loginTask);
   yield takeEvery(actions.LOGOUT, logoutTask);
   yield fork(projectsSaga);
+  yield fork(computeSaga);
 }

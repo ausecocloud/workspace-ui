@@ -4,6 +4,7 @@ import { getClientToken } from './keycloak';
 
 const axios = ax.create();
 
+const workspaceUrl = 'http://localhost:6543';
 
 // Add a request interceptor
 axios.interceptors.request.use(
@@ -22,12 +23,12 @@ axios.interceptors.request.use(
 );
 
 export function listProjects() {
-  return axios.get('/api/v1/projects')
+  return axios.get(`${workspaceUrl}/api/v1/projects`)
     .then(response => response.data);
 }
 
 export function listContents(params) {
-  return axios.get('/api/v1/folders', { params })
+  return axios.get(`${workspaceUrl}/api/v1/folders`, { params })
     .then(response => response.data);
 }
 
@@ -35,7 +36,7 @@ export function addFolder(params) {
   // project, path, name
   const { folder, ...rest } = params;
   return axios.post(
-    '/api/v1/folders',
+    `${workspaceUrl}/api/v1/folders`,
     folder,
     { params: rest },
   // We get a NoContent 204 respoense here
@@ -43,12 +44,12 @@ export function addFolder(params) {
 }
 
 export function deleteFolder(params) {
-  return axios.delete('/api/v1/folders', { params });
+  return axios.delete(`${workspaceUrl}/api/v1/folders`, { params });
 }
 
 export function uploadFile(params) {
   // project, path, files: FileList
-  const url = new URL('/api/v1/files', document.baseURI);
+  const url = new URL(`${workspaceUrl}/api/v1/files`);
   const data = new FormData();
   data.append('project', params.project);
   data.append('path', params.path);
@@ -64,15 +65,15 @@ export function uploadFile(params) {
 
 export function deleteFile(params) {
   // project, path, name
-  return axios.delete('/api/v1/files', { params });
+  return axios.delete(`${workspaceUrl}/api/v1/files`, { params });
 }
 
 export function createProject(params) {
   const { name, ...rest } = params;
   return axios.post(
-    '/api/v1/projects',
+    `${workspaceUrl}/api/v1/projects`,
     name,
-    { params },
+    { params: rest },
   // We get a NoContent 204 respoense here
   ).then(response => response);
 }
