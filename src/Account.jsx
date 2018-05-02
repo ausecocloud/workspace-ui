@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Form, FormGroup, Label, Input, Container } from 'reactstrap';
-import { withRouter } from 'react-router-dom';
 import { getUser, getAuthenticated } from './reducers';
 
 
@@ -65,6 +64,4 @@ class AccountTable extends React.PureComponent {
   }
 }
 
-const userAccountDetails = connect(mapStateToProps)(AccountTable);
-
-export default withRouter(userAccountDetails);
+export default connect(mapStateToProps)(AccountTable);
