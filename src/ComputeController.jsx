@@ -46,7 +46,7 @@ class ComputeController extends React.Component {
 
     return (
       <Container>
-        <ReduxBlockUi tag="div" block={actions.SERVERS_LIST} unblock={[actions.SERVERS_SUCCEEDED, actions.SERVER_FAILED]} className="loader">
+        <ReduxBlockUi tag="div" block={actions.SERVERS_LIST} unblock={[actions.SERVERS_SUCCEEDED, actions.SERVERS_FAILED]} className="loader">
           <Compute servers={servers} />
         </ReduxBlockUi>
       </Container>
