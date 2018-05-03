@@ -9,8 +9,11 @@ import * as actions from './actions';
 // makes it reusable with the repeating poll
 function* serversTask(action) {
   try {
-    console.log('FETCH SERVERS', action);
-    const servers = yield call(jupyterhub.listServers, action.payload);
+    const response = yield call(jupyterhub.getUser, action.payload);
+    // parse response
+    const serverkeys = Object.keys(response.data.servers).sort();
+    const servers = serverkeys.map(key => response.data.servers[key]);
+    // update server list
     yield put(actions.serversSucceeded(servers));
   } catch (error) {
     yield put(actions.serversFailed(error));
@@ -20,11 +23,9 @@ function* serversTask(action) {
 function* serversPollTask(action) {
   while (true) {
     try {
-      console.log('CALL servers list', action);
       // fetch servers list
       yield call(serversTask, action);
       // wait 10 secconds and start over
-      console.log('CALL servers list delay', action);
       yield call(delay, 10000);
     } catch (error) {
       console.log('servers poll task failed. keep retrying', error);
@@ -34,7 +35,6 @@ function* serversPollTask(action) {
 
 // keep fetching servers while polling is active
 function* serversWatchStopTask(action) {
-  console.log('START servers watch for stop', action);
   try {
     yield race({
       // start the serversPollTask... it will never stop
