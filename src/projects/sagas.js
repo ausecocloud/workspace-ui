@@ -1,12 +1,12 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { workspace } from '../api';
 import * as actions from './actions';
 
 
 function* projectsTask() {
   try {
-    const projects = yield call(workspace.listProjects);
-    yield put(actions.projectsSucceeded(projects));
+    const response = yield call(workspace.listProjects);
+    yield put(actions.projectsSucceeded(response.data));
   } catch (error) {
     yield put(actions.projectsFailed(error));
   }
@@ -24,8 +24,8 @@ function* projectsSelectTask(action) {
 
 function* projectCreateTask(action) {
   try {
-    const project = yield call(workspace.createProject, action.payload);
-    yield put(actions.createProjectSucceeded(project));
+    const response = yield call(workspace.createProject, action.payload);
+    yield put(actions.createProjectSucceeded(response.data));
   } catch (error) {
     yield put(actions.createProjectFailed(error));
   }
@@ -34,8 +34,8 @@ function* projectCreateTask(action) {
 
 function* contentsTask(action) {
   try {
-    const contents = yield call(workspace.listContents, action.payload);
-    yield put(actions.contentsSucceeded(contents));
+    const response = yield call(workspace.listContents, action.payload);
+    yield put(actions.contentsSucceeded(response.data));
   } catch (error) {
     yield put(actions.contentsFailed(error));
   }
@@ -44,7 +44,6 @@ function* contentsTask(action) {
 
 function* addFolderTask(action) {
   try {
-    // let response =
     yield call(workspace.addFolder, action.payload);
     yield put(actions.contentsPath(action.payload));
   } catch (error) {
@@ -88,10 +87,10 @@ function* deleteFileTask(action) {
 
 export default function* projectsSaga() {
   // start yourself
-  yield takeEvery(actions.PROJECTS_LIST, projectsTask);
-  yield takeEvery(actions.PROJECTS_SELECT, projectsSelectTask);
+  yield takeLatest(actions.PROJECTS_LIST, projectsTask);
+  yield takeLatest(actions.PROJECTS_SELECT, projectsSelectTask);
   yield takeEvery(actions.PROJECTS_ADD, projectCreateTask);
-  yield takeEvery(actions.CONTENTS_PATH, contentsTask);
+  yield takeLatest(actions.CONTENTS_PATH, contentsTask);
   yield takeEvery(actions.FOLDER_ADD, addFolderTask);
   yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);
   yield takeEvery(actions.FILE_UPLOAD, uploadFileTask);

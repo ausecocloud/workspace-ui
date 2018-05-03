@@ -1,13 +1,14 @@
-import ax from 'axios';
+import axios from 'axios';
+import { CANCEL } from 'redux-saga';
 import { getClientToken } from './keycloak';
 
 
-const axios = ax.create();
+const ajax = axios.create();
 
 const workspaceUrl = 'http://localhost:6543';
 
 // Add a request interceptor
-axios.interceptors.request.use(
+ajax.interceptors.request.use(
   // Do something before request is sent
   config => getClientToken('local')
     .then((token) => {
@@ -22,34 +23,61 @@ axios.interceptors.request.use(
   error => Promise.reject(error),
 );
 
+
+function doGet(url, options) {
+  const cancel = axios.CancelToken.source();
+  const opts = {
+    ...options,
+    cancelToken: cancel.token,
+  };
+  const promise = ajax.get(`${workspaceUrl}${url}`, opts);
+  promise[CANCEL] = cancel.cancel;
+  return promise;
+}
+
+function doPost(url, params, options) {
+  const cancel = axios.CancelToken.source();
+  const opts = {
+    ...options,
+    cancelToken: cancel.token,
+  };
+  const promise = ajax.post(`${workspaceUrl}${url}`, params, opts);
+  promise[CANCEL] = cancel.cancel;
+  return promise;
+}
+
+function doDelete(url, options) {
+  const cancel = axios.CancelToken.source();
+  const opts = {
+    ...options,
+    cancelToken: cancel.token,
+  };
+  const promise = ajax.delete(`${workspaceUrl}${url}`, opts);
+  promise[CANCEL] = cancel.cancel;
+  return promise;
+}
+
+
 export function listProjects() {
-  return axios.get(`${workspaceUrl}/api/v1/projects`)
-    .then(response => response.data);
+  return doGet('/api/v1/projects');
 }
 
 export function listContents(params) {
-  return axios.get(`${workspaceUrl}/api/v1/folders`, { params })
-    .then(response => response.data);
+  return doGet('/api/v1/folders', { params });
 }
 
 export function addFolder(params) {
   // project, path, name
   const { folder, ...rest } = params;
-  return axios.post(
-    `${workspaceUrl}/api/v1/folders`,
-    folder,
-    { params: rest },
-  // We get a NoContent 204 respoense here
-  ).then(response => response);
+  return doPost('/api/v1/folders', folder, { params: rest });
 }
 
 export function deleteFolder(params) {
-  return axios.delete(`${workspaceUrl}/api/v1/folders`, { params });
+  return doDelete('/api/v1/folders', { params });
 }
 
 export function uploadFile(params) {
   // project, path, files: FileList
-  const url = new URL(`${workspaceUrl}/api/v1/files`);
   const data = new FormData();
   data.append('project', params.project);
   data.append('path', params.path);
@@ -59,20 +87,15 @@ export function uploadFile(params) {
       console.log('Upload Progress', progressEvent, Math.round((progressEvent.loaded * 100) / progressEvent.total))
     ),
   };
-  return axios.post(url, data, config)
-    .then(res => res.data);
+  return doPost('/api/v1/files', data, config);
 }
 
 export function deleteFile(params) {
   // project, path, name
-  return axios.delete(`${workspaceUrl}/api/v1/files`, { params });
+  return doDelete('/api/v1/files', { params });
 }
 
 export function createProject(params) {
-  return axios.post(
-    `${workspaceUrl}/api/v1/projects`,
-    params,
-  // We get a NoContent 204 respoense here
-  ).then(response => response);
+  return doPost('/api/v1/projects', params);
 }
 
