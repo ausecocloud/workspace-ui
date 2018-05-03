@@ -14,11 +14,15 @@ export function getKeycloak() {
 
 function loadTokens() {
   try {
-    return {
-      token: localStorage.getItem('token'),
-      refreshToken: localStorage.getItem('refreshToken'),
-      idToken: localStorage.getItem('idToken'),
-    };
+    const tokens = {};
+    ['token', 'refreshToken', 'idToken'].forEach((key) => {
+      const val = localStorage.getItem(key);
+      // verify it is a JWT.
+      if (val && val.split('.').length == 3) {
+        tokens[key] = val;
+      }
+    });
+    return tokens;
   } catch (error) {
     console.log("Can't load data from local storage", error);
   }
@@ -27,9 +31,14 @@ function loadTokens() {
 
 function storeTokens(kc) {
   try {
-    localStorage.setItem('token', kc.token);
-    localStorage.setItem('refreshToken', kc.refreshToken);
-    localStorage.setItem('idToken', kc.idToken);
+    ['token', 'refreshToken', 'idToken'].forEach((key) => {
+      const val = kc[key];
+      if (val) {
+        localStorage.setItem(key, val);
+      } else {
+        localStorage.removeItem(key);
+      }
+    });
   } catch (error) {
     console.log("Can't persist data to local storage", error);
   }
@@ -48,10 +57,15 @@ export function initAuth(config, store) {
   keycloak.onAuthError = () => storeTokens(keycloak);
   keycloak.onAuthRefreshSuccess = () => storeTokens(keycloak);
   keycloak.onAuthRefreshError = () => storeTokens(keycloak);
-  keycloak.onAuthLogout = () => console.log('auth logout', keycloak);
+  keycloak.onAuthLogout = () => store.dispatch(actions.logout());
 
   // init keycloak
   const tokens = loadTokens();
+  // FIXME: in case our tokens are invalid, we can't really verify here,
+  //        but we can at least check if the format is ok.
+  //        unser some circumstance, keycloak.ini may fail in a way
+  //        (e.g. no '.' in JWT trefresh oken), so that we can't detect an
+  //        error here. (Exception is thrown async and passed to the browser).
   return keycloak.init({ onLoad: 'check-sso', ...tokens })
     .then(x => x && store.dispatch(actions.loginSucceeded(keycloak)))
     .catch(e => console.log('E KC:', e));
