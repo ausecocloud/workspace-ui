@@ -2,12 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 
 const pkgConfig = require('../package.json');
-const keycloak = require('./keycloak.json');
+const appConfig = require('./config.json');
 
 
 function resolve(dest) {
@@ -176,16 +175,8 @@ module.exports = (env, options) => {
       ], {}),
       new GenerateJsonPlugin('config.json', {
         version: pkgConfig.version,
-        workspace: {
-          url: 'http://localhost:6543',
-          client_id: 'local',
-        },
-        jupyterhub: {
-          url: 'http://localhost:8010',
-          client_id: 'jupyterhub',
-        },
+        ...appConfig,
       }),
-      new GenerateJsonPlugin('keycloak.json', keycloak),
     ],
 
     // see https://webpack.js.org/configuration/devtool/

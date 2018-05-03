@@ -1,16 +1,19 @@
 import axios from 'axios';
 import { CANCEL } from 'redux-saga';
 import { getClientToken } from './keycloak';
+import { getConfig } from '../config';
 
 
 const ajax = axios.create();
 
-const hubUrl = 'http://localhost:8010';
+export function getHubUrl() {
+  return getConfig('jupyterhub').url;
+}
 
 // Add a request interceptor
 ajax.interceptors.request.use(
   // Do something before request is sent
-  config => getClientToken('jupyterhub')
+  config => getClientToken(getConfig('jupyterhub').client_id)
     .then((token) => {
       const newConfig = config;
       if (token) {
@@ -29,15 +32,11 @@ function doGet(url, options) {
     ...options,
     cancelToken: cancel.token,
   };
-  const promise = ajax.get(`${hubUrl}${url}`, opts);
+  const promise = ajax.get(`${getHubUrl()}${url}`, opts);
   promise[CANCEL] = cancel.cancel;
   return promise;
 }
 
 export function getUser(username) {
   return doGet(`/hub/api/users/${username}`);
-}
-
-export function getHubUrl() {
-  return hubUrl;
 }

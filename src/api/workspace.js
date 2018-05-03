@@ -1,16 +1,19 @@
 import axios from 'axios';
 import { CANCEL } from 'redux-saga';
 import { getClientToken } from './keycloak';
+import { getConfig } from '../config';
 
 
 const ajax = axios.create();
 
-const workspaceUrl = 'http://localhost:6543';
+export function getWorkspaceUrl() {
+  return getConfig('workspace').url;
+}
 
 // Add a request interceptor
 ajax.interceptors.request.use(
   // Do something before request is sent
-  config => getClientToken('local')
+  config => getClientToken(getConfig('workspace').client_id)
     .then((token) => {
       const newConfig = config;
       if (token) {
@@ -30,7 +33,7 @@ function doGet(url, options) {
     ...options,
     cancelToken: cancel.token,
   };
-  const promise = ajax.get(`${workspaceUrl}${url}`, opts);
+  const promise = ajax.get(`${getWorkspaceUrl()}${url}`, opts);
   promise[CANCEL] = cancel.cancel;
   return promise;
 }
@@ -41,7 +44,7 @@ function doPost(url, params, options) {
     ...options,
     cancelToken: cancel.token,
   };
-  const promise = ajax.post(`${workspaceUrl}${url}`, params, opts);
+  const promise = ajax.post(`${getWorkspaceUrl()}${url}`, params, opts);
   promise[CANCEL] = cancel.cancel;
   return promise;
 }
@@ -52,7 +55,7 @@ function doDelete(url, options) {
     ...options,
     cancelToken: cancel.token,
   };
-  const promise = ajax.delete(`${workspaceUrl}${url}`, opts);
+  const promise = ajax.delete(`${getWorkspaceUrl()}${url}`, opts);
   promise[CANCEL] = cancel.cancel;
   return promise;
 }

@@ -6,19 +6,53 @@ import axios from 'axios';
 import * as Keycloak from 'keycloak-js';
 import * as actions from '../actions';
 
-export const keycloak = Keycloak('/keycloak.json');
+let keycloak;
 
-export function initAuth(store) {
+export function getKeycloak() {
+  return keycloak;
+}
+
+function loadTokens() {
+  try {
+    return {
+      token: localStorage.getItem('token'),
+      refreshToken: localStorage.getItem('refreshToken'),
+      idToken: localStorage.getItem('idToken'),
+    };
+  } catch (error) {
+    console.log("Can't load data from local storage", error);
+  }
+  return {};
+}
+
+function storeTokens(kc) {
+  try {
+    localStorage.setItem('token', kc.token);
+    localStorage.setItem('refreshToken', kc.refreshToken);
+    localStorage.setItem('idToken', kc.idToken);
+  } catch (error) {
+    console.log("Can't persist data to local storage", error);
+  }
+}
+
+export function initAuth(config, store) {
   // TODO: do a retry / backoff loop here ... until keycloak init succeeds (no error)
   //       or if moved into an init saga, do it there.
-
+  keycloak = Keycloak(config);
   // setup token refresh
   keycloak.onTokenExpired = () => keycloak.updateToken()
     .then(refreshed => console.log('refresh on expire:', refreshed))
     .catch(error => console.log('refresh on expire failed'));
 
+  keycloak.onAuthSuccess = () => storeTokens(keycloak);
+  keycloak.onAuthError = () => storeTokens(keycloak);
+  keycloak.onAuthRefreshSuccess = () => storeTokens(keycloak);
+  keycloak.onAuthRefreshError = () => storeTokens(keycloak);
+  keycloak.onAuthLogout = () => console.log('auth logout', keycloak);
+
   // init keycloak
-  return keycloak.init({ onLoad: 'check-sso' })
+  const tokens = loadTokens();
+  return keycloak.init({ onLoad: 'check-sso', ...tokens })
     .then(x => x && store.dispatch(actions.loginSucceeded(keycloak)))
     .catch(e => console.log('E KC:', e));
 }
