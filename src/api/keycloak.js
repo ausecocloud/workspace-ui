@@ -101,7 +101,7 @@ function fetchClientToken(clientid) {
       return axios.post(
         // TODO: change in Keycloak 4
         // keycloak.endpoints.token(),
-        'https://auth.ecocloud.org.au/auth/realms/test/protocol/openid-connect/token',
+        keycloak.endpoints.token(),
         params,
         // {
         //   headers: {
