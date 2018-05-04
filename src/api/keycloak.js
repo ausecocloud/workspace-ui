@@ -3,41 +3,70 @@
 // which means, that it is a mutable object and should not be stored in the
 // redux state tree.
 import axios from 'axios';
+import * as Keycloak from 'keycloak-js';
 import * as actions from '../actions';
 
-// TODO: NEXT: create a little helper, to manage axios instances
-//       with custom interceptors....
-//       One to manage login (public client) and token exchange to other clients
-//       Another to talk to local/workpsace client
-//       Another etc.....
+let keycloak;
 
-// TODO: ideally we'd include external keycloak.js like this, but I can't
-//       get webpack and eslint to pass or properly compile it.
-// import * as Keycloak from './keycloak';
-// export const keycloak = Keycloak('/keycloak.json');
-export const keycloak = window.Keycloak('/keycloak.json');
-
-// TODO: starting with Keycloak 4 we'll get a real Promise back.
-//       for now wrap in real Promise
-function wrapKeycloakPromise(kcpromise) {
-  return new Promise((resolve, reject) => {
-    kcpromise
-      .success(result => resolve(result))
-      .error(result => reject(result));
-  });
+export function getKeycloak() {
+  return keycloak;
 }
 
-export function initAuth(store) {
+function loadTokens() {
+  try {
+    const tokens = {};
+    ['token', 'refreshToken', 'idToken'].forEach((key) => {
+      const val = localStorage.getItem(key);
+      // verify it is a JWT.
+      if (val && val.split('.').length === 3) {
+        tokens[key] = val;
+      }
+    });
+    return tokens;
+  } catch (error) {
+    console.log("Can't load data from local storage", error);
+  }
+  return {};
+}
+
+function storeTokens(kc) {
+  try {
+    ['token', 'refreshToken', 'idToken'].forEach((key) => {
+      const val = kc[key];
+      if (val) {
+        localStorage.setItem(key, val);
+      } else {
+        localStorage.removeItem(key);
+      }
+    });
+  } catch (error) {
+    console.log("Can't persist data to local storage", error);
+  }
+}
+
+export function initAuth(config, store) {
   // TODO: do a retry / backoff loop here ... until keycloak init succeeds (no error)
   //       or if moved into an init saga, do it there.
-
+  keycloak = Keycloak(config);
   // setup token refresh
-  keycloak.onTokenExpired = () => wrapKeycloakPromise(keycloak.updateToken())
+  keycloak.onTokenExpired = () => keycloak.updateToken()
     .then(refreshed => console.log('refresh on expire:', refreshed))
     .catch(error => console.log('refresh on expire failed'));
 
+  keycloak.onAuthSuccess = () => storeTokens(keycloak);
+  keycloak.onAuthError = () => storeTokens(keycloak);
+  keycloak.onAuthRefreshSuccess = () => storeTokens(keycloak);
+  keycloak.onAuthRefreshError = () => storeTokens(keycloak);
+  keycloak.onAuthLogout = () => store.dispatch(actions.logout());
+
   // init keycloak
-  return wrapKeycloakPromise(keycloak.init({ onLoad: 'check-sso' }))
+  const tokens = loadTokens();
+  // FIXME: in case our tokens are invalid, we can't really verify here,
+  //        but we can at least check if the format is ok.
+  //        unser some circumstance, keycloak.ini may fail in a way
+  //        (e.g. no '.' in JWT trefresh oken), so that we can't detect an
+  //        error here. (Exception is thrown async and passed to the browser).
+  return keycloak.init({ onLoad: 'check-sso', ...tokens })
     .then(x => x && store.dispatch(actions.loginSucceeded(keycloak)))
     .catch(e => console.log('E KC:', e));
 }
@@ -55,7 +84,7 @@ export function initAuth(store) {
 // returns a promise
 function fetchClientToken(clientid) {
   // 1. make sure our access token is valid:
-  return wrapKeycloakPromise(keycloak.updateToken())
+  return keycloak.updateToken()
     // 2. exchange current token for client access token
     .then(() => {
       // token should be up to date, buld token exchange request
@@ -72,7 +101,7 @@ function fetchClientToken(clientid) {
       return axios.post(
         // TODO: change in Keycloak 4
         // keycloak.endpoints.token(),
-        'https://auth.ecocloud.org.au/auth/realms/test/protocol/openid-connect/token',
+        keycloak.endpoints.token(),
         params,
         // {
         //   headers: {

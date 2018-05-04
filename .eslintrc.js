@@ -6,6 +6,8 @@ const rules = {
     specialLink: [ 'to' ],
     aspects: ['invalidHref', 'preferButton'],
   }],
+  // TODO: enable this rule again
+  'react-redux/prefer-separate-component-file': 'off',
 }
 
 if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
@@ -20,9 +22,17 @@ if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
 module.exports = {
   "parser": "babel-eslint",
   // see: https://github.com/airbnb/javascript
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:react-redux/recommended",
+    "plugin:redux-saga/recommended",
+  ],
   "env": {
     "browser": true
   },
-  "rules": rules
+  "rules": rules,
+  "plugins": [
+    "react-redux",
+    "redux-saga",
+  ],
 };

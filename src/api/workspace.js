@@ -1,78 +1,115 @@
-import ax from 'axios';
+import axios from 'axios';
+import { CANCEL } from 'redux-saga';
 import { getClientToken } from './keycloak';
+import { getConfig } from '../config';
 
 
-const axios = ax.create();
+let client;
 
-const workspaceUrl = 'http://localhost:6543';
+export function getWorkspaceUrl() {
+  return getConfig('workspace').url;
+}
 
-// Add a request interceptor
-axios.interceptors.request.use(
-  // Do something before request is sent
-  config => getClientToken('local')
-    .then((token) => {
-      const newConfig = config;
-      if (token) {
-        newConfig.headers.Authorization = `Bearer ${token}`;
-      }
-      return newConfig;
-    })
-    .catch((error) => { console.log('Token refresh failed: ', error); throw error; }),
-  // Do something with request error
-  error => Promise.reject(error),
-);
+// FIXME: almost duplicate code
+function getClient() {
+  if (!client) {
+    client = axios.create({
+      baseURL: getWorkspaceUrl(),
+    });
+    // add auth interceptor
+    client.interceptors.request.use(
+      // Do something before request is sent
+      config => getClientToken(getConfig('workspace').client_id)
+        .then((token) => {
+          const newConfig = config;
+          if (token) {
+            newConfig.headers.Authorization = `Bearer ${token}`;
+          }
+          return newConfig;
+        })
+        .catch((error) => { console.log('Token refresh failed: ', error); throw error; }),
+      // Do something with request error
+      error => Promise.reject(error),
+    );
+  }
+  return client;
+}
+
+// FIXME: duplicate code
+function callAPI(options) {
+  // returns a cancelable promise
+  const cancel = axios.CancelToken.source();
+  const opts = {
+    ...options,
+    cancelToken: cancel.token,
+  };
+  const promise = getClient().request(opts);
+  return { promise, cancel: cancel.cancel };
+}
+
 
 export function listProjects() {
-  return axios.get(`${workspaceUrl}/api/v1/projects`)
-    .then(response => response.data);
+  const { promise, cancel } = callAPI({ url: 'api/v1/projects' });
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
 }
 
 export function listContents(params) {
-  return axios.get(`${workspaceUrl}/api/v1/folders`, { params })
-    .then(response => response.data);
+  const { promise, cancel } = callAPI({ url: 'api/v1/folders', params });
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
 }
 
 export function addFolder(params) {
   // project, path, name
   const { folder, ...rest } = params;
-  return axios.post(
-    `${workspaceUrl}/api/v1/folders`,
-    folder,
-    { params: rest },
-  // We get a NoContent 204 respoense here
-  ).then(response => response);
+  const { promise, cancel } = callAPI({
+    url: '/api/v1/folders',
+    method: 'POST',
+    data: folder,
+    params: rest,
+  });
+  promise[CANCEL] = cancel;
+  return promise;
 }
 
 export function deleteFolder(params) {
-  return axios.delete(`${workspaceUrl}/api/v1/folders`, { params });
+  const { promise, cancel } = callAPI({ url: 'api/v1/folders', method: 'DELETE', params });
+  promise[CANCEL] = cancel;
+  return promise;
 }
 
-export function uploadFile(params) {
+export function uploadFile(params, progress) {
   // project, path, files: FileList
-  const url = new URL(`${workspaceUrl}/api/v1/files`);
   const data = new FormData();
   data.append('project', params.project);
   data.append('path', params.path);
   data.append('file', params.files[0]);
-  const config = {
-    onUploadProgress: progressEvent => (
-      console.log('Upload Progress', progressEvent, Math.round((progressEvent.loaded * 100) / progressEvent.total))
-    ),
-  };
-  return axios.post(url, data, config)
-    .then(res => res.data);
+
+  const logProgress = progressEvent => console.log('Upload Progress', progressEvent, Math.round((progressEvent.loaded * 100) / progressEvent.total));
+  const { promise, cancel } = callAPI({
+    url: 'api/v1/files',
+    method: 'POST',
+    data,
+    onUploadProgress: progress || logProgress,
+  });
+  promise[CANCEL] = cancel;
+  return promise;
 }
 
 export function deleteFile(params) {
   // project, path, name
-  return axios.delete(`${workspaceUrl}/api/v1/files`, { params });
+  const { promise, cancel } = callAPI({ url: 'api/v1/files', method: 'DELETE', params });
+  promise[CANCEL] = cancel;
+  return promise;
 }
 
 export function createProject(params) {
-  return axios.post(
-    `${workspaceUrl}/api/v1/projects`,
-    params,
-  // We get a NoContent 204 respoense here
-  ).then(response => response);
+  const { promise, cancel } = callAPI({ url: 'api/v1/projects', method: 'POST', params });
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
 }
 

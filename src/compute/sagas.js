@@ -9,8 +9,11 @@ import * as actions from './actions';
 // makes it reusable with the repeating poll
 function* serversTask(action) {
   try {
-    console.log('FETCH SERVERS', action);
-    const servers = yield call(jupyterhub.listServers, action.payload);
+    const user = yield call(jupyterhub.getUser, action.payload);
+    // parse response
+    const serverkeys = Object.keys(user.servers).sort();
+    const servers = serverkeys.map(key => user.servers[key]);
+    // update server list
     yield put(actions.serversSucceeded(servers));
   } catch (error) {
     yield put(actions.serversFailed(error));
@@ -19,25 +22,30 @@ function* serversTask(action) {
 
 function* serversPollTask(action) {
   while (true) {
-    console.log('CALL servers list', action);
-    // fetch servers list
-    yield call(serversTask, action);
-    // wait 10 secconds and start over
-    console.log('CALL servers list delay', action);
-    yield call(delay, 10000);
+    try {
+      // fetch servers list
+      yield call(serversTask, action);
+      // wait 10 secconds and start over
+      yield call(delay, 10000);
+    } catch (error) {
+      console.log('servers poll task failed. keep retrying', error);
+    }
   }
 }
 
 // keep fetching servers while polling is active
 function* serversWatchStopTask(action) {
-  console.log('START servers watch for stop', action);
-  yield race([
-    // start the serversPollTask... it will never stop
-    call(serversPollTask, action),
-    // in parallel wait for servers list stop event,
-    // whne received it will cancel the poll task as well
-    take(actions.SERVERS_LIST_STOP),
-  ]);
+  try {
+    yield race({
+      // start the serversPollTask... it will never stop
+      servers: call(serversPollTask, action),
+      // in parallel wait for servers list stop event,
+      // whne received it will cancel the poll task as well
+      stop: take(actions.SERVERS_LIST_STOP),
+    });
+  } catch (error) {
+    console.log('servers watch stop task failed.', error);
+  }
 }
 
 export default function* computeSaga() {

@@ -2,12 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 
 const pkgConfig = require('../package.json');
-const keycloak = require('./keycloak.json');
+const appConfig = require('./config.json');
 
 
 function resolve(dest) {
@@ -28,7 +27,7 @@ module.exports = (env, options) => {
   // set NODE_ENV based on webpack mode option
   process.env.NODE_ENV = (options && options.mode) || 'production';
   // some variables to dhelp with conditional build options
-  const debug = process.env.npm_lifecycle_event === 'start';
+  const debug = process.env.NODE_ENV === 'development';
 
   return {
 
@@ -167,9 +166,6 @@ module.exports = (env, options) => {
         filename: '[name].css',
         chunkFilename: '[id].css',
       }),
-      new UglifyJsPlugin({
-        sourceMap: true,
-      }),
       new CopyWebpackPlugin([
         {
           from: resolve('./src/*.html'),
@@ -179,19 +175,12 @@ module.exports = (env, options) => {
       ], {}),
       new GenerateJsonPlugin('config.json', {
         version: pkgConfig.version,
-        workspace: {
-          url: 'http://localhost:6543',
-          client_id: 'local',
-        },
-        jupyterhub: {
-          url: 'http://localhost:8010',
-          client_id: 'jupyterhub',
-        },
+        ...appConfig,
       }),
-      new GenerateJsonPlugin('keycloak.json', keycloak),
     ],
 
     // see https://webpack.js.org/configuration/devtool/
+    // eval-source-map may be better for development, but is slower
     devtool: debug ? 'cheap-module-eval-source-map' : 'source-map',
     // configure dev server
     devServer: {

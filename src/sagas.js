@@ -2,17 +2,18 @@ import { put, takeEvery, fork } from 'redux-saga/effects';
 import * as actions from './actions';
 import projectsSaga from './projects/sagas';
 import computeSaga from './compute/sagas';
-import { keycloak } from './api';
+import { getKeycloak } from './api';
 
 // the task to fetch an access token
 export function* loginTask() {
   try {
-    if (!keycloak.authenticated) {
-      yield keycloak.login();
+    const kc = getKeycloak();
+    if (!kc.authenticated) {
+      yield kc.login();
     }
-    console.log('AUTH:', keycloak.authenticated);
-    if (keycloak.authenticated) {
-      yield put(actions.loginSucceeded(keycloak));
+    console.log('AUTH:', kc.authenticated);
+    if (kc.authenticated) {
+      yield put(actions.loginSucceeded(kc));
     } else {
       yield put(actions.loginFailed());
     }
@@ -25,10 +26,11 @@ export function* loginTask() {
 
 export function* logoutTask() {
   try {
-    if (keycloak.authenticated) {
-      yield keycloak.logout();
+    const kc = getKeycloak();
+    if (kc.authenticated) {
+      yield kc.logout();
     }
-    if (!keycloak.authenticated) {
+    if (!kc.authenticated) {
       yield put(actions.logoutSucceeded());
     } else {
       yield put(actions.logoutFailed());

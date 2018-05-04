@@ -1,12 +1,11 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { workspace } from '../api';
 import * as actions from './actions';
 
 
 function* projectsTask() {
-  let projects;
   try {
-    projects = yield call(workspace.listProjects);
+    const projects = yield call(workspace.listProjects);
     yield put(actions.projectsSucceeded(projects));
   } catch (error) {
     yield put(actions.projectsFailed(error));
@@ -15,7 +14,11 @@ function* projectsTask() {
 
 
 function* projectsSelectTask(action) {
-  yield put(actions.contentsPath({ project: action.payload, path: '/' }));
+  try {
+    yield put(actions.contentsPath({ project: action.payload, path: '/' }));
+  } catch (error) {
+    console.log('Projects Select Task failed', error);
+  }
 }
 
 
@@ -30,9 +33,8 @@ function* projectCreateTask(action) {
 
 
 function* contentsTask(action) {
-  let contents;
   try {
-    contents = yield call(workspace.listContents, action.payload);
+    const contents = yield call(workspace.listContents, action.payload);
     yield put(actions.contentsSucceeded(contents));
   } catch (error) {
     yield put(actions.contentsFailed(error));
@@ -42,7 +44,6 @@ function* contentsTask(action) {
 
 function* addFolderTask(action) {
   try {
-    // let response =
     yield call(workspace.addFolder, action.payload);
     yield put(actions.contentsPath(action.payload));
   } catch (error) {
@@ -86,10 +87,10 @@ function* deleteFileTask(action) {
 
 export default function* projectsSaga() {
   // start yourself
-  yield takeEvery(actions.PROJECTS_LIST, projectsTask);
-  yield takeEvery(actions.PROJECTS_SELECT, projectsSelectTask);
+  yield takeLatest(actions.PROJECTS_LIST, projectsTask);
+  yield takeLatest(actions.PROJECTS_SELECT, projectsSelectTask);
   yield takeEvery(actions.PROJECTS_ADD, projectCreateTask);
-  yield takeEvery(actions.CONTENTS_PATH, contentsTask);
+  yield takeLatest(actions.CONTENTS_PATH, contentsTask);
   yield takeEvery(actions.FOLDER_ADD, addFolderTask);
   yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);
   yield takeEvery(actions.FILE_UPLOAD, uploadFileTask);
