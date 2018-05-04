@@ -6,6 +6,7 @@ import { Route, NavLink, withRouter } from 'react-router-dom';
 import { Container, Col, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
+import Dashboard from './Dashboard';
 import Account from './Account';
 import { getUser, getAuthenticated } from './reducers';
 import Logo from './assets/images/logo.svg';
@@ -146,7 +147,9 @@ class App extends React.Component {
               key="Dashboard"
               exact
               path="/"
-              render={() => <Container><h1>Dashboard</h1></Container>}
+              isAuthenticated={isAuthenticated}
+              user={user}
+              component={Dashboard}
             />,
             <Route key="Drive" exact path="/drive" component={ProjectsController} />,
             <Route

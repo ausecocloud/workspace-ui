@@ -1,6 +1,11 @@
 
 // override rules
 const rules = {
+  'jsx-a11y/anchor-is-valid': [ "warn", {
+    components: [ 'Link' ],
+    specialLink: [ 'to' ],
+    aspects: ['invalidHref', 'preferButton'],
+  }],
 }
 
 if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {

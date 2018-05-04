@@ -21,17 +21,17 @@ body {
 h1 {
     font-weight: 700;
     font-size:2.25rem;
-    margin-bottom:1rem;
+    margin-bottom:1.5rem;
 }
 h2 {
     font-size:1.5rem;
     font-weight: 700;
-    margin-bottom:1rem;
+    margin-bottom:1.5rem;
 }
 h3 {
     font-size:1.125rem;
     font-weight: 700;
-    margin-bottom:1rem;
+    margin-bottom:1.5rem;
 }
 p {
 	font-size:1rem;
@@ -40,6 +40,12 @@ p {
 	strong {
 		font-weight: 600;
 	}
+}
+.bg-success {
+	background:$primary-color!important;
+}
+.bg-warning {
+	background:$secondary-color!important;
 }
 .btn {
 	border-radius:0px;
@@ -187,12 +193,54 @@ section#main {
 	    	thead th {
 	    		border-top:0px solid white;
 	    	}
+	    	margin-bottom:0;
 	    }
 	    button {
 	    	margin-right:.5rem;
 	    }
     }
+    .home-projects-table {
+    	.table {
+    		margin-bottom:0;
+    		border-bottom:1px solid #e6e6e6;
+	    	tr {
+		    	td, th {
+		    		&:last-child{
+		    			text-align: right;
+		    		}
+		    	} 
+		    }
+		}
+	}
+	.dash-activity {
+		background:white;
+		padding:1rem;
+
+		ul {
+			line-height: 1.3rem;
+			list-style-type: none;
+			padding-left:0;
+			li {
+				margin-bottom:1rem;
+				p {
+					margin:0;
+					font-size:0.875rem;
+				}
+			}
+		}
+	}
+    .basic-table {
+    	thead th {
+	    	font-weight:700;
+	    	border:0px solid white;
+	    	background-color:$dull-header;
+	    	color:white;
+	    }
+
+    }
+
     .table {
+    	background:white;
 	    thead th {
 	    	font-weight:700;
 	    	border-bottom:0px solid white;
@@ -213,8 +261,49 @@ section#main {
 		    		};
 		    	}
 		    }
+		    svg {
+		    	margin-right:.35rem;
+		    }
 		}
 	}
+
+	.table-footer {
+		padding:1rem;
+		background:white;
+	}
+
+	.dashboard {
+		h1 {
+			margin-bottom:0rem;
+		}
+		h2 {
+			margin:2rem 0 .5rem;
+		}
+		.btn-dashboard {
+			display:block;
+			padding: 1.2rem .5rem;
+
+			svg {
+				font-size:2rem;
+			}
+		}
+	}
+	.storage {
+		p {
+			margin-bottom:.25rem;
+		}
+		.storage-int {
+			float:right;
+			font-size:0.75rem;
+			opacity:0.5;
+		}
+	}
+	.progress {
+		border-radius:0px;
+
+
+	}
+
 }
 footer#footer {
     color:white;
@@ -253,4 +342,15 @@ footer#footer {
 			text-shadow:none;
 		}
 	}
+}
+
+@media only screen and (max-width: 960px) {
+    body {
+        font-size:14px;
+    }
+}
+@media only screen and (max-width: 600px) {
+    body {
+        font-size:12px;
+    }
 }

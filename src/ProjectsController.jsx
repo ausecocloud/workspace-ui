@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import ReduxBlockUi from 'react-block-ui/redux';
 import 'react-block-ui/style.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -269,8 +270,8 @@ class ProjectsController extends React.Component {
             </div>
             <Row>
               <Col className="footerCallToAction">
-                <a className="btn btn-xl btn-secondary" href={`compute/${selected}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></a>
-                <p>Need additional datasets? Find them in <a href="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></a></p>
+                <Link className="btn btn-xl btn-secondary" to={`compute/${selected}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></Link>
+                <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
               </Col>
             </Row>
           </ReduxBlockUi>
