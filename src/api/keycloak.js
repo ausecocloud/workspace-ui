@@ -18,7 +18,7 @@ function loadTokens() {
     ['token', 'refreshToken', 'idToken'].forEach((key) => {
       const val = localStorage.getItem(key);
       // verify it is a JWT.
-      if (val && val.split('.').length == 3) {
+      if (val && val.split('.').length === 3) {
         tokens[key] = val;
       }
     });
