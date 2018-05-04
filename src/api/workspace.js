@@ -4,101 +4,112 @@ import { getClientToken } from './keycloak';
 import { getConfig } from '../config';
 
 
-const ajax = axios.create();
+let client;
 
 export function getWorkspaceUrl() {
   return getConfig('workspace').url;
 }
 
-// Add a request interceptor
-ajax.interceptors.request.use(
-  // Do something before request is sent
-  config => getClientToken(getConfig('workspace').client_id)
-    .then((token) => {
-      const newConfig = config;
-      if (token) {
-        newConfig.headers.Authorization = `Bearer ${token}`;
-      }
-      return newConfig;
-    })
-    .catch((error) => { console.log('Token refresh failed: ', error); throw error; }),
-  // Do something with request error
-  error => Promise.reject(error),
-);
-
-
-function doGet(url, options) {
-  const cancel = axios.CancelToken.source();
-  const opts = {
-    ...options,
-    cancelToken: cancel.token,
-  };
-  const promise = ajax.get(`${getWorkspaceUrl()}${url}`, opts);
-  promise[CANCEL] = cancel.cancel;
-  return promise;
+// FIXME: almost duplicate code
+function getClient() {
+  if (!client) {
+    client = axios.create({
+      baseURL: getWorkspaceUrl(),
+    });
+    // add auth interceptor
+    client.interceptors.request.use(
+      // Do something before request is sent
+      config => getClientToken(getConfig('workspace').client_id)
+        .then((token) => {
+          const newConfig = config;
+          if (token) {
+            newConfig.headers.Authorization = `Bearer ${token}`;
+          }
+          return newConfig;
+        })
+        .catch((error) => { console.log('Token refresh failed: ', error); throw error; }),
+      // Do something with request error
+      error => Promise.reject(error),
+    );
+  }
+  return client;
 }
 
-function doPost(url, params, options) {
+// FIXME: duplicate code
+function callAPI(options) {
+  // returns a cancelable promise
   const cancel = axios.CancelToken.source();
   const opts = {
     ...options,
     cancelToken: cancel.token,
   };
-  const promise = ajax.post(`${getWorkspaceUrl()}${url}`, params, opts);
-  promise[CANCEL] = cancel.cancel;
-  return promise;
-}
-
-function doDelete(url, options) {
-  const cancel = axios.CancelToken.source();
-  const opts = {
-    ...options,
-    cancelToken: cancel.token,
-  };
-  const promise = ajax.delete(`${getWorkspaceUrl()}${url}`, opts);
-  promise[CANCEL] = cancel.cancel;
-  return promise;
+  const promise = getClient().request(opts);
+  return { promise, cancel: cancel.cancel };
 }
 
 
 export function listProjects() {
-  return doGet('/api/v1/projects');
+  const { promise, cancel } = callAPI({ url: 'api/v1/projects' });
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
 }
 
 export function listContents(params) {
-  return doGet('/api/v1/folders', { params });
+  const { promise, cancel } = callAPI({ url: 'api/v1/folders', params });
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
 }
 
 export function addFolder(params) {
   // project, path, name
   const { folder, ...rest } = params;
-  return doPost('/api/v1/folders', folder, { params: rest });
+  const { promise, cancel } = callAPI({
+    url: '/api/v1/folders',
+    method: 'POST',
+    data: folder,
+    params: rest,
+  });
+  promise[CANCEL] = cancel;
+  return promise;
 }
 
 export function deleteFolder(params) {
-  return doDelete('/api/v1/folders', { params });
+  const { promise, cancel } = callAPI({ url: 'api/v1/folders', method: 'DELETE', params });
+  promise[CANCEL] = cancel;
+  return promise;
 }
 
-export function uploadFile(params) {
+export function uploadFile(params, progress) {
   // project, path, files: FileList
   const data = new FormData();
   data.append('project', params.project);
   data.append('path', params.path);
   data.append('file', params.files[0]);
-  const config = {
-    onUploadProgress: progressEvent => (
-      console.log('Upload Progress', progressEvent, Math.round((progressEvent.loaded * 100) / progressEvent.total))
-    ),
-  };
-  return doPost('/api/v1/files', data, config);
+
+  const logProgress = progressEvent => console.log('Upload Progress', progressEvent, Math.round((progressEvent.loaded * 100) / progressEvent.total));
+  const { promise, cancel } = callAPI({
+    url: 'api/v1/files',
+    method: 'POST',
+    data,
+    onUploadProgress: progress || logProgress,
+  });
+  promise[CANCEL] = cancel;
+  return promise;
 }
 
 export function deleteFile(params) {
   // project, path, name
-  return doDelete('/api/v1/files', { params });
+  const { promise, cancel } = callAPI({ url: 'api/v1/files', method: 'DELETE', params });
+  promise[CANCEL] = cancel;
+  return promise;
 }
 
 export function createProject(params) {
-  return doPost('/api/v1/projects', params);
+  const { promise, cancel } = callAPI({ url: 'api/v1/projects', method: 'POST', params });
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
 }
 

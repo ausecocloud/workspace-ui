@@ -9,10 +9,10 @@ import * as actions from './actions';
 // makes it reusable with the repeating poll
 function* serversTask(action) {
   try {
-    const response = yield call(jupyterhub.getUser, action.payload);
+    const user = yield call(jupyterhub.getUser, action.payload);
     // parse response
-    const serverkeys = Object.keys(response.data.servers).sort();
-    const servers = serverkeys.map(key => response.data.servers[key]);
+    const serverkeys = Object.keys(user.servers).sort();
+    const servers = serverkeys.map(key => user.servers[key]);
     // update server list
     yield put(actions.serversSucceeded(servers));
   } catch (error) {
