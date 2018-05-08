@@ -30,6 +30,14 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+function formatDate(date) {
+  const formattedDate = new Date(date);
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const string = `${formattedDate.getDate()} ${months[formattedDate.getMonth()]} ${formattedDate.getFullYear()}`;
+
+  return string;
+}
+
 class Dashboard extends React.Component {
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -60,9 +68,10 @@ class Dashboard extends React.Component {
       parser.on('item', (item) => {
         // need to format date string
         const desc = item.description.substring(0, 80);
+        const date = formatDate(item.pubdate);
         const feedItem = (
           <li key={item.link}>
-            <p><strong>{item.pubdate}</strong></p>
+            <p><strong>{date}</strong></p>
             <p>{item.title}</p>
             <p><span dangerouslySetInnerHTML={{ __html: desc }} /> <a href={item.link} target="_blank">... Read more</a></p>
           </li>
@@ -102,12 +111,12 @@ class Dashboard extends React.Component {
                     </Link>
                   </Col>
                   <Col md="4">
-                    <Link to="explorer" className="btn btn-lg btn-dashboard btn-success" title="Find Datasets in ecocloud Explorer">
+                    <Link to="drive" className="btn btn-lg btn-dashboard btn-success" title="Find Datasets in ecocloud Explorer">
                       <FontAwesomeIcon icon={faFolderOpen} /> <br /> Manage files in <strong><em>Drive</em></strong>
                     </Link>
                   </Col>
                   <Col md="4">
-                    <Link to="explorer" className="btn btn-lg btn-dashboard btn-success" title="Find Datasets in ecocloud Explorer">
+                    <Link to="compute" className="btn btn-lg btn-dashboard btn-success" title="Find Datasets in ecocloud Explorer">
                       <FontAwesomeIcon icon={faServer} /> <br /> Start a service in <strong><em>Compute</em></strong>
                     </Link>
                   </Col>
