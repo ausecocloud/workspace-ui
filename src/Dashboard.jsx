@@ -14,7 +14,6 @@ import { getProjects, getUser, getAuthenticated } from './reducers';
 import { ProjectsTableBasic } from './projects';
 
 const FeedMe = require('feedme');
-const http = require('http');
 
 function mapStateToProps(state) {
   return {
@@ -58,32 +57,36 @@ class Dashboard extends React.Component {
   }
 
   getFeed = () => {
-    http.get('http://www.ecocloud.org.au/category/notifications/feed/', (res) => {
-      if (res.statusCode !== 200) {
-        console.error(new Error(`status code ${res.statusCode}`));
-        return;
-      }
-      const parser = new FeedMe(true);
-      const feed = [];
-      parser.on('item', (item) => {
-        // need to format date string
-        const desc = item.description.substring(0, 80);
-        const date = formatDate(item.pubdate);
-        const feedItem = (
-          <li key={item.link}>
-            <p><strong>{date}</strong></p>
-            <p>{item.title}</p>
-            <p><span dangerouslySetInnerHTML={{ __html: desc }} /> <a href={item.link} target="_blank">... Read more</a></p>
-          </li>
-        );
-        feed.push(feedItem);
+    fetch('http://www.ecocloud.org.au/category/notifications/feed/')
+      .then(res => res.text())
+      .then((body) => {
+        const parser = new FeedMe(false);
+        const feed = [];
+        // register all event handlers before we push data into the parser
+        parser.on('item', (item) => {
+          // need to format date string
+          const desc = item.description.substring(0, 80);
+          const date = formatDate(item.pubdate);
+          const feedItem = (
+            <li key={item.link}>
+              <p><strong>{date}</strong></p>
+              <p>{item.title}</p>
+              <p><span dangerouslySetInnerHTML={{ __html: desc }} /> <a href={item.link} target="_blank">... Read more</a></p>
+            </li>
+          );
+          feed.push(feedItem);
+        });
+        parser.on('end', () => {
+          console.log('parser finished');
+          this.setState({ feed });
+        });
+        // write is a blocking call
+        parser.write(body);
+        // trigger end event handler ....
+        // could just do setState here as well
+        parser.end();
       });
-      res.pipe(parser);
-
-      this.setState({ feed });
-    });
   }
-
 
   render() {
     const {
