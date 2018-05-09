@@ -16,6 +16,10 @@ export function getHubUrl() {
 function getToken(username) {
   // return jupytrehub API token....
   return getClientToken(getConfig('jupyterhub').client_id)
+    .catch((error) => {
+      // oauth token refresh failed
+      throw error;
+    })
     .then((accessToken) => {
       const token = localStorage.getItem('jupyterhub_api_token');
       if (!token) {
@@ -26,7 +30,12 @@ function getToken(username) {
           data: {
             auth: { token: accessToken },
             note: navigator.userAgent,
+            // valid for one week
+            expires_in: 604800,
           },
+        }).catch((error) => {
+          // create token failed ?
+          throw error;
         }).then((resp) => {
           // apiToken may have: created, id, kind, last_activity, note, token, user
           localStorage.setItem('jupyterhub_api_token', resp.data.token);
@@ -54,7 +63,10 @@ function getClient(username) {
           }
           return newConfig;
         })
-        .catch((error) => { console.log('Token refresh failed: ', error); throw error; }),
+        .catch((error) => {
+          console.log('Token refresh failed: ', error);
+          throw error;
+        }),
       // Do something with request error
       error => Promise.reject(error),
     );
@@ -70,9 +82,14 @@ function callAPI(options, username) {
     ...options,
     cancelToken: cancel.token,
   };
-  const promise = getClient(username).request(opts);
-  // TODO: if we get an unauthorized we shoudl try an get a new token (or at least clear the old one in localStorage)
-  //       any other errors we should handle here?
+  const promise = getClient(username).request(opts)
+    .catch((error) => {
+      // TODO: we probabsy should retry with fetching a new token
+      //       if (error.request.status == 403) ...
+      // TODO: any other errors we should handle here?
+      localStorage.removeItem('jupyterhub_api_token');
+      throw error;
+    });
   return { promise, cancel: cancel.cancel };
 }
 
