@@ -34,6 +34,8 @@ const rootReducers = {
 export default rootReducers;
 
 // redefine selectors to match our mapping in rootReducer
+export const getStats = state => projects.getStats(state.projects);
+
 export const getProjects = state => projects.getProjects(state.projects);
 
 export const getContents = state => projects.getContents(state.projects);

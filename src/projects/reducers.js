@@ -43,6 +43,15 @@ function path(state = '/', action) {
   }
 }
 
+function stats(state = '/', action) {
+  switch (action.type) {
+    case actions.PROJECTS_STATS_SUCCEEDED:
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 
 // export reducer as default ot be combined at unknown key at root level
 export default combineReducers({
@@ -50,6 +59,7 @@ export default combineReducers({
   selected,
   contents,
   path,
+  stats,
 });
 
 // define selectors here as well, these should match the structure in
@@ -61,3 +71,5 @@ export const getContents = state => state.contents;
 export const getSelected = state => state.selected;
 
 export const getPath = state => state.path;
+
+export const getStats = state => state.stats;

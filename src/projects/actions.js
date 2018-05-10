@@ -60,3 +60,11 @@ export const FILE_DELETE_FAILED = 'CONTENTS/FILE/DELETE/FAILED';
 export const deleteFile = action(FILE_DELETE);
 export const deleteFileSucceeded = action(FILE_DELETE_SUCCEEDED);
 export const deleteFileFailed = action(FILE_DELETE_FAILED, true);
+
+export const PROJECTS_STATS = 'PROJECTS/STATS';
+export const PROJECTS_STATS_SUCCEEDED = 'PROJECTS/STATS/SUCCEEDED';
+export const PROJECTS_STATS_FAILED = 'PROJECTS/STATS/FAILED';
+
+export const getStats = action(PROJECTS_STATS);
+export const getStatsSucceeded = action(PROJECTS_STATS_SUCCEEDED);
+export const getStatsFailed = action(PROJECTS_STATS_FAILED, true);

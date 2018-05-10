@@ -150,79 +150,82 @@ class ProjectsController extends React.Component {
 
     return (
       <Container>
-        <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
-          <Row>
-            <Col>
-              <h1>{currentProject.name}</h1>
-              <div className="placeholder">
-                <p><strong>Date Created:</strong> 11 Apr, 2018</p>
-                <p>Project description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <h3>Project Contents</h3>
-              <div className="project-pathbar">
-                <PathBar project={currentProject.name} path={path} onClick={this.onPath} />
-              </div>
-            </Col>
-          </Row>
-          <div className="project-contents-table">
+        {currentProject &&
+          <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
             <Row>
               <Col>
-                <Contents key="contents" contents={contents} project={currentProject.name} path={path} onClick={onClick} onDelete={this.onDelete} />
+                <Link to="/drive" className="back-crumb">&laquo; Back to <em><strong>Drive</strong></em></Link>
+                <h1>{currentProject.name}</h1>
+                <div className="placeholder">
+                  <p><strong>Date Created:</strong> 11 Apr, 2018</p>
+                  <p>Project description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                </div>
               </Col>
             </Row>
-            { addFolder &&
+            <Row>
+              <Col>
+                <h3>Project Contents</h3>
+                <div className="project-pathbar">
+                  <PathBar project={currentProject.name} path={path} onClick={this.onPath} />
+                </div>
+              </Col>
+            </Row>
+            <div className="project-contents-table">
               <Row>
                 <Col>
-                  <InputGroup key="folder">
-                    <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
-                    <InputGroupAddon addonType="append">
-                      <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
-                      <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
-                    </InputGroupAddon>
-                  </InputGroup>
+                  <Contents key="contents" contents={contents} project={currentProject.name} path={path} onClick={onClick} onDelete={this.onDelete} />
                 </Col>
               </Row>
-            }
-            { addFile &&
-              <Row>
-                <Col>
-                  <InputGroup key="file">
-                    <Label for="uploads" className="btn btn-primary">Choose Files</Label>
-                    <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
-                    <InputGroupAddon addonType="append">
-                      <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
-                      <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
-                    </InputGroupAddon>
-                  </InputGroup>
-                  { newFile.map(file => (
-                    <Row key={file.name}>
-                      <Col>{file.name}</Col>
-                    </Row>
-                    ))
-                  }
-                </Col>
-              </Row>
-            }
-            { (!addFile && !addFolder) &&
-              <Row>
-                <Col>
-                  <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
-                  <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
-                </Col>
-              </Row>
-            }
-          </div>
-          <Row>
-            <Col className="footerCallToAction">
-              <Link className="btn btn-xl btn-secondary" to={`compute/${currentProject.name}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></Link>
-              <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
-            </Col>
-          </Row>
-        </ReduxBlockUi>
+              { addFolder &&
+                <Row>
+                  <Col>
+                    <InputGroup key="folder">
+                      <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
+                      <InputGroupAddon addonType="append">
+                        <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
+                        <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Col>
+                </Row>
+              }
+              { addFile &&
+                <Row>
+                  <Col>
+                    <InputGroup key="file">
+                      <Label for="uploads" className="btn btn-primary">Choose Files</Label>
+                      <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
+                      <InputGroupAddon addonType="append">
+                        <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
+                        <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    { newFile.map(file => (
+                      <Row key={file.name}>
+                        <Col>{file.name}</Col>
+                      </Row>
+                      ))
+                    }
+                  </Col>
+                </Row>
+              }
+              { (!addFile && !addFolder) &&
+                <Row>
+                  <Col>
+                    <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
+                    <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
+                  </Col>
+                </Row>
+              }
+            </div>
+            <Row>
+              <Col className="footerCallToAction">
+                <Link className="btn btn-xl btn-secondary" to={`compute/${currentProject.name}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></Link>
+                <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
+              </Col>
+            </Row>
+          </ReduxBlockUi>
+        }
       </Container>
     );
   }

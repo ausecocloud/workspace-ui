@@ -85,6 +85,16 @@ function* deleteFileTask(action) {
 }
 
 
+function* getStatsTask() {
+  try {
+    const stats = yield call(workspace.getStats);
+    yield put(actions.getStatsSucceeded(stats));
+  } catch (error) {
+    yield put(actions.getStatsFailed(error));
+  }
+}
+
+
 export default function* projectsSaga() {
   // start yourself
   yield takeLatest(actions.PROJECTS_LIST, projectsTask);
@@ -95,4 +105,5 @@ export default function* projectsSaga() {
   yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);
   yield takeEvery(actions.FILE_UPLOAD, uploadFileTask);
   yield takeEvery(actions.FILE_DELETE, deleteFileTask);
+  yield takeLatest(actions.PROJECTS_STATS, getStatsTask);
 }

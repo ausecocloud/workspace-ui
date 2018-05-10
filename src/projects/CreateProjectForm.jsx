@@ -32,10 +32,13 @@ class CreateProjectForm extends React.PureComponent {
   handleChange(event) {
     const { target } = event;
     const { value, name } = target;
+    console.log(value);
     this.setState({
       [name]: value,
-    }, () => { this.validateField(name, value); });
-    this.props.data(this.state);
+    }, () => {
+      this.validateField(name, value);
+      this.props.data(this.state);
+    });
   }
 
   validateField(fieldName, value) {

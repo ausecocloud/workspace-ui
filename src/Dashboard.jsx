@@ -10,7 +10,7 @@ import faServer from '@fortawesome/fontawesome-free-solid/faServer';
 import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen';
 import faSearchPlus from '@fortawesome/fontawesome-free-solid/faSearchPlus';
 import * as actions from './projects/actions';
-import { getProjects, getUser, getAuthenticated } from './reducers';
+import { getProjects, getUser, getAuthenticated, getStats } from './reducers';
 import { ProjectsTableBasic } from './projects';
 
 const FeedMe = require('feedme');
@@ -20,6 +20,7 @@ function mapStateToProps(state) {
     user: getUser(state),
     isAuthenticated: getAuthenticated(state),
     projects: getProjects(state),
+    stats: getStats(state),
   };
 }
 
@@ -37,12 +38,21 @@ function formatDate(date) {
   return string;
 }
 
+function bytesToSize(bytes) {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0) return 'n/a';
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+  if (i === 0) return `${bytes} ${sizes[i]})`;
+  return `${(bytes / (1024 ** i)).toFixed(1)} ${sizes[i]}`;
+}
+
 class Dashboard extends React.Component {
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any).isRequired,
     projects: PropTypes.arrayOf(PropTypes.any).isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
+    stats: PropTypes.objectOf(PropTypes.any).isRequired,
   }
 
   state = {
@@ -54,6 +64,7 @@ class Dashboard extends React.Component {
   }
   componentDidMount() {
     this.props.dispatch(actions.projectsList());
+    this.props.dispatch(actions.getStats());
   }
 
   getFeed = () => {
@@ -90,8 +101,13 @@ class Dashboard extends React.Component {
 
   render() {
     const {
-      user, projects, isAuthenticated,
+      user, projects, isAuthenticated, stats,
     } = this.props;
+
+    const used = bytesToSize(stats.used);
+    const total = bytesToSize(stats.quota);
+    const usageNum = `${used} / ${total}`;
+    const usagePercent = (stats.used / stats.quota) * 100;
 
     return (
       <Container className="dashboard">
@@ -128,14 +144,10 @@ class Dashboard extends React.Component {
             </Row>
             <Row>
               <Col sm="12">
-                <div className="storage placeholder">
+                <div className="storage">
                   <h2>Your Resources</h2>
-                  <p>Storage Space <span className="storage-int">8.2GB / 10GB</span></p>
-                  <Progress multi>
-                    <Progress bar color="success" value="50" />
-                    <Progress bar color="warning" value="30" />
-                    <Progress bar color="danger" value="10" />
-                  </Progress>
+                  <p>Storage Space <span className="storage-int">{usageNum}</span></p>
+                  <Progress color="warning" value={usagePercent} />
                 </div>
               </Col>
             </Row>

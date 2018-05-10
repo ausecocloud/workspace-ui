@@ -176,7 +176,10 @@ header#header {
 section#main {
     padding:2rem 0 2rem;
     background:#F7F7F7;
-
+    .back-crumb {
+    	margin-bottom:.75rem;
+    	display:inline-block;
+    }
     .project-list {
     	a.project-link {
     		text-decoration:none;
@@ -230,6 +233,9 @@ section#main {
 	    }
 	    button {
 	    	margin-right:.5rem;
+	    }
+	    .table-hover tbody tr {
+	    	cursor: pointer;
 	    }
     }
     .home-projects-table {
