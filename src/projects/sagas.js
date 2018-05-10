@@ -17,6 +17,7 @@ function* projectCreateTask(action) {
   try {
     const project = yield call(workspace.createProject, action.payload);
     yield put(actions.createProjectSucceeded(project));
+    yield put(actions.projectsList());
   } catch (error) {
     yield put(actions.createProjectFailed(error));
   }
