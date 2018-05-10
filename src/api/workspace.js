@@ -107,7 +107,7 @@ export function deleteFile(params) {
 }
 
 export function createProject(params) {
-  const { promise, cancel } = callAPI({ url: 'api/v1/projects', method: 'POST', params });
+  const { promise, cancel } = callAPI({ url: 'api/v1/projects', method: 'POST', data: params });
   const data = promise.then(response => response.data);
   data[CANCEL] = cancel;
   return data;
