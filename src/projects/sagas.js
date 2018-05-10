@@ -13,15 +13,6 @@ function* projectsTask() {
 }
 
 
-function* projectsSelectTask(action) {
-  try {
-    yield put(actions.contentsPath({ project: action.payload, path: '/' }));
-  } catch (error) {
-    console.log('Projects Select Task failed', error);
-  }
-}
-
-
 function* projectCreateTask(action) {
   try {
     const project = yield call(workspace.createProject, action.payload);
@@ -98,7 +89,6 @@ function* getStatsTask() {
 export default function* projectsSaga() {
   // start yourself
   yield takeLatest(actions.PROJECTS_LIST, projectsTask);
-  yield takeLatest(actions.PROJECTS_SELECT, projectsSelectTask);
   yield takeEvery(actions.PROJECTS_ADD, projectCreateTask);
   yield takeLatest(actions.CONTENTS_PATH, contentsTask);
   yield takeEvery(actions.FOLDER_ADD, addFolderTask);

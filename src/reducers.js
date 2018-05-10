@@ -40,8 +40,6 @@ export const getProjects = state => projects.getProjects(state.projects);
 
 export const getContents = state => projects.getContents(state.projects);
 
-export const getSelected = state => projects.getSelected(state.projects);
-
 export const getPath = state => projects.getPath(state.projects);
 
 export const getUser = state => state.auth && state.auth.idTokenParsed;

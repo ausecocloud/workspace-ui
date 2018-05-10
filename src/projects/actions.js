@@ -3,12 +3,10 @@ import action from '../utils';
 
 
 export const PROJECTS_LIST = 'PROJECTS/LIST';
-export const PROJECTS_SELECT = 'PROJECTS/SELECT';
 export const PROJECTS_SUCCEEDED = 'PROJECTS/SUCCEEDED';
 export const PROJECTS_FAILED = 'PROJECTS/FAILED';
 
 export const projectsList = action(PROJECTS_LIST);
-export const projectsSelect = action(PROJECTS_SELECT);
 export const projectsSucceeded = action(PROJECTS_SUCCEEDED);
 export const projectsFailed = action(PROJECTS_FAILED, true);
 

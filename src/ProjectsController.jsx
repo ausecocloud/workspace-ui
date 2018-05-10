@@ -26,8 +26,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    // projects
-    onChange: project => dispatch(actions.projectsSelect(project)),
     // contents
     onClick: (project, path) => {
       dispatch(actions.contentsPath({ project, path }));
