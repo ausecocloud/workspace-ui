@@ -10,6 +10,7 @@ import Dashboard from './Dashboard';
 import Account from './Account';
 import { getUser, getAuthenticated } from './reducers';
 import Logo from './assets/images/logo.svg';
+import ProjectsListController from './ProjectsListController';
 import Footer from './Footer';
 import Meta from './Meta';
 import ComputeController from './ComputeController';
@@ -151,7 +152,8 @@ class App extends React.Component {
               user={user}
               component={Dashboard}
             />,
-            <Route key="Drive" exact path="/drive" component={ProjectsController} />,
+            <Route key="Drive" exact path="/drive" component={ProjectsListController} />,
+            <Route key="Project" exact path="/drive/:id" component={ProjectsController} />,
             <Route
               key="Explorer"
               path="/explorer"

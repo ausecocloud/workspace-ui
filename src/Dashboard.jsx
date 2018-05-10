@@ -128,7 +128,7 @@ class Dashboard extends React.Component {
             </Row>
             <Row>
               <Col sm="12">
-                <div className="storage">
+                <div className="storage placeholder">
                   <h2>Your Resources</h2>
                   <p>Storage Space <span className="storage-int">8.2GB / 10GB</span></p>
                   <Progress multi>

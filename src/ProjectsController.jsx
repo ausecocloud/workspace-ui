@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import ReduxBlockUi from 'react-block-ui/redux';
 import 'react-block-ui/style.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -11,16 +11,14 @@ import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import faServer from '@fortawesome/fontawesome-free-solid/faServer';
-import { Projects, Contents, PathBar, CreateProjectForm } from './projects';
-import BasicModal from './BasicModal';
+import { Contents, PathBar } from './projects';
 import * as actions from './projects/actions';
-import { getContents, getSelected, getProjects, getPath } from './reducers';
+import { getContents, getProjects, getPath } from './reducers';
 
 
 function mapStateToProps(state) {
   return {
     projects: getProjects(state),
-    selected: getSelected(state),
     contents: getContents(state),
     path: getPath(state),
   };
@@ -46,9 +44,6 @@ function mapDispatchToProps(dispatch) {
     onDeleteFile: (project, path, name) => {
       dispatch(actions.deleteFile({ project, path, name }));
     },
-    onCreateProject: (name) => {
-      dispatch(actions.createProject({ name }));
-    },
     dispatch,
   };
 }
@@ -56,18 +51,16 @@ function mapDispatchToProps(dispatch) {
 
 class ProjectsController extends React.Component {
   static propTypes = {
+    match: PropTypes.objectOf(PropTypes.any).isRequired,
     projects: PropTypes.arrayOf(PropTypes.any).isRequired,
-    selected: PropTypes.string.isRequired,
     contents: PropTypes.arrayOf(PropTypes.any).isRequired,
     path: PropTypes.string.isRequired,
     // event handlers
-    onChange: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
     onAddFolder: PropTypes.func.isRequired,
     onDeleteFolder: PropTypes.func.isRequired,
     onAddFile: PropTypes.func.isRequired,
     onDeleteFile: PropTypes.func.isRequired,
-    onCreateProject: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
   }
 
@@ -76,17 +69,16 @@ class ProjectsController extends React.Component {
     newFolder: '',
     addFile: false,
     newFile: [],
-    projectModalActive: false,
-    newProject: {},
   }
 
   componentDidMount() {
     this.props.dispatch(actions.projectsList());
+    this.props.dispatch(actions.contentsPath({ project: this.props.match.params.id, path: '/' }));
   }
 
   onPath = (path) => {
-    const { selected, onClick } = this.props;
-    onClick(selected, path);
+    const { match, onClick } = this.props;
+    onClick(match.params.id, path);
   }
 
   onDelete = (project, path, item) => {
@@ -97,33 +89,8 @@ class ProjectsController extends React.Component {
     }
   }
 
-  getNewProjectForm = (formstate) => {
-    this.setState({ newProject: formstate });
-  }
-
-  toggleProjectModal = () => {
-    this.setState({ projectModalActive: !this.state.projectModalActive });
-  }
-
-  newProjectSubmit = () => {
-    const { onCreateProject } = this.props;
-    const { newProject } = this.state;
-    if (newProject && Object.keys(newProject).length > 0) {
-      onCreateProject(newProject.name);
-
-      this.setState({
-        newProject: {},
-      });
-
-      // close modal
-      this.setState({ projectModalActive: false });
-    } else {
-      console.log('return invalid here');
-    }
-  }
-
   addFolder = () => {
-    const { selected, path, onAddFolder } = this.props;
+    const { match, path, onAddFolder } = this.props;
     const { addFolder, newFolder } = this.state;
     if (addFolder) {
       // we hit the confirm button
@@ -131,7 +98,7 @@ class ProjectsController extends React.Component {
       if (!newFolder) {
         return;
       }
-      onAddFolder(selected, path, { name: newFolder });
+      onAddFolder(match.params.id, path, { name: newFolder });
       this.setState({
         addFolder: false,
         newFolder: '',
@@ -146,7 +113,7 @@ class ProjectsController extends React.Component {
   changeNewFolder = e => this.setState({ newFolder: e.target.value });
 
   addFile = () => {
-    const { selected, path, onAddFile } = this.props;
+    const { match, path, onAddFile } = this.props;
     const { addFile, newFile } = this.state;
     if (addFile) {
       // we hit the confirm button
@@ -154,7 +121,7 @@ class ProjectsController extends React.Component {
       if (!newFile) {
         return;
       }
-      onAddFile(selected, path, newFile);
+      onAddFile(match.params.id, path, newFile);
       this.setState({
         addFile: false,
         newFile: [],
@@ -170,8 +137,8 @@ class ProjectsController extends React.Component {
 
   render() {
     const {
-      projects, selected, contents, path,
-      onChange, onClick,
+      projects, contents, path,
+      onClick, match,
     } = this.props;
 
     const {
@@ -179,107 +146,87 @@ class ProjectsController extends React.Component {
       addFile, newFile,
     } = this.state;
 
+    const currentProject = projects.filter(project => project.name === match.params.id)[0];
+
     return (
       <Container>
-        <Row>
-          <Col>
-            <h1>Your Projects</h1>
-            <Row>
-              <Projects key="projects" selected={selected} projects={projects} onChange={onChange} />
-              <Button color="success" onClick={this.toggleProjectModal}><FontAwesomeIcon icon={faPlusCircle} /> New Project</Button>
-              <BasicModal
-                title="Create A Project"
-                desc="You can create a new project to organise your work using this form."
-                active={this.state.projectModalActive}
-                close={this.toggleProjectModal}
-              >
-                <CreateProjectForm
-                  data={this.getNewProjectForm}
-                  submit={this.newProjectSubmit}
-                  close={this.toggleProjectModal}
-                />
-              </BasicModal>
-              <hr />
-            </Row>
-          </Col>
-        </Row>
-        { selected &&
-          <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
-            <Row>
-              <Col>
-                <h2>{selected}</h2>
+        <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
+          <Row>
+            <Col>
+              <h1>{currentProject.name}</h1>
+              <div className="placeholder">
                 <p><strong>Date Created:</strong> 11 Apr, 2018</p>
                 <p>Project description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-              </Col>
-            </Row>
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <h3>Project Contents</h3>
+              <div className="project-pathbar">
+                <PathBar project={currentProject.name} path={path} onClick={this.onPath} />
+              </div>
+            </Col>
+          </Row>
+          <div className="project-contents-table">
             <Row>
               <Col>
-                <h3>Project Contents</h3>
-                <div className="project-pathbar">
-                  <PathBar project={selected} path={path} onClick={this.onPath} />
-                </div>
+                <Contents key="contents" contents={contents} project={currentProject.name} path={path} onClick={onClick} onDelete={this.onDelete} />
               </Col>
             </Row>
-            <div className="project-contents-table">
+            { addFolder &&
               <Row>
                 <Col>
-                  <Contents key="contents" contents={contents} project={selected} path={path} onClick={onClick} onDelete={this.onDelete} />
+                  <InputGroup key="folder">
+                    <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
+                    <InputGroupAddon addonType="append">
+                      <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
+                      <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
+                    </InputGroupAddon>
+                  </InputGroup>
                 </Col>
               </Row>
-              { addFolder &&
-                <Row>
-                  <Col>
-                    <InputGroup key="folder">
-                      <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
-                      <InputGroupAddon addonType="append">
-                        <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
-                        <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </Col>
-                </Row>
-              }
-              { addFile &&
-                <Row>
-                  <Col>
-                    <InputGroup key="file">
-                      <Label for="uploads" className="btn btn-primary">Choose Files</Label>
-                      <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
-                      <InputGroupAddon addonType="append">
-                        <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
-                        <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    { newFile.map(file => (
-                      <Row key={file.name}>
-                        <Col>{file.name}</Col>
-                      </Row>
-                      ))
-                    }
-                  </Col>
-                </Row>
-              }
-              { (!addFile && !addFolder) &&
-                <Row>
-                  <Col>
-                    <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
-                    <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
-                  </Col>
-                </Row>
-              }
-            </div>
-            <Row>
-              <Col className="footerCallToAction">
-                <Link className="btn btn-xl btn-secondary" to={`compute/${selected}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></Link>
-                <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
-              </Col>
-            </Row>
-          </ReduxBlockUi>
-        }
+            }
+            { addFile &&
+              <Row>
+                <Col>
+                  <InputGroup key="file">
+                    <Label for="uploads" className="btn btn-primary">Choose Files</Label>
+                    <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
+                    <InputGroupAddon addonType="append">
+                      <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
+                      <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  { newFile.map(file => (
+                    <Row key={file.name}>
+                      <Col>{file.name}</Col>
+                    </Row>
+                    ))
+                  }
+                </Col>
+              </Row>
+            }
+            { (!addFile && !addFolder) &&
+              <Row>
+                <Col>
+                  <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
+                  <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
+                </Col>
+              </Row>
+            }
+          </div>
+          <Row>
+            <Col className="footerCallToAction">
+              <Link className="btn btn-xl btn-secondary" to={`compute/${currentProject.name}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></Link>
+              <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
+            </Col>
+          </Row>
+        </ReduxBlockUi>
       </Container>
     );
   }
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectsController);
+export default (withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectsController)));

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container } from 'reactstrap';
+import { Container, Col, Row } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
 import 'react-block-ui/style.css';
 import Compute from './compute';
@@ -46,9 +46,14 @@ class ComputeController extends React.Component {
 
     return (
       <Container>
-        <ReduxBlockUi tag="div" block={actions.SERVERS_LIST} unblock={[actions.SERVERS_SUCCEEDED, actions.SERVERS_FAILED]} className="loader">
-          <Compute servers={servers} />
-        </ReduxBlockUi>
+        <Row>
+          <Col>
+            <h1>Server Configuration</h1>
+            <ReduxBlockUi tag="div" block={actions.SERVERS_LIST} unblock={[actions.SERVERS_SUCCEEDED, actions.SERVERS_FAILED]} className="loader">
+              <Compute servers={servers} />
+            </ReduxBlockUi>
+          </Col>
+        </Row>
       </Container>
     );
   }
