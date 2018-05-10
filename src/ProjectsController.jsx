@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container } from 'reactstrap';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ReduxBlockUi from 'react-block-ui/redux';
 import 'react-block-ui/style.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -230,4 +230,4 @@ class ProjectsController extends React.Component {
 }
 
 
-export default (withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectsController)));
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectsController);
