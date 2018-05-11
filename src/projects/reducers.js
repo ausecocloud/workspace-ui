@@ -33,7 +33,7 @@ function path(state = '/', action) {
   }
 }
 
-function stats(state = '/', action) {
+function stats(state = {}, action) {
   switch (action.type) {
     case actions.PROJECTS_STATS_SUCCEEDED:
       return action.payload;
