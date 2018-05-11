@@ -64,7 +64,7 @@ class ProjectsController extends React.Component {
       // close modal
       this.setState({
         projectModalActive: false,
-      }, this.props.dispatch(actions.projectsList()));
+      });
     } else {
       console.log('return invalid here');
     }
