@@ -20,9 +20,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onCreateProject: (name) => {
-      dispatch(actions.createProject({ name }));
-    },
     dispatch,
   };
 }
@@ -31,36 +28,25 @@ class ProjectsController extends React.Component {
   static propTypes = {
     projects: PropTypes.arrayOf(PropTypes.any).isRequired,
     // event handlers
-    onCreateProject: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
   }
 
   state = {
     projectModalActive: false,
-    newProject: {},
   }
 
   componentDidMount() {
     this.props.dispatch(actions.projectsList());
   }
 
-  getNewProjectForm = (formstate) => {
-    this.setState({ newProject: formstate });
-  }
-
   toggleProjectModal = () => {
     this.setState({ projectModalActive: !this.state.projectModalActive });
   }
 
-  newProjectSubmit = () => {
-    const { onCreateProject } = this.props;
-    const { newProject } = this.state;
-    if (newProject && Object.keys(newProject).length > 0) {
-      onCreateProject(newProject.name);
-
-      this.setState({
-        newProject: {},
-      });
+  newProjectSubmit = (formData) => {
+    if (formData && Object.keys(formData).length > 0) {
+      // submit ajax call
+      this.props.dispatch(actions.createProject(formData));
       // close modal
       this.setState({
         projectModalActive: false,
@@ -96,7 +82,6 @@ class ProjectsController extends React.Component {
                       close={this.toggleProjectModal}
                     >
                       <CreateProjectForm
-                        data={this.getNewProjectForm}
                         submit={this.newProjectSubmit}
                         close={this.toggleProjectModal}
                       />
