@@ -1,5 +1,5 @@
 
-import action from '../utils';
+import { action } from '../utils';
 
 
 export const PROJECTS_LIST = 'PROJECTS/LIST';

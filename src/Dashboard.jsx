@@ -12,6 +12,7 @@ import faSearchPlus from '@fortawesome/fontawesome-free-solid/faSearchPlus';
 import * as actions from './projects/actions';
 import { getProjects, getUser, getAuthenticated, getStats } from './reducers';
 import { ProjectsTableBasic } from './projects';
+import { formatDate, bytesToSize } from './utils';
 
 const FeedMe = require('feedme');
 
@@ -28,22 +29,6 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
   };
-}
-
-function formatDate(date) {
-  const formattedDate = new Date(date);
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const string = `${formattedDate.getDate()} ${months[formattedDate.getMonth()]} ${formattedDate.getFullYear()}`;
-
-  return string;
-}
-
-function bytesToSize(bytes) {
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  if (bytes === 0) return 'n/a';
-  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-  if (i === 0) return `${bytes} ${sizes[i]})`;
-  return `${(bytes / (1024 ** i)).toFixed(1)} ${sizes[i]}`;
 }
 
 class Dashboard extends React.Component {

@@ -1,5 +1,5 @@
 
-import action from '../utils';
+import { action } from '../utils';
 
 export const SERVERS_LIST = 'SERVERS/LIST';
 export const SERVERS_LIST_START = 'SERVERS/LIST/START';
