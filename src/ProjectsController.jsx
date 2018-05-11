@@ -11,6 +11,7 @@ import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import faServer from '@fortawesome/fontawesome-free-solid/faServer';
+import { formatDate } from './utils';
 import { Contents, PathBar } from './projects';
 import * as actions from './projects/actions';
 import { getContents, getProject, getPath } from './reducers';
@@ -176,8 +177,8 @@ class ProjectsController extends React.Component {
                 <Link to="/drive" className="back-crumb">&laquo; Back to <em><strong>Drive</strong></em></Link>
                 <h1>{project.name}</h1>
                 <div className="placeholder">
-                  <p><strong>Date Created:</strong> 11 Apr, 2018</p>
-                  <p>Project description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                  <p><strong>Date Created:</strong> {formatDate(project.created)}</p>
+                  <p>{project.description}</p>
                 </div>
               </Col>
             </Row>
