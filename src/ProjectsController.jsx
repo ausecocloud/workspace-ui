@@ -13,12 +13,12 @@ import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import faServer from '@fortawesome/fontawesome-free-solid/faServer';
 import { Contents, PathBar } from './projects';
 import * as actions from './projects/actions';
-import { getContents, getProjects, getPath } from './reducers';
+import { getContents, getProject, getPath } from './reducers';
 
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
-    projects: getProjects(state),
+    project: getProject(state, ownProps.match.params.id),
     contents: getContents(state),
     path: getPath(state),
   };
@@ -48,9 +48,12 @@ function mapDispatchToProps(dispatch) {
 
 
 class ProjectsController extends React.Component {
+  static defaultProps = {
+    project: null,
+  }
+
   static propTypes = {
-    match: PropTypes.objectOf(PropTypes.any).isRequired,
-    projects: PropTypes.arrayOf(PropTypes.any).isRequired,
+    project: PropTypes.objectOf(PropTypes.any),
     contents: PropTypes.arrayOf(PropTypes.any).isRequired,
     path: PropTypes.string.isRequired,
     // event handlers
@@ -70,13 +73,33 @@ class ProjectsController extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(actions.projectsList());
-    this.props.dispatch(actions.contentsPath({ project: this.props.match.params.id, path: '/' }));
+    // good place to trigger ajax data load
+    // setState update will trigger render, but before browser updates => no flicker
+    const { project } = this.props;
+    if (!project) {
+      // we need to load project list
+      // this will trigger a componentDidUpdate when the list has been loaded
+      this.props.dispatch(actions.projectsList());
+    } else {
+      // project already available on mount lifecycle ..., trigger a contents reload right away
+      this.props.dispatch(actions.contentsPath({ project: project.name, path: '/' }));
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    // good place to trigger ajax, but should compare to props, to avoid
+    // unnecessary ajax calls
+    const { project } = this.props;
+    if (project && (project !== prevProps.project)) {
+      // project was not available on mount lifecycle, so we triffer loading contents
+      // during update lifecycle
+      this.props.dispatch(actions.contentsPath({ project: project.name, path: '/' }));
+    }
   }
 
   onPath = (path) => {
-    const { match, onClick } = this.props;
-    onClick(match.params.id, path);
+    const { project, onClick } = this.props;
+    onClick(project.name, path);
   }
 
   onDelete = (project, path, item) => {
@@ -88,7 +111,7 @@ class ProjectsController extends React.Component {
   }
 
   addFolder = () => {
-    const { match, path, onAddFolder } = this.props;
+    const { project, path, onAddFolder } = this.props;
     const { addFolder, newFolder } = this.state;
     if (addFolder) {
       // we hit the confirm button
@@ -96,7 +119,7 @@ class ProjectsController extends React.Component {
       if (!newFolder) {
         return;
       }
-      onAddFolder(match.params.id, path, { name: newFolder });
+      onAddFolder(project.name, path, { name: newFolder });
       this.setState({
         addFolder: false,
         newFolder: '',
@@ -111,7 +134,7 @@ class ProjectsController extends React.Component {
   changeNewFolder = e => this.setState({ newFolder: e.target.value });
 
   addFile = () => {
-    const { match, path, onAddFile } = this.props;
+    const { project, path, onAddFile } = this.props;
     const { addFile, newFile } = this.state;
     if (addFile) {
       // we hit the confirm button
@@ -119,7 +142,7 @@ class ProjectsController extends React.Component {
       if (!newFile) {
         return;
       }
-      onAddFile(match.params.id, path, newFile);
+      onAddFile(project.name, path, newFile);
       this.setState({
         addFile: false,
         newFile: [],
@@ -135,8 +158,8 @@ class ProjectsController extends React.Component {
 
   render() {
     const {
-      projects, contents, path,
-      onClick, match,
+      project, contents, path,
+      onClick,
     } = this.props;
 
     const {
@@ -144,16 +167,14 @@ class ProjectsController extends React.Component {
       addFile, newFile,
     } = this.state;
 
-    const currentProject = projects.filter(project => project.name === match.params.id)[0];
-
     return (
       <Container>
-        {currentProject &&
+        { project &&
           <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
             <Row>
               <Col>
                 <Link to="/drive" className="back-crumb">&laquo; Back to <em><strong>Drive</strong></em></Link>
-                <h1>{currentProject.name}</h1>
+                <h1>{project.name}</h1>
                 <div className="placeholder">
                   <p><strong>Date Created:</strong> 11 Apr, 2018</p>
                   <p>Project description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
@@ -164,14 +185,14 @@ class ProjectsController extends React.Component {
               <Col>
                 <h3>Project Contents</h3>
                 <div className="project-pathbar">
-                  <PathBar project={currentProject.name} path={path} onClick={this.onPath} />
+                  <PathBar project={project.name} path={path} onClick={this.onPath} />
                 </div>
               </Col>
             </Row>
             <div className="project-contents-table">
               <Row>
                 <Col>
-                  <Contents key="contents" contents={contents} project={currentProject.name} path={path} onClick={onClick} onDelete={this.onDelete} />
+                  <Contents key="contents" contents={contents} project={project.name} path={path} onClick={onClick} onDelete={this.onDelete} />
                 </Col>
               </Row>
               { addFolder &&
@@ -218,7 +239,7 @@ class ProjectsController extends React.Component {
             </div>
             <Row>
               <Col className="footerCallToAction">
-                <Link className="btn btn-xl btn-secondary" to={`compute/${currentProject.name}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></Link>
+                <Link className="btn btn-xl btn-secondary" to={`compute/${project.name}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></Link>
                 <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
               </Col>
             </Row>
