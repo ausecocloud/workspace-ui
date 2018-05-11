@@ -18,27 +18,17 @@ class BasicModal extends React.Component {
     children: PropTypes.element.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-
-    this.closeHandler = this.closeHandler.bind(this);
-  }
-
-  closeHandler(e) {
-    this.props.close(e.target.value);
-  }
+  closeHandler = e => this.props.close(e.target.value);
 
   render() {
     return (
-      <div>
-        <Modal isOpen={this.props.active} toggle={this.closeHandler} className="new-project">
-          <ModalHeader toggle={this.closeHandler}>{this.props.title}</ModalHeader>
-          <ModalBody>
-            <p>{this.props.desc}</p>
-            {this.props.children}
-          </ModalBody>
-        </Modal>
-      </div>
+      <Modal isOpen={this.props.active} toggle={this.closeHandler} className="new-project">
+        <ModalHeader toggle={this.closeHandler}>{this.props.title}</ModalHeader>
+        <ModalBody>
+          <p>{this.props.desc}</p>
+          {this.props.children}
+        </ModalBody>
+      </Modal>
     );
   }
 }
