@@ -176,10 +176,8 @@ class ProjectsController extends React.Component {
               <Col>
                 <Link to="/drive" className="back-crumb">&laquo; Back to <em><strong>Drive</strong></em></Link>
                 <h1>{project.name}</h1>
-                <div className="placeholder">
-                  <p><strong>Date Created:</strong> {formatDate(project.created)}</p>
-                  <p>{project.description}</p>
-                </div>
+                <p><strong>Date Created:</strong> {formatDate(project.created)}</p>
+                <p>{project.description}</p>
               </Col>
             </Row>
             <Row>

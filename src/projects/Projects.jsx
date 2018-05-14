@@ -20,10 +20,8 @@ class Projects extends React.PureComponent {
       <Link key={project.name} to={`/drive/${project.name}`} className="project-link">
         <div className="project-list-item">
           <h2>{project.name}</h2>
-          <div className="placeholder">
-            <p><strong>Date Created:</strong> {formatDate(project.created)}</p>
-            <p>{project.description}</p>
-          </div>
+          <p><strong>Date Created:</strong> {formatDate(project.created)}</p>
+          <p>{project.description}</p>
         </div>
       </Link>
     ));

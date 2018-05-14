@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Row, Col, Container, Progress } from 'reactstrap';
+import { Row, Col, Container, Progress, Button } from 'reactstrap';
 import 'react-block-ui/style.css';
+import BasicModal from './BasicModal';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faServer from '@fortawesome/fontawesome-free-solid/faServer';
@@ -11,7 +12,7 @@ import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen';
 import faSearchPlus from '@fortawesome/fontawesome-free-solid/faSearchPlus';
 import * as actions from './projects/actions';
 import { getProjects, getUser, getAuthenticated, getStats } from './reducers';
-import { ProjectsTableBasic } from './projects';
+import { ProjectsTableBasic, CreateProjectForm } from './projects';
 import { formatDate, bytesToSize } from './utils';
 
 const FeedMe = require('feedme');
@@ -42,6 +43,7 @@ class Dashboard extends React.Component {
 
   state = {
     feed: [],
+    projectModalActive: false,
   }
 
   componentWillMount() {
@@ -82,6 +84,23 @@ class Dashboard extends React.Component {
         // could just do setState here as well
         parser.end();
       });
+  }
+
+  toggleProjectModal = () => {
+    this.setState({ projectModalActive: !this.state.projectModalActive });
+  }
+
+  newProjectSubmit = (formData) => {
+    if (formData && Object.keys(formData).length > 0) {
+      // submit ajax call
+      this.props.dispatch(actions.createProject(formData));
+      // close modal
+      this.setState({
+        projectModalActive: false,
+      });
+    } else {
+      console.log('return invalid here');
+    }
   }
 
   render() {
@@ -142,8 +161,19 @@ class Dashboard extends React.Component {
                   <h2>Your Projects</h2>
                   <ProjectsTableBasic projects={projects} />
                   <div className="table-footer">
-                    <Link to="drive" title="Create new project on ecocloud Drive" className="btn btn-lg btn-success"><FontAwesomeIcon icon={faPlusCircle} /> Create New Project</Link>
+                    <Button onClick={this.toggleProjectModal} className="btn btn-lg btn-success"><FontAwesomeIcon icon={faPlusCircle} /> Create New Project</Button>
                   </div>
+                  <BasicModal
+                    title="Create A Project"
+                    desc="You can create a new project to organise your work using this form."
+                    active={this.state.projectModalActive}
+                    close={this.toggleProjectModal}
+                  >
+                    <CreateProjectForm
+                      submit={this.newProjectSubmit}
+                      close={this.toggleProjectModal}
+                    />
+                  </BasicModal>
                 </div>
               </Col>
             </Row>
