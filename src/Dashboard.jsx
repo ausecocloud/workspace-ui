@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Container, Progress, Button } from 'reactstrap';
+import ReduxBlockUi from 'react-block-ui/redux';
 import 'react-block-ui/style.css';
 import BasicModal from './BasicModal';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -150,8 +151,10 @@ class Dashboard extends React.Component {
               <Col sm="12">
                 <div className="storage">
                   <h2>Your Resources</h2>
-                  <p>Storage Space <span className="storage-int">{usageNum}</span></p>
-                  <Progress color="warning" value={usagePercent} />
+                  <ReduxBlockUi tag="div" block={actions.PROJECTS_STATS} unblock={[actions.PROJECTS_STATS_SUCCEEDED, actions.PROJECTS_STATS_FAILED]} className="loader">
+                    <p>Storage Space <span className="storage-int">{usageNum}</span></p>
+                    <Progress color="warning" value={usagePercent} />
+                  </ReduxBlockUi>
                 </div>
               </Col>
             </Row>
@@ -159,7 +162,9 @@ class Dashboard extends React.Component {
               <Col sm="12">
                 <div className="home-projects-table">
                   <h2>Your Projects</h2>
-                  <ProjectsTableBasic projects={projects} />
+                  <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} className="loader">
+                    <ProjectsTableBasic projects={projects} />
+                  </ReduxBlockUi>
                   <div className="table-footer">
                     <Button onClick={this.toggleProjectModal} className="btn btn-lg btn-success"><FontAwesomeIcon icon={faPlusCircle} /> Create New Project</Button>
                   </div>

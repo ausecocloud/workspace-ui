@@ -104,7 +104,6 @@ class App extends React.Component {
             )}
           />
           <Route
-            exact
             path="/drive"
             render={() => ([
               <span key="drive-text" className="logo-text"><h1>Drive</h1></span>,
