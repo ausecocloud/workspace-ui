@@ -113,6 +113,13 @@ export function createProject(params) {
   return data;
 }
 
+export function deleteProject(params) {
+  const { promise, cancel } = callAPI({ url: 'api/v1/projects', method: 'DELETE', params });
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
+}
+
 export function getStats() {
   const { promise, cancel } = callAPI({ url: 'api/v1/stat', method: 'GET' });
   const data = promise.then(response => response.data);

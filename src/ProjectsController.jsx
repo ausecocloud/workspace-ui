@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import ReduxBlockUi from 'react-block-ui/redux';
 import 'react-block-ui/style.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
@@ -11,8 +11,10 @@ import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faUpload from '@fortawesome/fontawesome-free-solid/faUpload';
 import faServer from '@fortawesome/fontawesome-free-solid/faServer';
+import faTrash from '@fortawesome/fontawesome-free-solid/faTrash';
+import BasicModal from './BasicModal';
 import { formatDate } from './utils';
-import { Contents, PathBar } from './projects';
+import { Contents, PathBar, DeleteProjectForm } from './projects';
 import * as actions from './projects/actions';
 import { getContents, getProject, getPath } from './reducers';
 
@@ -71,6 +73,7 @@ class ProjectsController extends React.Component {
     newFolder: '',
     addFile: false,
     newFile: [],
+    deleteModalActive: false,
   }
 
   componentDidMount() {
@@ -153,6 +156,23 @@ class ProjectsController extends React.Component {
     }
   }
 
+  toggleDeleteModal = () => {
+    this.setState({ deleteModalActive: !this.state.deleteModalActive });
+  }
+
+  deleteProjectSubmit = (formData) => {
+    if (formData && Object.keys(formData).length > 0) {
+      // submit ajax call
+      this.props.dispatch(actions.deleteProject(formData));
+      // close modal
+      this.setState({
+        deleteModalActive: false,
+      });
+    } else {
+      console.log('return invalid here');
+    }
+  }
+
   cancelAddFile = () => this.setState({ addFile: false });
 
   changeNewFile = e => this.setState({ newFile: Array.from(e.target.files) });
@@ -176,6 +196,19 @@ class ProjectsController extends React.Component {
               <Col>
                 <Link to="/drive" className="back-crumb">&laquo; Back to <em><strong>Drive</strong></em></Link>
                 <h1>{project.name}</h1>
+                <Button color="danger" onClick={this.toggleDeleteModal} className="float-right btn-sm"><FontAwesomeIcon icon={faTrash} /> Delete Project</Button>
+                <BasicModal
+                  title="Delete Project"
+                  desc="This action is irreversible, are you sure you want to delete this project?"
+                  active={this.state.deleteModalActive}
+                  close={this.toggleDeleteModal}
+                >
+                  <DeleteProjectForm
+                    submit={this.deleteProjectSubmit}
+                    close={this.toggleDeleteModal}
+                    project={project.name}
+                  />
+                </BasicModal>
                 <p><strong>Date Created:</strong> {formatDate(project.created)}</p>
                 <p>{project.description}</p>
               </Col>
@@ -250,4 +283,4 @@ class ProjectsController extends React.Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectsController);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectsController));

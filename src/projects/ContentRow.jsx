@@ -5,6 +5,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faFile from '@fortawesome/fontawesome-free-solid/faFile';
 import faFolder from '@fortawesome/fontawesome-free-solid/faFolder';
 import faTrash from '@fortawesome/fontawesome-free-solid/faTrash';
+import { formatDate, bytesToSize } from '../utils';
 
 
 const iconMap = {
@@ -54,13 +55,17 @@ class ContentRow extends React.PureComponent {
 
     render() {
       const { item } = this.props;
-
+      let lastMod = '';
+      if (typeof item.last_modified !== 'undefined') {
+        lastMod = formatDate(item.last_modified);
+      }
+      const size = bytesToSize(item.bytes);
       return (
         <tr key={item.name} onClick={this.onClick}>
           <th scope="row"><FontAwesomeIcon icon={getIcon(item.content_type)} /></th>
           <td>{item.name}</td>
-          <td>{item.last_modified}</td>
-          <td>{item.bytes}</td>
+          <td>{lastMod}</td>
+          <td>{size}</td>
           <td>
             <Button color="danger" size="sm" onClick={this.onDelete}><FontAwesomeIcon icon={faTrash} /></Button>
           </td>

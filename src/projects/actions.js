@@ -27,6 +27,14 @@ export const createProject = action(PROJECTS_ADD);
 export const createProjectSucceeded = action(PROJECTS_ADD_SUCCEEDED);
 export const createProjectFailed = action(PROJECTS_ADD_FAILED);
 
+export const PROJECTS_DELETE = 'PROJECTS/DELETE';
+export const PROJECTS_DELETE_SUCCEEDED = 'PROJECTS/DELETE/SUCCEEDED';
+export const PROJECTS_DELETE_FAILED = 'PROJECTS/DELETE/FAILED';
+
+export const deleteProject = action(PROJECTS_DELETE);
+export const deleteProjectSucceeded = action(PROJECTS_DELETE_SUCCEEDED);
+export const deleteProjectFailed = action(PROJECTS_DELETE_FAILED);
+
 export const FOLDER_ADD = 'CONTENTS/FOLDER/ADD';
 export const FOLDER_ADD_SUCCEEDED = 'CONTENTS/FOLDER/ADD/SUCCEEDED';
 export const FOLDER_ADD_FAILED = 'CONTENTS/FOLDER/ADD/FAILED';

@@ -1,4 +1,5 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 import { workspace } from '../api';
 import * as actions from './actions';
 
@@ -20,6 +21,17 @@ function* projectCreateTask(action) {
     yield put(actions.projectsList());
   } catch (error) {
     yield put(actions.createProjectFailed(error));
+  }
+}
+
+
+function* projectDeleteTask(action) {
+  try {
+    const project = yield call(workspace.deleteProject, action.payload);
+    yield put(actions.deleteProjectSucceeded(project));
+    yield put(push('/drive'));
+  } catch (error) {
+    yield put(actions.deleteProjectFailed(error));
   }
 }
 
@@ -91,6 +103,7 @@ export default function* projectsSaga() {
   // start yourself
   yield takeLatest(actions.PROJECTS_LIST, projectsTask);
   yield takeEvery(actions.PROJECTS_ADD, projectCreateTask);
+  yield takeEvery(actions.PROJECTS_DELETE, projectDeleteTask);
   yield takeLatest(actions.CONTENTS_PATH, contentsTask);
   yield takeEvery(actions.FOLDER_ADD, addFolderTask);
   yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);
