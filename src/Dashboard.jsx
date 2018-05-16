@@ -112,7 +112,7 @@ class Dashboard extends React.Component {
     const used = bytesToSize(stats.used);
     const total = bytesToSize(stats.quota);
     const usageNum = `${used} / ${total}`;
-    const usagePercent = (stats.used / stats.quota) * 100;
+    const usagePercent = (stats.quota / stats.used) * 100;
 
     return (
       <Container className="dashboard">
