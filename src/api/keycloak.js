@@ -151,6 +151,21 @@ export function getClientToken(clientid) {
 }
 
 
+export function updateUserAccount(formData) {
+  console.log(keycloak);
+  console.log(formData);
+  const { authServerUrl, realm, idTokenParsed } = keycloak;
+  const user = idTokenParsed.sub;
+  const url = `${authServerUrl}/${realm}/users/${user}`;
+  console.log(url);
+  return fetch(url, {
+    method: 'PUT',
+    body: formData,
+  })
+    .then(response => response.json());
+}
+
+
 // init keycloak
 
 // events:

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Form, FormGroup, Label, Input, Container, FormFeedback } from 'reactstrap';
+import * as actions from './actions';
 import { getUser, getAuthenticated } from './reducers';
 
 
@@ -9,6 +10,12 @@ function mapStateToProps(state) {
   return {
     user: getUser(state),
     isAuthenticated: getAuthenticated(state),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
   };
 }
 
@@ -22,6 +29,7 @@ class AccountTable extends React.PureComponent {
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any),
     isAuthenticated: PropTypes.bool,
+    dispatch: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -60,7 +68,6 @@ class AccountTable extends React.PureComponent {
     let state = 'is-valid';
     let errorMsg = '';
     const emailRegex = new RegExp('[^@]+@[^@]+\\.[^@]+');
-    console.log(fieldName);
     switch (fieldName) {
       case 'name':
         // rule: must be at least 1 char
@@ -71,8 +78,6 @@ class AccountTable extends React.PureComponent {
         }
         break;
       case 'email':
-        console.log(value.match(emailRegex));
-        console.log();
         // rule: must be at least 1 char
         if (value.length <= 0) {
           state = 'is-invalid';
@@ -85,7 +90,6 @@ class AccountTable extends React.PureComponent {
         }
         break;
       case 'username':
-        console.log(value);
         // rule: must be at least 1 char
         if (value.length <= 0) {
           state = 'is-invalid';
@@ -100,7 +104,6 @@ class AccountTable extends React.PureComponent {
   }
 
   validateForm = () => {
-    console.log('here');
     Object.entries(this.state.formErrors).forEach(([fieldname, error]) => {
       if (error.length > 0) {
         this.setState({ formValid: false });
@@ -119,9 +122,7 @@ class AccountTable extends React.PureComponent {
       console.log(formData);
       // submit ajax call
       // action doesn't exist yet
-      // this.props.dispatch(actions.updateUser(formData));
-
-      console.log('form post here');
+      this.props.dispatch(actions.userUpdate(formData));
     } else {
       Object.entries(this.state.formErrors).forEach(([fieldname, error]) => {
         const formState = { ...this.state.formState };

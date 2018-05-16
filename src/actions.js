@@ -17,3 +17,11 @@ export const LOGOUT_FAILED = 'AUTH/LOGOUT/FAILED';
 export const logout = action(LOGOUT);
 export const logoutSucceeded = action(LOGOUT_SUCCEEDED);
 export const logoutFailed = action(LOGOUT_FAILED, true);
+
+export const AUTH_UPDATE = 'AUTH/UPDATE';
+export const AUTH_UPDATE_SUCCEEDED = 'AUTH/UPDATE/SUCCEEDED';
+export const AUTH_UPDATE_FAILED = 'AUTH/UPDATE/FAILED';
+
+export const userUpdate = action(AUTH_UPDATE);
+export const userUpdateSucceeded = action(AUTH_UPDATE_SUCCEEDED);
+export const userUpdateFailed = action(AUTH_UPDATE_FAILED, true);

@@ -1,5 +1,5 @@
 
-export { getKeycloak, initAuth } from './keycloak';
+export { getKeycloak, initAuth, updateUserAccount } from './keycloak';
 
 export * as workspace from './workspace';
 

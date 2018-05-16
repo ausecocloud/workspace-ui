@@ -1,8 +1,8 @@
-import { put, takeEvery, fork } from 'redux-saga/effects';
+import { call, put, takeEvery, fork } from 'redux-saga/effects';
 import * as actions from './actions';
 import projectsSaga from './projects/sagas';
 import computeSaga from './compute/sagas';
-import { getKeycloak } from './api';
+import { getKeycloak, updateUserAccount } from './api';
 
 // the task to fetch an access token
 export function* loginTask() {
@@ -20,6 +20,24 @@ export function* loginTask() {
   } catch (error) {
     console.log('AUTH:', error);
     yield put(actions.loginFailed());
+  }
+}
+
+
+// the task to update a user
+export function* updateUserTask(action) {
+  try {
+    const kc = getKeycloak();
+    const user = yield call(updateUserAccount, action.payload);
+    console.log(user);
+    if (kc.authenticated) {
+      yield put(actions.userUpdateSucceeded(user));
+    } else {
+      yield put(actions.userUpdateFailed());
+    }
+  } catch (error) {
+    console.log('AUTH:', error);
+    yield put(actions.userUpdateFailed());
   }
 }
 
@@ -47,6 +65,7 @@ export default function* rootSaga() {
   // start yourself
   yield takeEvery(actions.LOGIN, loginTask);
   yield takeEvery(actions.LOGOUT, logoutTask);
+  yield takeEvery(actions.AUTH_UPDATE, updateUserTask);
   yield fork(projectsSaga);
   yield fork(computeSaga);
 }
