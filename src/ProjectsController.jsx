@@ -235,8 +235,8 @@ class ProjectsController extends React.Component {
                     <InputGroup key="folder">
                       <Input type="text" value={newFolder} onChange={this.changeNewFolder} required />
                       <InputGroupAddon addonType="append">
-                        <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /></Button>
-                        <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /></Button>
+                        <Button color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faCheck} /> Create</Button>
+                        <Button color="danger" onClick={this.cancelAddFolder}><FontAwesomeIcon icon={faTimes} /> Cancel</Button>
                       </InputGroupAddon>
                     </InputGroup>
                   </Col>
@@ -246,15 +246,15 @@ class ProjectsController extends React.Component {
                 <Row>
                   <Col>
                     <InputGroup key="file">
-                      <Label for="uploads" className="btn btn-primary btn-lg">Choose Files</Label>
+                      <Label for="uploads" className="btn btn-secondary">Choose File</Label>
                       <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
                       <InputGroupAddon addonType="append">
-                        <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
-                        <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /></Button>
+                        <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /> Upload</Button>
+                        <Button color="danger" onClick={this.cancelAddFile}><FontAwesomeIcon icon={faTimes} /> Cancel</Button>
                       </InputGroupAddon>
                     </InputGroup>
                     { newFile.map(file => (
-                      <Row key={file.name}>
+                      <Row key={file.name} className="pending-uploads">
                         <Col>{file.name}</Col>
                       </Row>
                       ))
@@ -265,8 +265,8 @@ class ProjectsController extends React.Component {
               { (!addFile && !addFolder) &&
                 <Row>
                   <Col>
-                    <Button key="addfolder" color="success" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
-                    <Button key="uploadfile" color="success" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
+                    <Button key="addfolder" color="primary" onClick={this.addFolder}><FontAwesomeIcon icon={faPlusCircle} /> Add Folder</Button>
+                    <Button key="uploadfile" color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faUpload} /> Upload File</Button>
                   </Col>
                 </Row>
               }

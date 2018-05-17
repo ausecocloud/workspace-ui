@@ -98,7 +98,7 @@ class CreateProjectForm extends React.PureComponent {
           <Input type="textarea" name="description" id="description" value={description} onChange={this.handleChange} />
         </FormGroup>
         <FormGroup>
-          <Button color="success">Submit</Button>{' '}
+          <Button color="primary">Submit</Button>{' '}
           <Button type="button" color="secondary" onClick={this.closeHandler}>Cancel</Button>
         </FormGroup>
       </Form>

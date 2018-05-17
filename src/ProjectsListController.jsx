@@ -74,7 +74,7 @@ class ProjectsController extends React.Component {
                 </Row>
                 <Row>
                   <Col>
-                    <Button color="success" onClick={this.toggleProjectModal}><FontAwesomeIcon icon={faPlusCircle} /> New Project</Button>
+                    <Button color="primary" onClick={this.toggleProjectModal}><FontAwesomeIcon icon={faPlusCircle} /> New Project</Button>
                     <BasicModal
                       title="Create A Project"
                       desc="You can create a new project to organise your work using this form."

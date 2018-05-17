@@ -112,7 +112,15 @@ class Dashboard extends React.Component {
     const used = bytesToSize(stats.used);
     const total = bytesToSize(stats.quota);
     const usageNum = `${used} / ${total}`;
-    const usagePercent = (stats.quota / stats.used) * 100;
+    const usagePercent = (stats.used / stats.quota) * 100;
+    const progColor = () => {
+      if (usagePercent < 50) return 'primary';
+      else if (usagePercent < 70) return 'warning';
+      else if (usagePercent < 85) return 'danger';
+      return 'success';
+    };
+
+    console.log(progColor());
 
     return (
       <Container className="dashboard">
@@ -130,17 +138,17 @@ class Dashboard extends React.Component {
                 <h2>Getting Started</h2>
                 <Row>
                   <Col md="4">
-                    <Link to="explorer" className="btn btn-lg btn-dashboard btn-success" title="Find Datasets in ecocloud Explorer">
+                    <Link to="explorer" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
                       <FontAwesomeIcon icon={faSearchPlus} /> <br /> Find datasets in <strong><em>Explorer</em></strong>
                     </Link>
                   </Col>
                   <Col md="4">
-                    <Link to="drive" className="btn btn-lg btn-dashboard btn-success" title="Find Datasets in ecocloud Explorer">
+                    <Link to="drive" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
                       <FontAwesomeIcon icon={faFolderOpen} /> <br /> Manage files in <strong><em>Drive</em></strong>
                     </Link>
                   </Col>
                   <Col md="4">
-                    <Link to="compute" className="btn btn-lg btn-dashboard btn-success" title="Find Datasets in ecocloud Explorer">
+                    <Link to="compute" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
                       <FontAwesomeIcon icon={faServer} /> <br /> Start a service in <strong><em>Compute</em></strong>
                     </Link>
                   </Col>
@@ -153,7 +161,7 @@ class Dashboard extends React.Component {
                   <h2>Your Resources</h2>
                   <ReduxBlockUi tag="div" block={actions.PROJECTS_STATS} unblock={[actions.PROJECTS_STATS_SUCCEEDED, actions.PROJECTS_STATS_FAILED]} className="loader">
                     <p>Storage Space <span className="storage-int">{usageNum}</span></p>
-                    <Progress color="warning" value={usagePercent} />
+                    <Progress color={progColor()} value={usagePercent} />
                   </ReduxBlockUi>
                 </div>
               </Col>

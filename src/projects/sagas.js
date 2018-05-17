@@ -73,6 +73,7 @@ function* uploadFileTask(action) {
   try {
     yield call(workspace.uploadFile, action.payload);
     yield put(actions.contentsPath(action.payload));
+    yield put(actions.uploadFileSucceeded());
   } catch (error) {
     yield put(actions.uploadFileFailed(error));
   }
