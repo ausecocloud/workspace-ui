@@ -115,12 +115,9 @@ class Dashboard extends React.Component {
     const usagePercent = (stats.used / stats.quota) * 100;
     const progColor = () => {
       if (usagePercent < 50) return 'primary';
-      else if (usagePercent < 70) return 'warning';
-      else if (usagePercent < 85) return 'danger';
-      return 'success';
+      else if (usagePercent < 75) return 'warning';
+      return 'danger';
     };
-
-    console.log(progColor());
 
     return (
       <Container className="dashboard">

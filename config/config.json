@@ -11,5 +11,8 @@
     "url": "https://auth.ecocloud.org.au/auth",
     "realm": "test",
     "clientId": "public"
+  },
+  "googleAnalytics": {
+    "tracking_id": "UA-50930616-2"
   }
 }

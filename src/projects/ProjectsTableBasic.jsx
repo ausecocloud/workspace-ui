@@ -18,7 +18,6 @@ class ProjectsTableBasic extends React.PureComponent {
   // TODO: return a valid size for each project
   renderProjectOptions() {
     const { projects } = this.props;
-    console.log(projects);
     return projects.map(project => (
       <tr key={project.name}>
         <td><FontAwesomeIcon icon={faFolder} /> {project.name}</td>
