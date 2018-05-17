@@ -3,6 +3,7 @@
 
 $font-stack:    'Cabin', sans-serif;
 $body-color: #333;
+$main-bg-color: #F7F7F7;
 $primary-color: #A9CB79;
 $secondary-color: #DEAC5D;
 $brown-black: #3B3333;
@@ -48,6 +49,10 @@ p {
 }
 .bg-warning {
 	background:$secondary-color!important;
+}
+
+.block-ui-overlay {
+	background:$main-bg-color;
 }
 .btn {
 	border-radius:0px;
@@ -175,7 +180,7 @@ header#header {
 }
 section#main {
     padding:2rem 0 2rem;
-    background:#F7F7F7;
+    background:$main-bg-color;
     .back-crumb {
     	margin-bottom:.75rem;
     	display:inline-block;

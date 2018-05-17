@@ -14,12 +14,14 @@ class ProjectsTableBasic extends React.PureComponent {
     projects: PropTypes.arrayOf(PropTypes.any).isRequired,
   }
 
+
+  // TODO: return a valid size for each project
   renderProjectOptions() {
     const { projects } = this.props;
+    console.log(projects);
     return projects.map(project => (
       <tr key={project.name}>
         <td><FontAwesomeIcon icon={faFolder} /> {project.name}</td>
-        <td>{bytesToSize(project.bytes)}</td>
         <td>{formatDate(project.created)}</td>
         <td><Link to={`drive/${project.name}`} title="Create new project on ecocloud Drive"><FontAwesomeIcon icon={faExternalLinkAlt} /> Open in <strong><em>Drive</em></strong></Link></td>
       </tr>
@@ -33,7 +35,6 @@ class ProjectsTableBasic extends React.PureComponent {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Size</th>
               <th>Last Modified</th>
               <th />
             </tr>

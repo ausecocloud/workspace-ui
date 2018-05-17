@@ -224,7 +224,9 @@ class ProjectsController extends React.Component {
             <div className="project-contents-table">
               <Row>
                 <Col>
-                  <Contents key="contents" contents={contents} project={project.name} path={path} onClick={onClick} onDelete={this.onDelete} />
+                  <ReduxBlockUi tag="div" block={actions.FILE_UPLOAD} unblock={[actions.FILE_UPLOAD_SUCCEEDED, actions.FILE_UPLOAD_FAILED]} className="loader">
+                    <Contents key="contents" contents={contents} project={project.name} path={path} onClick={onClick} onDelete={this.onDelete} />
+                  </ReduxBlockUi>
                 </Col>
               </Row>
               { addFolder &&
@@ -244,7 +246,7 @@ class ProjectsController extends React.Component {
                 <Row>
                   <Col>
                     <InputGroup key="file">
-                      <Label for="uploads" className="btn btn-primary">Choose Files</Label>
+                      <Label for="uploads" className="btn btn-primary btn-lg">Choose Files</Label>
                       <Input hidden id="uploads" type="file" onChange={this.changeNewFile} required />
                       <InputGroupAddon addonType="append">
                         <Button color="primary" onClick={this.addFile}><FontAwesomeIcon icon={faCheck} /></Button>
