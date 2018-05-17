@@ -8,13 +8,14 @@ import blockUiMiddleware from 'react-block-ui/reduxMiddleware';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware, LOCATION_CHANGE } from 'react-router-redux';
 import { createMiddleware } from 'redux-beacon';
-import GoogleAnalytics, { trackPageView } from '@redux-beacon/google-analytics';
+import GoogleAnalytics, { trackPageView, trackEvent } from '@redux-beacon/google-analytics';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import createSagaMiddleware from 'redux-saga';
 import reducers from './reducers';
 import rootSaga from './sagas';
 import { loadConfig } from './config';
 import { initAuth } from './api';
+import * as actions from './projects/actions';
 import App from './App';
 
 
@@ -24,6 +25,10 @@ const sagaMiddleware = createSagaMiddleware();
 const eventsMap = {
   [LOCATION_CHANGE]: trackPageView(action => ({
     page: action.payload.pathname,
+  })),
+  [actions.PROJECTS_ADD]: trackEvent(action => ({
+    category: 'Projects',
+    action: action.type,
   })),
 };
 const gaMiddleware = createMiddleware(eventsMap, GoogleAnalytics());
@@ -75,7 +80,8 @@ const initGA = (config) => {
   window.ga('create', config.tracking_id, 'auto');
 
   // Sends a pageview hit from the tracker just created.
-  window.ga('send', 'pageview');
+  // not needed, router registers a pageview for first load
+  // window.ga('send', 'pageview');
 };
 
 // load configuration and init keycloak client, and delay mounting of App,
