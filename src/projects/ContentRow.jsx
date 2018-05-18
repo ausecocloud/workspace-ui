@@ -62,7 +62,7 @@ class ContentRow extends React.PureComponent {
       const size = bytesToSize(item.bytes);
       return (
         <tr key={item.name} onClick={this.onClick}>
-          <th scope="row"><FontAwesomeIcon icon={getIcon(item.content_type)} /></th>
+          <td><FontAwesomeIcon icon={getIcon(item.content_type)} /></td>
           <td>{item.name}</td>
           <td>{lastMod}</td>
           <td>{size}</td>

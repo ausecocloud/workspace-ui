@@ -30,7 +30,7 @@ class ProjectsTableBasic extends React.PureComponent {
   render() {
     return (
       <div>
-        <Table className="basic-table">
+        <Table className="green-table">
           <thead>
             <tr>
               <th>Name</th>

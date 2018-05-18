@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Container, Progress, Button } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
-import 'react-block-ui/style.css';
 import BasicModal from './BasicModal';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';

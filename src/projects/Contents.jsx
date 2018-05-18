@@ -44,7 +44,7 @@ class Contents extends React.PureComponent {
     } = this.props;
 
     return (
-      <Table hover>
+      <Table>
         <thead>
           <tr>
             <th colSpan="2">Name</th>

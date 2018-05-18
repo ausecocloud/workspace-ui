@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Row, Col, Container } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
-import 'react-block-ui/style.css';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import { Projects, CreateProjectForm } from './projects';

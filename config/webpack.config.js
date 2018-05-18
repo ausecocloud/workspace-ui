@@ -179,6 +179,12 @@ module.exports = (env, options) => {
       }),
     ],
 
+    externals: {
+      'react/addons': true,
+      'react/lib/ExecutionEnvironment': true,
+      'react/lib/ReactContext': true
+    },
+
     // see https://webpack.js.org/configuration/devtool/
     // eval-source-map may be better for development, but is slower
     devtool: debug ? 'cheap-module-eval-source-map' : 'source-map',

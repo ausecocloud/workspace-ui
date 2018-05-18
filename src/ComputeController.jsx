@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Col, Row } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
-import 'react-block-ui/style.css';
 import Compute from './compute';
 import * as actions from './compute/actions';
 import { getServers, getUser } from './reducers';

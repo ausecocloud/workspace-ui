@@ -325,12 +325,15 @@ section#main {
 			}
 		}
 	}
-    .basic-table {
+    .green-table {
     	thead th {
 	    	font-weight:700;
 	    	border:0px solid white;
 	    	background-color:$dull-header;
 	    	color:white;
+	    }
+	    tbody tr:first-child td {
+	    	border-top: 0px solid transparent;
 	    }
 
     }
@@ -340,9 +343,6 @@ section#main {
 	    thead th {
 	    	font-weight:700;
 	    	border-bottom:0px solid white;
-	    }
-	    tbody tr:first-child td {
-	    	border-top: 0px solid transparent;
 	    }
 	 	th, td {
 		    padding: .5rem .75rem;
