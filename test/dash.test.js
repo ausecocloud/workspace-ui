@@ -4,7 +4,7 @@ import { shallow, mount, render, configure } from 'enzyme';
 import { spy } from 'sinon';
 import Adapter from 'enzyme-adapter-react-16';
 
-import Dashboard from '../src/Dashboard';
+import { Dashboard } from '../src/Dashboard';
 
 configure({ adapter: new Adapter() });
 

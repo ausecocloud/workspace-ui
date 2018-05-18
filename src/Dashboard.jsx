@@ -10,6 +10,7 @@ import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faServer from '@fortawesome/fontawesome-free-solid/faServer';
 import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen';
 import faSearchPlus from '@fortawesome/fontawesome-free-solid/faSearchPlus';
+import fetch from 'node-fetch';
 import * as actions from './projects/actions';
 import { getProjects, getUser, getAuthenticated, getStats } from './reducers';
 import { ProjectsTableBasic, CreateProjectForm } from './projects';
@@ -32,7 +33,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class Dashboard extends React.Component {
+export class Dashboard extends React.Component {
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any).isRequired,
     projects: PropTypes.arrayOf(PropTypes.any).isRequired,

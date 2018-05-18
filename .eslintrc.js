@@ -17,6 +17,7 @@ if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
     // disallow declaration of variables that are not used in the code
     rules['no-unused-vars'] = ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }];
     rules['import/first'] = ['warn', 'absolute-first'];
+    rules["import/no-named-as-default"] = 0;
 }
 
 module.exports = {

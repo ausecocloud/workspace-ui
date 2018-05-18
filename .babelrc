@@ -1,5 +1,5 @@
 {
-  "presets": ["react", "airbnb", "es2016", "stage-2"],
+  "presets": ["@babel/preset-env", "@babel/preset-react", "@babel/preset-stage-2"],
   "plugins": [
     ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
   ],
