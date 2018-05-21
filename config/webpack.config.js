@@ -99,7 +99,10 @@ module.exports = (env, options) => {
                   },
                 ],
                 '@babel/preset-react',
-                '@babel/preset-stage-2',
+                [
+                  '@babel/preset-stage-2',
+                  {"decoratorsLegacy": true}
+                ]
               ],
             },
           },
