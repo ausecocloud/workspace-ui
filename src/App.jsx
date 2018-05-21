@@ -76,6 +76,9 @@ class App extends React.Component {
         <NavItem>
           <NavLink exact to="/compute">Compute</NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink target="_blank" to="http://support.ecocloud.org.au/support/home">Support &amp; Docs</NavLink>
+        </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>
             {user.name} <i className="fa fa-user-circle" />
@@ -93,7 +96,7 @@ class App extends React.Component {
     );
 
     const MainNavbar = () => (
-      <Navbar expand="md">
+      <Navbar expand="lg">
         <NavbarBrand href="/">
           <img src={Logo} alt="ecocloud Logo" />
           <Route

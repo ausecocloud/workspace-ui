@@ -178,15 +178,50 @@ header#header {
 	background:#FFF;
 
 	.navbar {
+		align-items:initial;
 		height:100px;
 		padding-left:0;
 		padding-right:0;
+		button.navbar-toggler {
+		    margin-top: 1rem;
+		    height: 3rem;
+		}
+		.navbar-toggler-icon {
+		    position:relative;
+		    height:1.5rem;
+		}
+		.navbar-toggler-icon:before {
+			content: "\f0c9";  /* this is your text. You can also use UTF-8 character codes as I do here */
+		    font-family: FontAwesome;
+		    color:$primary-color;
+		}
+		.show.navbar-collapse {
+			background: white;
+		    width: 100%;
+		    margin: 0px -2.4rem;
+		    padding: 1rem 2rem;
+		    z-index: 100;
+		    font-size: 1rem;
+		    line-height: 2rem;
+
+		    .nav-item {
+		    	margin-bottom:.35rem;
+
+		    	a {
+		    		display:block;
+		    		&:active {
+		    			background-color:$primary-color;
+		    			color:white;
+		    		}
+		    	}
+		    }
+		}
 
 		.navbar-brand {
 			width: 192px;
 		    height: 42px;
 		    padding-top:0;
-
+		    margin-top: 1.3rem;
 		    img {
 		    	vertical-align: top;
 		    }
