@@ -140,7 +140,7 @@ export class Explorer extends React.Component {
               </div>
             </aside>
           </Col>
-          <Col md="9">
+          <Col lg="9" md="12">
             <div className="selected">
               <h4>Datasets Selected: 1</h4>
               <a href="#" className="help-link"><FontAwesomeIcon icon={faQuestionCircle} /> How Do I Use This Selection?</a>
