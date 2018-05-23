@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "mocha --compilers js:@babel/register --require ./test/setup.js --recursive ./test/*.test.js",
+    "test": "mocha --require @babel/register --require ./test/setup.js --recursive ./test/*.test.js",
     "build": "webpack --config ./config/webpack.config.js --mode production",
     "start": "webpack-dev-server --config ./config/webpack.config.js --mode development --hot"
   },
