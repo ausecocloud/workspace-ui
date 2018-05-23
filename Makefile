@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY:	build push
+.PHONY:	build push test
 
 PREFIX = hub.bccvl.org.au/ecocloud
 IMAGE = workspace-ui
@@ -20,6 +20,9 @@ TAG = latest
 
 build:
 	docker build -t $(PREFIX)/$(IMAGE):$(TAG) .
+
+test:
+	docker run --rm -it -p 5000:80 $(PREFIX)/$(IMAGE):$(TAG)
 
 run:
 	docker run --rm -it -p 5000:5000 -v $(PWD):/code $(PREFIX)/$(IMAGE):$(TAG) bash
