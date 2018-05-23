@@ -101,8 +101,10 @@ module.exports = (env, options) => {
                 '@babel/preset-react',
                 [
                   '@babel/preset-stage-2',
-                  {"decoratorsLegacy": true}
-                ]
+                  {
+                    decoratorsLegacy: true,
+                  },
+                ],
               ],
             },
           },
@@ -185,7 +187,7 @@ module.exports = (env, options) => {
     externals: {
       'react/addons': true,
       'react/lib/ExecutionEnvironment': true,
-      'react/lib/ReactContext': true
+      'react/lib/ReactContext': true,
     },
 
     // see https://webpack.js.org/configuration/devtool/
