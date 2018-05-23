@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Container, Progress, Button, Label, Form, Input, FormGroup } from 'reactstrap';
-import ReduxBlockUi from 'react-block-ui/redux';
 import BasicModal from './BasicModal';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Col, Row } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
+import { Loader, Types } from 'react-loaders';
 import Compute from './compute';
 import * as actions from './compute/actions';
 import { getServers, getUser } from './reducers';
@@ -48,7 +49,7 @@ class ComputeController extends React.Component {
         <Row>
           <Col>
             <h1>Server Configuration</h1>
-            <ReduxBlockUi tag="div" block={actions.SERVERS_LIST} unblock={[actions.SERVERS_SUCCEEDED, actions.SERVERS_FAILED]} className="loader">
+            <ReduxBlockUi tag="div" block={actions.SERVERS_LIST} unblock={[actions.SERVERS_SUCCEEDED, actions.SERVERS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
               <Compute servers={servers} />
             </ReduxBlockUi>
           </Col>

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Container, Progress, Button } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
+import { Loader, Types } from 'react-loaders';
 import BasicModal from './BasicModal';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
@@ -43,7 +44,7 @@ export class Dashboard extends React.Component {
   }
 
   state = {
-    feed: [],
+    feed: ['No new notifications.'],
     projectModalActive: false,
   }
 
@@ -156,7 +157,7 @@ export class Dashboard extends React.Component {
               <Col sm="12">
                 <div className="storage">
                   <h2>Your Resources</h2>
-                  <ReduxBlockUi tag="div" block={actions.PROJECTS_STATS} unblock={[actions.PROJECTS_STATS_SUCCEEDED, actions.PROJECTS_STATS_FAILED]} className="loader">
+                  <ReduxBlockUi tag="div" block={actions.PROJECTS_STATS} unblock={[actions.PROJECTS_STATS_SUCCEEDED, actions.PROJECTS_STATS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
                     <p>Storage Space <span className="storage-int">{usageNum}</span></p>
                     <Progress color={progColor()} value={usagePercent} />
                   </ReduxBlockUi>
@@ -167,7 +168,7 @@ export class Dashboard extends React.Component {
               <Col sm="12">
                 <div className="home-projects-table">
                   <h2>Your Projects</h2>
-                  <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} className="loader">
+                  <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
                     <ProjectsTableBasic projects={projects} />
                   </ReduxBlockUi>
                   <div className="table-footer">

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Row, Col, Container } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
+import { Loader, Types } from 'react-loaders';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import { Projects, CreateProjectForm } from './projects';
@@ -64,7 +65,7 @@ class ProjectsController extends React.Component {
       <Container>
         <Row>
           { projects &&
-            <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} className="loader">
+            <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
               <Col sm={{ size: 10, offset: 1 }}>
                 <h1>Your Projects</h1>
                 <Row>

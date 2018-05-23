@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
 import ReduxBlockUi from 'react-block-ui/redux';
+import { Loader, Types } from 'react-loaders';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
@@ -190,7 +191,7 @@ class ProjectsController extends React.Component {
     return (
       <Container>
         { project &&
-          <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} className="loader">
+          <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
             <Row>
               <Col>
                 <Link to="/drive" className="back-crumb">&laquo; Back to <em><strong>Drive</strong></em></Link>

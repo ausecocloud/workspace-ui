@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 @import url('https://use.fontawesome.com/releases/v5.0.10/css/all.css');
+@import '~loaders.css/src/animations/ball-pulse.scss';
 
 $font-stack:    'Cabin', sans-serif;
 $body-color: #333;
@@ -651,6 +652,18 @@ footer#footer {
 .loading-bullet {
 	color:$primary-color;
 }
+.loader-hidden {
+  display: none;
+}
+.loader-active {
+  display: block;
+}
+.ball-pulse > div {
+	background:$primary-color;
+	width: 10px;
+    height: 10px;
+}
+
 .modal-content { 
 	border-radius: 0px;
 	border:none;
