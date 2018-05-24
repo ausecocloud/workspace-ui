@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 const GenerateJsonPlugin = require('generate-json-webpack-plugin');
 
 const pkgConfig = require('../package.json');
@@ -39,6 +39,7 @@ module.exports = (env, options) => {
     output: {
       filename: 'main.js',
       path: paths.dist,
+      publicPath: '/',
     },
 
     resolve: {
@@ -149,6 +150,15 @@ module.exports = (env, options) => {
             },
           ],
         },
+        {
+          test: /\.(html)$/,
+          use: {
+            loader: 'html-loader',
+            options: {
+              minimize: debug,
+            },
+          },
+        },
       ],
     },
 
@@ -171,13 +181,10 @@ module.exports = (env, options) => {
         filename: '[name].css',
         chunkFilename: '[id].css',
       }),
-      new CopyWebpackPlugin([
-        {
-          from: resolve('./src/*.html'),
-          to: resolve('./dist/'),
-          flatten: true,
-        },
-      ], {}),
+      new HtmlWebPackPlugin({
+        template: resolve('src/index.html'),
+        filename: 'index.html',
+      }),
       new GenerateJsonPlugin('config.json', {
         version: pkgConfig.version,
         ...appConfig,
