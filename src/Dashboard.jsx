@@ -4,15 +4,14 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Container, Progress, Button } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
-import { Loader, Types } from 'react-loaders';
-import BasicModal from './BasicModal';
+import { Loader } from 'react-loaders';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faServer from '@fortawesome/fontawesome-free-solid/faServer';
 import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen';
 import faSearchPlus from '@fortawesome/fontawesome-free-solid/faSearchPlus';
-import fetch from 'node-fetch';
 import * as actions from './projects/actions';
+import BasicModal from './BasicModal';
 import { getProjects, getUser, getAuthenticated, getStats } from './reducers';
 import { ProjectsTableBasic, CreateProjectForm } from './projects';
 import { formatDate, bytesToSize } from './utils';
@@ -77,7 +76,6 @@ export class Dashboard extends React.Component {
           feed.push(feedItem);
         });
         parser.on('end', () => {
-          console.log('parser finished');
           this.setState({ feed });
         });
         // write is a blocking call

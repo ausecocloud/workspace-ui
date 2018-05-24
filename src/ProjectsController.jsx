@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Input, InputGroup, InputGroupAddon, Label, Row, Col, Container } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
 import ReduxBlockUi from 'react-block-ui/redux';
-import { Loader, Types } from 'react-loaders';
+import { Loader } from 'react-loaders';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';

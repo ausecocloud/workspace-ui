@@ -51,7 +51,7 @@ export function initAuth(config, store) {
   // setup token refresh
   keycloak.onTokenExpired = () => keycloak.updateToken()
     .then(refreshed => console.log('refresh on expire:', refreshed))
-    .catch(error => console.log('refresh on expire failed'));
+    .catch(error => console.log('refresh on expire failed', error));
 
   keycloak.onAuthSuccess = () => storeTokens(keycloak);
   keycloak.onAuthError = () => storeTokens(keycloak);
