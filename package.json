@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "mocha --require @babel/register --require ./test/setup.js --recursive ./test/*.test.js",
+    "test": "mocha --require @babel/register --require isomorphic-fetch --require ./test/setup.js --recursive ./test/*.test.js",
     "build": "webpack --config ./config/webpack.config.js --mode production",
     "start": "webpack-dev-server --config ./config/webpack.config.js --mode development --hot"
   },
@@ -23,7 +23,6 @@
     "history": "^4.7.2",
     "keycloak-js": "^4.0.0-beta.2",
     "loaders.css": "^0.1.2",
-    "node-fetch": "^2.1.2",
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "react-block-ui": "^1.1.1",
@@ -72,6 +71,7 @@
     "extract-loader": "^2.0.1",
     "file-loader": "^1.1.11",
     "generate-json-webpack-plugin": "^0.3.1",
+    "isomorphic-fetch": "^2.2.1",
     "jsdom": "^11.10.0",
     "mini-css-extract-plugin": "^0.4.0",
     "mocha": "^5.1.1",
