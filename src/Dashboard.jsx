@@ -10,6 +10,7 @@ import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faServer from '@fortawesome/fontawesome-free-solid/faServer';
 import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen';
 import faSearchPlus from '@fortawesome/fontawesome-free-solid/faSearchPlus';
+import axios from 'axios';
 import * as actions from './projects/actions';
 import BasicModal from './BasicModal';
 import { getProjects, getUser, getAuthenticated, getStats } from './reducers';
@@ -56,8 +57,8 @@ export class Dashboard extends React.Component {
   }
 
   getFeed = () => {
-    fetch('https://www.ecocloud.org.au/category/notifications/feed/')
-      .then(res => res.text())
+    axios.get('https://www.ecocloud.org.au/category/notifications/feed/')
+      .then(res => res.data)
       .then((body) => {
         const parser = new FeedMe(false);
         const feed = [];
