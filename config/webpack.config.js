@@ -32,12 +32,14 @@ module.exports = (env, options) => {
   return {
 
     // input modules
-    entry: [
-      resolve('src/main.jsx'),
-    ],
+    entry: {
+      main: resolve('src/main.jsx'),
+    },
+
     // output bundles
     output: {
-      filename: 'main.js',
+      filename: '[name].[hash].js',
+      chunkFilename: '[name].[chunkhash].chunk.js',
       path: paths.dist,
       publicPath: '/',
     },
@@ -135,6 +137,26 @@ module.exports = (env, options) => {
       ],
     },
 
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          commons: {
+            chunks: 'initial',
+            minChunks: 2,
+            // maxInitialRequests: 5,
+            // minSize: 0,
+          },
+          vendor: {
+            test: /node_modules/,
+            chunks: 'initial',
+            name: 'vendor',
+            priority: 10,
+            // enforce: true,
+          },
+        },
+      },
+    },
+
     // webpack plugins
     plugins: [
       new webpack.DefinePlugin({
@@ -151,8 +173,8 @@ module.exports = (env, options) => {
       new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // both options are optional
-        filename: '[name].css',
-        chunkFilename: '[id].css',
+        filename: debug ? '[name].css' : '[name].[chunkhash].css',
+        chunkFilename: debug ? '[id].css' : '[id].[chunkhash].css',
       }),
       new HtmlWebPackPlugin({
         template: resolve('src/index.html'),
@@ -173,9 +195,12 @@ module.exports = (env, options) => {
       historyApiFallback: true, // serve index.html from any sub url
       inline: true,
       port: 5000,
-      host: 'localhost', // Change to '0.0.0.0' for external facing server
+      host: '0.0.0.0', // Change to '0.0.0.0' for external facing server
       // watchContentBase: true,
-      public: 'localhost:5000',
+      watchOptions: {
+        ignored: /node_modules/,
+      },
+      public: '0.0.0.0:5000',
       publicPath: '/',
       proxy: [
         {
