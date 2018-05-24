@@ -80,33 +80,6 @@ module.exports = (env, options) => {
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
               cacheDirectory: true,
-              // reduce babel loader bloat
-              plugins: [
-                '@babel/plugin-transform-runtime',
-              ],
-              // babel presets to enable
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    env: {
-                      targets: {
-                        browsers: [
-                          'last 2 versions',
-                        ],
-                      },
-                    },
-                    modules: false,
-                  },
-                ],
-                '@babel/preset-react',
-                [
-                  '@babel/preset-stage-2',
-                  {
-                    decoratorsLegacy: true,
-                  },
-                ],
-              ],
             },
           },
         },
@@ -190,12 +163,6 @@ module.exports = (env, options) => {
         ...appConfig,
       }),
     ],
-
-    externals: {
-      'react/addons': true,
-      'react/lib/ExecutionEnvironment': true,
-      'react/lib/ReactContext': true,
-    },
 
     // see https://webpack.js.org/configuration/devtool/
     // eval-source-map may be better for development, but is slower
