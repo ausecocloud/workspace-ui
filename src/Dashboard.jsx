@@ -57,7 +57,7 @@ export class Dashboard extends React.Component {
   }
 
   getFeed = () => {
-    fetch('http://www.ecocloud.org.au/category/notifications/feed/')
+    fetch('https://www.ecocloud.org.au/category/notifications/feed/')
       .then(res => res.text())
       .then((body) => {
         const parser = new FeedMe(false);
