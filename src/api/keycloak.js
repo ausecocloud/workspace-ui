@@ -3,7 +3,7 @@
 // which means, that it is a mutable object and should not be stored in the
 // redux state tree.
 import axios from 'axios';
-import * as Keycloak from 'keycloak-js';
+import Keycloak from 'keycloak-js';
 import * as actions from '../actions';
 
 let keycloak;
