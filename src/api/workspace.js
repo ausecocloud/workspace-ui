@@ -83,16 +83,20 @@ export function deleteFolder(params) {
 
 export function uploadFile(params, progress) {
   // project, path, files: FileList
-  const data = new FormData();
-  data.append('project', params.project);
-  data.append('path', params.path);
-  data.append('file', params.files[0]);
+  const query = {
+    project: params.project,
+    path: params.path.endsWith('/') ? `${params.path}${params.files[0].name}` : `${params.path}/${params.files[0].name}`,
+  };
 
   const logProgress = progressEvent => console.log('Upload Progress', progressEvent, Math.round((progressEvent.loaded * 100) / progressEvent.total));
   const { promise, cancel } = callAPI({
     url: 'api/v1/files',
     method: 'POST',
-    data,
+    params: query,
+    data: params.files[0],
+    headers: {
+      'Content-Type': params.files[0].type,
+    },
     onUploadProgress: progress || logProgress,
   });
   promise[CANCEL] = cancel;
