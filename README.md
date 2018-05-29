@@ -8,10 +8,14 @@
 ## Development deployment
 
 Clone workspace_ui repo
+```sh
 yarn install
 yarn start
+```
 
 Visit [http://localhost:5000/](http://localhost:5000/) to confirm working app
 
 ## To Test
+```sh
 yarn test
+```
