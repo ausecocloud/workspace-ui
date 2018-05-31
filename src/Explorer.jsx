@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Container, Progress, Button, Label, Form, Input, FormGroup } from 'reactstrap';
 import BasicModal from './BasicModal';
 import SearchFacet from './SearchFacet';
+import ResultsList from './ResultsList';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import axios from 'axios';
@@ -12,7 +13,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faQuestionCircle from '@fortawesome/fontawesome-free-solid/faQuestionCircle';
-import faExternalLinkSquareAlt from '@fortawesome/fontawesome-free-solid/faExternalLinkSquareAlt';
 import * as actions from './projects/actions';
 import { getUser, getAuthenticated } from './reducers';
 
@@ -29,6 +29,8 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+const restrictedPubs = ["Geoscience Australia", "Australian Institute of Marine Science (AIMS)", "Office of Environment and Heritage (OEH)", "Natural Resources, Mines and Energy", "State of the Environment"];
+
 export class Explorer extends React.Component {
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -39,11 +41,14 @@ export class Explorer extends React.Component {
     publishersLoading: true,
     formats: [],
     formatsLoading: true,
+    results: [],
+    resultsLoading: true,
   }
 
   componentWillMount() {
     this.getPublishers();
     this.getFormats();
+    this.getInitResults();
   }
   componentDidMount() {
     console.log('Explorer: work in progress.');
@@ -52,38 +57,15 @@ export class Explorer extends React.Component {
     const query = {
       "size": 0,
       "aggs": {
-        "publishers": {
-          "terms": {
-            "field": "publisher.name.keyword",
-            "size": 25,
-          },
-        },
-      },
-    };
-
-    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
-      .then((res) => {
-        this.setState({
-          publishers: res.data.aggregations.publishers.buckets,
-          publishersLoading: false,
-        });
-      });
-  }
-
-  getFormats() {
-    const query = {
-      "size": 0,
-      "aggs": {
-        "formats": {
-          "nested": {
-            "path": "distributions",
+        "publisher_filter": {
+          "filter": {
+            "terms": {
+              "publisher.name.keyword": restrictedPubs,
+            },
           },
           "aggs": {
-            "formats": {
-              "terms": {
-                "field": "distributions.format.keyword",
-                "size": 25,
-              },
+            "publishers": {
+              "terms": { "field": "publisher.name.keyword", "size": 100 },
             },
           },
         },
@@ -93,8 +75,72 @@ export class Explorer extends React.Component {
     axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
       .then((res) => {
         this.setState({
-          formats: res.data.aggregations.formats.formats.buckets,
+          publishers: res.data.aggregations.publisher_filter.publishers.buckets,
+          publishersLoading: false,
+        });
+      });
+  }
+
+  getFormats() {
+    const query = {
+      "size": 0,
+      "aggs": {
+        "publisher_filter": {
+          "filter": {
+            "terms": {
+              "publisher.name.keyword": restrictedPubs,
+            },
+          },
+          "aggs": {
+            "formats": {
+              "nested": {
+                "path": "distributions",
+              },
+              "aggs": {
+                "formats": {
+                  "terms": {
+                    "field": "distributions.format.keyword",
+                    "size": 25,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          formats: res.data.aggregations.publisher_filter.formats.formats.buckets,
           formatsLoading: false,
+        });
+      });
+  }
+
+  getInitResults() {
+    const query = {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "terms": {
+                "publisher.name.keyword": restrictedPubs,
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          results: res.data.hits.hits,
+          resultsLoading: false,
         });
       });
   }
@@ -104,8 +150,7 @@ export class Explorer extends React.Component {
       user, isAuthenticated,
     } = this.props;
 
-    console.log(this.state.publishers);
-    console.log(this.state.formats);
+    console.log(this.state.results);
 
     return (
       <section className="explorer">
@@ -192,56 +237,9 @@ export class Explorer extends React.Component {
               </ul>
             </div>
 
-            <div className="results-list">
-              <header>
-                <div className="bulk-select">
-                  <Label for="selectAll">
-                    <Input name="select-all" id="selectAll" type="checkbox" />
-                    Select All
-                  </Label>
-                  <Label for="selectNone">
-                    <Input name="select-none" id="selectNone" type="checkbox" />
-                    Select None
-                  </Label>
-                </div>
-                <div className="float-right pagination">
-                  <span className="pages">Page 1 / 24</span>
-                  <Button color="primary" size="sm">1</Button>
-                  <Button color="primary" size="sm">2</Button>
-                  <Button color="primary" size="sm">3</Button>
-                  <Button color="primary" size="sm">4</Button>
-                  <Button color="primary" size="sm">&raquo;</Button>
-                </div>
-              </header>
-              <div className="result">
-                <Row>
-                  <Col md="1" className="result-check">
-                    <Input name="marine-assets" id="marineAssets" type="checkbox" />
-                  </Col>
-                  <Col md="11">
-                    <Label for="marineAssets">Marine Assets</Label>
-                    <p className="source">data.vic.gov.au</p>
-                    <p>This layer provides the boundaries of significant marine environmental assets which have been identified on the basis of their environmental value (at statewide, bioregional or local significance scale) for marine biodiversity and/or marine ecological processes <a href="#">… more</a></p>
-                    <p><strong>Provider:</strong> <a href="#">http://data.vic.gov.au/data/dataset/marine-assets</a></p>
-                    <Button color="primary" size="sm">Go to website <FontAwesomeIcon icon={faExternalLinkSquareAlt} /></Button>
-                  </Col>
-                </Row>
-              </div>
-              <div className="result">
-                <Row>
-                  <Col md="1" className="result-check">
-                    <Input name="marine-chapter" id="marineChapter" type="checkbox" />
-                  </Col>
-                  <Col md="11">
-                    <Label for="marineChapter">2016 SoE Marine Chapter - Pressures - Marine debris</Label>
-                    <p className="source">Australian Ocean Data Network</p>
-                    <p>The Marine chapter of the 2016 State of the Environment (SoE) report incorporates multiple expert templates developed from streams of marine.  This metadata record describes the Expert Assessment “Pressures on the marine environment associated with marine debris”.</p>
-                    <p><strong>Provider:</strong> <a href="#">http://catalogue.aodn.org.au/geonetwork/srv/en/file.disclaimer?uuid=b6c205fa-d8f4-474a-9a17-99db6f084607&fname=Pressures_marine</a></p>
-                    <Button color="primary" size="sm">Go to website <FontAwesomeIcon icon={faExternalLinkSquareAlt} /></Button>
-                  </Col>
-                </Row>
-              </div>
-            </div>
+            <BlockUi tag="div" blocking={this.state.resultsLoading} loader={<Loader active type="ball-pulse" />}>
+              <ResultsList data={this.state.results} />
+            </BlockUi>
           </Col>
         </Row>
       </section>

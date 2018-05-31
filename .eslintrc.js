@@ -16,6 +16,7 @@ if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
     rules['max-len'] = 'warn';
     rules['quotes'] = 1;
     rules['quote-props'] = 1;
+    rules['no-underscore-dangle'] = 1;
     // disallow declaration of variables that are not used in the code
     rules['no-unused-vars'] = ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }];
     rules['import/first'] = ['warn', 'absolute-first'];
