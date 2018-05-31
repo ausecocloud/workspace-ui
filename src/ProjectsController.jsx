@@ -17,6 +17,7 @@ import { formatDate } from './utils';
 import { Contents, PathBar, DeleteProjectForm } from './projects';
 import * as actions from './projects/actions';
 import { getContents, getProject, getPath } from './reducers';
+import { jupyterhub } from './api';
 
 
 function mapStateToProps(state, ownProps) {
@@ -188,6 +189,8 @@ class ProjectsController extends React.Component {
       addFile, newFile,
     } = this.state;
 
+    const huburl = jupyterhub.getHubUrl();
+
     return (
       <Container>
         { project &&
@@ -273,7 +276,7 @@ class ProjectsController extends React.Component {
             </div>
             <Row>
               <Col className="footerCallToAction">
-                <Link className="btn btn-xl btn-secondary" to={`compute/${project.name}`} title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></Link>
+                <a className="btn btn-xl btn-secondary" href={`${huburl}/hub/home`} target="_blank" title="Launch this project in ecocloud Compute"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></a>
                 <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
               </Col>
             </Row>

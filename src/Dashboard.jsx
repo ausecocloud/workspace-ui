@@ -13,6 +13,7 @@ import faSearchPlus from '@fortawesome/fontawesome-free-solid/faSearchPlus';
 import axios from 'axios';
 import * as actions from './projects/actions';
 import BasicModal from './BasicModal';
+import { jupyterhub } from './api';
 import { getProjects, getUser, getAuthenticated, getStats } from './reducers';
 import { ProjectsTableBasic, CreateProjectForm } from './projects';
 import { formatDate, bytesToSize } from './utils';
@@ -118,6 +119,7 @@ export class Dashboard extends React.Component {
       else if (usagePercent < 75) return 'warning';
       return 'danger';
     };
+    const huburl = jupyterhub.getHubUrl();
 
     return (
       <Container className="dashboard">
@@ -145,9 +147,9 @@ export class Dashboard extends React.Component {
                     </Link>
                   </Col>
                   <Col md="4">
-                    <Link to="compute" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
+                    <a href={`${huburl}/hub/home`} target="_blank" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
                       <FontAwesomeIcon icon={faServer} /> <br /> Start a service in <strong><em>Compute</em></strong>
-                    </Link>
+                    </a>
                   </Col>
                 </Row>
               </Col>

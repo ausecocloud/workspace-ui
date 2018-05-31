@@ -15,6 +15,7 @@ import ProjectsListController from './ProjectsListController';
 import Footer from './Footer';
 import Meta from './Meta';
 import ComputeController from './ComputeController';
+import { jupyterhub } from './api';
 import * as actions from './actions';
 import './assets/scss/default.scss';
 
@@ -54,6 +55,7 @@ class App extends React.Component {
 
   render() {
     const { isAuthenticated, user } = this.props;
+    const huburl = jupyterhub.getHubUrl();
 
     const anonLinks = (
       <Nav className="ml-auto" navbar>
@@ -75,7 +77,7 @@ class App extends React.Component {
           <NavLink exact to="/explorer">Explorer</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink exact to="/compute">Compute</NavLink>
+          <a href={`${huburl}/hub/home`} target="_blank">Compute</a>
         </NavItem>
         <NavItem>
           <NavLink target="_blank" to="http://support.ecocloud.org.au/support/home">Support &amp; Docs</NavLink>

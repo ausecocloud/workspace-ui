@@ -12,7 +12,7 @@ export default class Footer extends React.Component {
               <Row>
                 <Col md="6">
                   <ul>
-                    <li><a href="http://fennerschool.anu.edu.au/" target="_blank" rel="noopener noreferrer" title="Fennel School, ANU">Fennel School, ANU</a></li>
+                    <li><a href="http://fennerschool.anu.edu.au/" target="_blank" rel="noopener noreferrer" title="Fenner School, ANU">Fenner School, ANU</a></li>
                     <li><a href="https://www.ala.org.au/" target="_blank" rel="noopener noreferrer" title="Atlas of Living Australia">Atlas of Living Australia</a></li>
                     <li><a href="http://www.plantphenomics.org.au/" target="_blank" rel="noopener noreferrer" title="Australian Plant Phenomics Facility">Australian Plant Phenomics Facility</a></li>
                     <li><a href="https://www.csiro.au/en/Research/LWF" target="_blank" rel="noopener noreferrer" title="CSIRO Land and Water">CSIRO Land and Water</a></li>
