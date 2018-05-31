@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Container, Progress, Button, Label, Form, Input, FormGroup } from 'reactstrap';
 import BasicModal from './BasicModal';
+import SearchFacet from './SearchFacet';
+import BlockUi from 'react-block-ui';
+import { Loader } from 'react-loaders';
+import axios from 'axios';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
@@ -30,13 +34,78 @@ export class Explorer extends React.Component {
     user: PropTypes.objectOf(PropTypes.any).isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
   }
+  state = {
+    publishers: [],
+    publishersLoading: true,
+    formats: [],
+    formatsLoading: true,
+  }
+
+  componentWillMount() {
+    this.getPublishers();
+    this.getFormats();
+  }
   componentDidMount() {
     console.log('Explorer: work in progress.');
   }
+  getPublishers() {
+    const query = {
+      "size": 0,
+      "aggs": {
+        "publishers": {
+          "terms": {
+            "field": "publisher.name.keyword",
+            "size": 25,
+          },
+        },
+      },
+    };
+
+    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
+      .then((res) => {
+        this.setState({
+          publishers: res.data.aggregations.publishers.buckets,
+          publishersLoading: false,
+        });
+      });
+  }
+
+  getFormats() {
+    const query = {
+      "size": 0,
+      "aggs": {
+        "formats": {
+          "nested": {
+            "path": "distributions",
+          },
+          "aggs": {
+            "formats": {
+              "terms": {
+                "field": "distributions.format.keyword",
+                "size": 25,
+              },
+            },
+          },
+        },
+      },
+    };
+
+    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
+      .then((res) => {
+        this.setState({
+          formats: res.data.aggregations.formats.formats.buckets,
+          formatsLoading: false,
+        });
+      });
+  }
+
   render() {
     const {
       user, isAuthenticated,
     } = this.props;
+
+    console.log(this.state.publishers);
+    console.log(this.state.formats);
 
     return (
       <section className="explorer">
@@ -56,7 +125,7 @@ export class Explorer extends React.Component {
                 <FormGroup className="sorts">
                   <Label for="sortBy">Sort:</Label>
                   <Input type="select" name="sortBy" id="sortBy">
-                    <option selected>Relevance</option>
+                    <option defaultValue>Relevance</option>
                     <option>Alphabetical</option>
                   </Input>
                   <Label for="resultsNum">Per Page:</Label>
@@ -104,38 +173,12 @@ export class Explorer extends React.Component {
                     </FormGroup>
                   </Form>
                 </div>
-                <div className="facet">
-                  <h5>Service Type(s)</h5>
-                  <ul>
-                    <li>
-                      <Input name="ogc" id="ogc_checkbox" type="checkbox" />
-                      <Label for="ogc_checkbox" > OGC</Label>
-                      <span className="count"> (667)</span>
-                      <ul>
-                        <li>
-                          <Input name="wms" id="wms_checkbox" type="checkbox" />
-                          <Label for="wms_checkbox" > WMS</Label>
-                          <span className="count"> (333)</span>
-                        </li>
-                        <li>
-                          <Input name="wfs" id="wfs_checkbox" type="checkbox" />
-                          <Label for="wfs_checkbox" > WFS</Label>
-                          <span className="count"> (334)</span>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      <Input name="opendap" id="opendap_checkbox" type="checkbox" />
-                      <Label for="opendap_checkbox" > OPeNDAP</Label>
-                      <span className="count"> (102)</span>
-                    </li>
-                    <li>
-                      <Input name="thredds" id="thredds_checkbox" type="checkbox" />
-                      <Label for="thredds_checkbox" > THREDDS</Label>
-                      <span className="count"> (25)</span>
-                    </li>
-                  </ul>
-                </div>
+                <BlockUi tag="div" blocking={this.state.publishersLoading} loader={<Loader active type="ball-pulse" />}>
+                  <SearchFacet title="Publisher" options={this.state.publishers} />
+                </BlockUi>
+                <BlockUi tag="div" blocking={this.state.formatsLoading} loader={<Loader active type="ball-pulse" />}>
+                  <SearchFacet title="Service Type" options={this.state.formats} />
+                </BlockUi>
               </div>
             </aside>
           </Col>
