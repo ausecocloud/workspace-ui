@@ -150,8 +150,6 @@ export class Explorer extends React.Component {
       user, isAuthenticated,
     } = this.props;
 
-    console.log(this.state.results);
-
     return (
       <section className="explorer">
         <Row className="search-header">

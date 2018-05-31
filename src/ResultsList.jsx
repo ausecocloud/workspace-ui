@@ -13,7 +13,7 @@ class ResultsList extends React.Component {
   renderResults() {
     const { data } = this.props;
     return data.map(record => (
-      <div className="result">
+      <div className="result" key={record._id}>
         <Row>
           <Col md="1" className="result-check">
             <Input name={record._id} id={record._id} type="checkbox" />
