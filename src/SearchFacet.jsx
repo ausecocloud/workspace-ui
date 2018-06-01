@@ -13,7 +13,7 @@ class SearchFacet extends React.Component {
     const { options } = this.props;
     return options.map(option => (
       <li key={option.key}>
-        <Input name={`${option.key}_checkbox`} id={`${option.key}_checkbox`} type="checkbox" />
+        <Input name={`${option.key}_checkbox`} id={`${option.key}_checkbox`} type="checkbox" checked />
         <Label for={`${option.key}_checkbox`} >{option.key} <span className="count"> {option.doc_count}</span></Label>
       </li>
     ));

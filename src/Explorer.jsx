@@ -1,11 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Row, Col, Container, Progress, Button, Label, Form, Input, FormGroup } from 'reactstrap';
-import BasicModal from './BasicModal';
-import SearchFacet from './SearchFacet';
-import ResultsList from './ResultsList';
+import { Row, Col, Button, Label, Form, Input, FormGroup } from 'reactstrap';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import axios from 'axios';
@@ -13,7 +9,8 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faQuestionCircle from '@fortawesome/fontawesome-free-solid/faQuestionCircle';
-import * as actions from './projects/actions';
+import SearchFacet from './SearchFacet';
+import ResultsList from './ResultsList';
 import { getUser, getAuthenticated } from './reducers';
 
 function mapStateToProps(state) {
@@ -29,6 +26,37 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+function pagination(currentPage, pageCount) {
+  const delta = 2;
+  const left = currentPage - delta;
+  const right = currentPage + delta + 1;
+  let result = [];
+  result = Array.from({ length: pageCount }, (v, k) => k + 1)
+    .filter(i => i && i >= left && i < right);
+
+  // this isn't very solid
+  // keeping it for improvement later
+  // if (result.length > 1) {
+  //   // Add first page and dots
+  //   if (result[0] > 1) {
+  //     if (result[0] > 2) {
+  //       result.unshift('...')
+  //     }
+  //     result.unshift(1)
+  //   }
+  //   // Add dots and last page
+  //   if (result[result.length - 1] < pageCount) {
+  //     if (result[result.length - 1] !== pageCount - 1) {
+  //       result.push('...')
+  //     }
+  //     result.push(pageCount)
+  //   }
+  // }
+
+  const reduced = result.slice(0, 5);
+  return reduced;
+}
+
 const restrictedPubs = ["Geoscience Australia", "Australian Institute of Marine Science (AIMS)", "Office of Environment and Heritage (OEH)", "Natural Resources, Mines and Energy", "State of the Environment"];
 
 export class Explorer extends React.Component {
@@ -36,6 +64,12 @@ export class Explorer extends React.Component {
     user: PropTypes.objectOf(PropTypes.any).isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
   }
+
+  constructor(props) {
+    super(props);
+    this.changePage = this.changePage.bind(this);
+  }
+
   state = {
     publishers: [],
     publishersLoading: true,
@@ -43,16 +77,33 @@ export class Explorer extends React.Component {
     formatsLoading: true,
     results: [],
     resultsLoading: true,
+    perpage: 10,
+    hits: 0,
+    page: 1,
+    query: {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "terms": {
+                "publisher.name.keyword": restrictedPubs,
+              },
+            },
+          ],
+        },
+      },
+    },
   }
 
   componentWillMount() {
     this.getPublishers();
     this.getFormats();
-    this.getInitResults();
+    this.getResults(this.state.query);
   }
   componentDidMount() {
     console.log('Explorer: work in progress.');
   }
+
   getPublishers() {
     const query = {
       "size": 0,
@@ -112,7 +163,6 @@ export class Explorer extends React.Component {
 
     axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
       .then((res) => {
-        console.log(res);
         this.setState({
           formats: res.data.aggregations.publisher_filter.formats.formats.buckets,
           formatsLoading: false,
@@ -120,29 +170,35 @@ export class Explorer extends React.Component {
       });
   }
 
-  getInitResults() {
-    const query = {
-      "query": {
-        "bool": {
-          "must": [
-            {
-              "terms": {
-                "publisher.name.keyword": restrictedPubs,
-              },
-            },
-          ],
-        },
-      },
-    };
+  getResults() {
+    const { query } = this.state;
+
+    query.from = (this.state.page * this.state.perpage);
+    query.size = this.state.perpage;
 
     axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
       .then((res) => {
-        console.log(res);
         this.setState({
           results: res.data.hits.hits,
           resultsLoading: false,
+          hits: res.data.hits.total,
         });
       });
+  }
+
+  changePage(e) {
+    const page = e.target.innerHTML;
+    this.setState({ page }, () => this.getResults());
+  }
+
+  renderPageButtons() {
+    const { page, hits, perpage } = this.state;
+    const last = hits / perpage;
+    const pages = pagination(page, last);
+
+    return pages.map(pageNo => (
+      <Button color="primary" size="sm" key={pageNo} onClick={this.changePage} disabled={(pageNo === this.state.page)}>{pageNo}</Button>
+    ));
   }
 
   render() {
@@ -155,7 +211,7 @@ export class Explorer extends React.Component {
         <Row className="search-header">
           <Col lg="3" md="12">
             <Col sm="12">
-              <span className="results-count"><strong>1024 Results</strong></span>
+              <span className="results-count"><strong>{this.state.hits} Results</strong></span>
             </Col>
           </Col>
           <Col lg="9" md="12">
@@ -172,8 +228,9 @@ export class Explorer extends React.Component {
                     <option>Alphabetical</option>
                   </Input>
                   <Label for="resultsNum">Per Page:</Label>
-                  <Input type="select" name="resultsNum" id="resultsNum">
-                    <option selected>25</option>
+                  <Input type="select" name="resultsNum" id="resultsNum" defaultValue="10">
+                    <option>10</option>
+                    <option>25</option>
                     <option>50</option>
                   </Input>
                 </FormGroup>
@@ -234,9 +291,22 @@ export class Explorer extends React.Component {
                 <li><a className="selected-dataset"> Marine Assets, data.vic.gov.au <FontAwesomeIcon icon={faTimes} /></a></li>
               </ul>
             </div>
-
             <BlockUi tag="div" blocking={this.state.resultsLoading} loader={<Loader active type="ball-pulse" />}>
-              <ResultsList data={this.state.results} />
+              <div className="results-list">
+                <header>
+                  <div className="pagination">
+                    <span className="pages">Page {this.state.page} / {this.state.hits / this.state.perpage}</span>
+                    { this.renderPageButtons() }
+                  </div>
+                </header>
+                <ResultsList data={this.state.results} />
+                <footer>
+                  <div className="pagination">
+                    <span className="pages">Page {this.state.page} / {this.state.hits / this.state.perpage}</span>
+                    { this.renderPageButtons() }
+                  </div>
+                </footer>
+              </div>
             </BlockUi>
           </Col>
         </Row>

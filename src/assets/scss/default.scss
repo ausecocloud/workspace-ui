@@ -256,7 +256,7 @@ header#header {
 	}
 }
 section#main {
-    padding:2rem 0 2rem;
+    padding:2rem 0 2rem 0;
     background:$main-bg-color;
     .back-crumb {
     	margin-bottom:.75rem;
@@ -587,7 +587,10 @@ section#main {
 			.pagination {
 				font-size:0.875rem;
 				color:lighten($body-color, 50%);
-				margin:1rem;
+			    text-align: right;
+			    display: block;
+			    padding: 1rem;
+			    border-radius:0px;
 				.pages {
 					margin-right:.5rem;
 					padding:.5rem;
