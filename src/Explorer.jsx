@@ -207,6 +207,8 @@ export class Explorer extends React.Component {
     // udpate state (used for validation and handling)
     const { search } = this.state;
     search.keywords = e.target.value;
+    this.setState({ search });
+
     // update query (this could be combined in request handler)
     const { query } = this.state;
     if (e.target.value.length > 0) {
@@ -226,6 +228,31 @@ export class Explorer extends React.Component {
       }
       this.setState({ query });
     }
+  }
+
+  handleFacetUpdate = (facetData) => {
+    const { type, newSelection } = facetData;
+    const { query } = this.state;
+    if (type === 'format') {
+      if (newSelection.length > 0) {
+        query.query.bool.must[1].nested.query.terms = {
+          "distributions.format.keyword": newSelection,
+        };
+      } else {
+        query.query.bool.must[1].nested.query = {};
+      }
+    } else if (type === 'publisher') {
+      if (newSelection.length > 0) {
+        query.query.bool.must[0].terms = {
+          "publisher.name.keyword": newSelection,
+        };
+      } else {
+        query.query.bool.must[0].terms = {
+          "publisher.name.keyword": restrictedPubs,
+        };
+      }
+    }
+    this.setState({ query }, () => this.getResults());
   }
 
   handlePerPageChange(e) {
@@ -275,7 +302,7 @@ export class Explorer extends React.Component {
               <Col lg="5" md="12">
                 <FormGroup className="sorts">
                   <Label for="sortBy">Sort:</Label>
-                  <Input type="select" name="sortBy" id="sortBy">
+                  <Input type="select" name="sortBy" id="sortBy" disabled="true">
                     <option defaultValue>Relevance</option>
                     <option>Alphabetical</option>
                   </Input>
@@ -292,44 +319,16 @@ export class Explorer extends React.Component {
         </Row>
         <Row className="search-body">
           <Col lg="3" md="12">
-            <aside className="search-sidebar-panel current-search placeholder">
-              <header>
-                Current Search
-                <span className="float-right"><a href="#">Clear Search</a></span>
-              </header>
-              <div className="sidebar-body">
-                <div className="selected-facet">
-                  <h5>Keywords</h5>
-                  <ul>
-                    <li>marine <a href="#"><FontAwesomeIcon icon={faTimes} /></a></li>
-                  </ul>
-                </div>
-                <div className="selected-facet">
-                  <h5>Service Type(s)</h5>
-                  <ul>
-                    <li>WMS <a href="#"><FontAwesomeIcon icon={faTimes} /></a></li>
-                  </ul>
-                </div>
-              </div>
-            </aside>
             <aside className="search-sidebar-panel facets">
               <header>
                 Refine Search
               </header>
               <div className="sidebar-body">
-                <div className="facet">
-                  <Form className="add-keywords-form" inline>
-                    <FormGroup>
-                      <Input type="text" name="addKeywords" id="addKeywords" placeholder="Add more keywords ..." />
-                      <Button><FontAwesomeIcon icon={faSearch} /></Button>
-                    </FormGroup>
-                  </Form>
-                </div>
                 <BlockUi tag="div" blocking={this.state.publishersLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet title="Publisher" options={this.state.publishers} />
+                  <SearchFacet title="Publisher" type="publisher" options={this.state.publishers} onUpdate={this.handleFacetUpdate} />
                 </BlockUi>
                 <BlockUi tag="div" blocking={this.state.formatsLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet title="Service Type" options={this.state.formats} />
+                  <SearchFacet title="Service Type" type="format" options={this.state.formats} onUpdate={this.handleFacetUpdate} />
                 </BlockUi>
               </div>
             </aside>
