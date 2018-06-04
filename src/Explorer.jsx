@@ -62,6 +62,8 @@ export class Explorer extends React.Component {
   constructor(props) {
     super(props);
     this.changePage = this.changePage.bind(this);
+    this.searchHandler = this.searchHandler.bind(this);
+    this.handleKeywordChange = this.handleKeywordChange.bind(this);
   }
 
   state = {
@@ -74,6 +76,9 @@ export class Explorer extends React.Component {
     perpage: 10,
     hits: 0,
     page: 1,
+    search: {
+      keywords: '',
+    },
     query: {
       "query": {
         "bool": {
@@ -81,6 +86,12 @@ export class Explorer extends React.Component {
             {
               "terms": {
                 "publisher.name.keyword": restrictedPubs,
+              },
+            },
+            {
+              "nested": {
+                "path": "distributions",
+                "query": {},
               },
             },
           ],
@@ -110,7 +121,7 @@ export class Explorer extends React.Component {
           },
           "aggs": {
             "publishers": {
-              "terms": { "field": "publisher.name.keyword", "size": 100 },
+              "terms": { "field": "publisher.name.keyword", "size": 25 },
             },
           },
         },
@@ -180,6 +191,42 @@ export class Explorer extends React.Component {
       });
   }
 
+  searchHandler = (event) => {
+    // validate here
+    event.preventDefault();
+    const { query } = this.state;
+    if (query.query.bool.must.length > 2 && query.query.bool.must[2].multi_match.query.length > 1) {
+      this.getResults(this.state.query);
+    } else {
+      alert('must have keywords to search');
+    }
+  }
+
+  handleKeywordChange(e) {
+    // udpate state (used for validation and handling)
+    const { search } = this.state;
+    search.keywords = e.target.value;
+    // update query (this could be combined in request handler)
+    const { query } = this.state;
+    if (e.target.value.length > 0) {
+      if (query.query.bool.must.length === 2) {
+        const keywords = {
+          "multi_match": {
+            "query": e.target.value,
+            "fields": ["catalog", "description", "title", "themes"],
+          },
+        };
+        query.query.bool.must.push(keywords);
+      } else {
+        // assume any longer query is a keyword search
+        // TODO: too fragile, fix later
+        // update query
+        query.query.bool.must[2].multi_match.query = e.target.value;
+      }
+      this.setState({ query });
+    }
+  }
+
   changePage(n) {
     const page = n;
     this.setState({ page }, () => this.getResults());
@@ -187,7 +234,8 @@ export class Explorer extends React.Component {
 
   renderPageButtons() {
     const { page, hits, perpage } = this.state;
-    const last = hits / perpage;
+    const last = Math.ceil(hits / perpage);
+    console.log(last);
     const pages = pagination(page, last);
     const pageButtons = pages.map((pageNo) => {
       if (pageNo === 'First') {
@@ -215,13 +263,13 @@ export class Explorer extends React.Component {
             </Col>
           </Col>
           <Col lg="9" md="12">
-            <Form inline>
+            <Form inline onSubmit={this.searchHandler}>
               <Col lg="7" md="12">
-                <Input type="text" name="search" id="searchTerms" placeholder="Enter search terms ..." />
+                <Input type="text" name="search" id="searchTerms" placeholder="Enter search terms ..." value={this.state.search.keywords} onChange={this.handleKeywordChange} />
                 <Button><FontAwesomeIcon icon={faSearch} /> Search</Button>
               </Col>
               <Col lg="5" md="12">
-                <FormGroup className="sorts">
+                <FormGroup className="sorts placeholder">
                   <Label for="sortBy">Sort:</Label>
                   <Input type="select" name="sortBy" id="sortBy">
                     <option defaultValue>Relevance</option>
@@ -240,7 +288,7 @@ export class Explorer extends React.Component {
         </Row>
         <Row className="search-body">
           <Col lg="3" md="12">
-            <aside className="search-sidebar-panel current-search">
+            <aside className="search-sidebar-panel current-search placeholder">
               <header>
                 Current Search
                 <span className="float-right"><a href="#">Clear Search</a></span>
@@ -283,7 +331,7 @@ export class Explorer extends React.Component {
             </aside>
           </Col>
           <Col lg="9" md="12">
-            <div className="selected">
+            <div className="selected placeholder">
               <h4>Datasets Selected: 1</h4>
               <a href="#" className="help-link"><FontAwesomeIcon icon={faQuestionCircle} /> How Do I Use This Selection?</a>
               <a href="#" className="btn btn-primary float-right">View Snippets </a>
@@ -295,14 +343,14 @@ export class Explorer extends React.Component {
               <div className="results-list">
                 <header>
                   <div className="pagination">
-                    <span className="pages">Page {this.state.page} / {this.state.hits / this.state.perpage}</span>
+                    <span className="pages">Page {this.state.page} / { Math.ceil(this.state.hits / this.state.perpage) }</span>
                     { this.renderPageButtons() }
                   </div>
                 </header>
                 <ResultsList data={this.state.results} />
                 <footer>
                   <div className="pagination">
-                    <span className="pages">Page {this.state.page} / {this.state.hits / this.state.perpage}</span>
+                    <span className="pages">Page {this.state.page} / { Math.ceil(this.state.hits / this.state.perpage) }</span>
                     { this.renderPageButtons() }
                   </div>
                 </footer>
