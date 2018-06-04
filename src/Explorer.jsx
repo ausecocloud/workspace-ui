@@ -34,27 +34,21 @@ function pagination(currentPage, pageCount) {
   result = Array.from({ length: pageCount }, (v, k) => k + 1)
     .filter(i => i && i >= left && i < right);
 
+  result = result.slice(0, 5);
+
   // this isn't very solid
   // keeping it for improvement later
-  // if (result.length > 1) {
-  //   // Add first page and dots
-  //   if (result[0] > 1) {
-  //     if (result[0] > 2) {
-  //       result.unshift('...')
-  //     }
-  //     result.unshift(1)
-  //   }
-  //   // Add dots and last page
-  //   if (result[result.length - 1] < pageCount) {
-  //     if (result[result.length - 1] !== pageCount - 1) {
-  //       result.push('...')
-  //     }
-  //     result.push(pageCount)
-  //   }
-  // }
-
-  const reduced = result.slice(0, 5);
-  return reduced;
+  if (result.length > 1) {
+    // Add first page and dots
+    if (result[0] > 1) {
+      result.unshift('First');
+    }
+    // Add dots and last page
+    if (result[result.length - 1] < pageCount) {
+      result.push('Last');
+    }
+  }
+  return result;
 }
 
 const restrictedPubs = ["Geoscience Australia", "Australian Institute of Marine Science (AIMS)", "Office of Environment and Heritage (OEH)", "Natural Resources, Mines and Energy", "State of the Environment"];
@@ -186,8 +180,8 @@ export class Explorer extends React.Component {
       });
   }
 
-  changePage(e) {
-    const page = e.target.innerHTML;
+  changePage(n) {
+    const page = n;
     this.setState({ page }, () => this.getResults());
   }
 
@@ -195,10 +189,16 @@ export class Explorer extends React.Component {
     const { page, hits, perpage } = this.state;
     const last = hits / perpage;
     const pages = pagination(page, last);
+    const pageButtons = pages.map((pageNo) => {
+      if (pageNo === 'First') {
+        return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(1)}>&laquo;</Button>;
+      } else if (pageNo === 'Last') {
+        return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(last)}>&raquo;</Button>;
+      }
+      return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(pageNo)} className={(pageNo === this.state.page) ? "active" : ""} disabled={(pageNo === this.state.page)}>{pageNo}</Button>;
+    });
 
-    return pages.map(pageNo => (
-      <Button color="primary" size="sm" key={pageNo} onClick={this.changePage} disabled={(pageNo === this.state.page)}>{pageNo}</Button>
-    ));
+    return pageButtons;
   }
 
   render() {
