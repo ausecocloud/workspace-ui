@@ -65,6 +65,7 @@ export class Explorer extends React.Component {
     this.searchHandler = this.searchHandler.bind(this);
     this.handleKeywordChange = this.handleKeywordChange.bind(this);
     this.handlePerPageChange = this.handlePerPageChange.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
   }
 
   state = {
@@ -77,6 +78,8 @@ export class Explorer extends React.Component {
     perpage: 10,
     hits: 0,
     page: 1,
+    sort: [],
+    selectedSort: 'default',
     search: {
       keywords: '',
     },
@@ -98,6 +101,7 @@ export class Explorer extends React.Component {
           ],
         },
       },
+      "sort": [],
     },
   }
 
@@ -181,6 +185,7 @@ export class Explorer extends React.Component {
 
     query.from = (this.state.page * this.state.perpage);
     query.size = this.state.perpage;
+    query.sort = this.state.sort;
 
     axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
       .then((res) => {
@@ -259,6 +264,24 @@ export class Explorer extends React.Component {
     this.setState({ perpage: e.target.value }, () => this.getResults());
   }
 
+  handleSortChange(e) {
+    const selectedSort = e.target.value;
+    const attr = selectedSort.split('-')[0];
+    const order = selectedSort.split('-')[1];
+    let sort = [];
+    if (attr !== 'default') {
+      const sortOption = {
+        [attr]: {
+          "order": order,
+        },
+      };
+      sort.push(sortOption);
+    } else {
+      sort = [];
+    }
+    this.setState({ sort, selectedSort }, () => this.getResults());
+  }
+
   changePage(n) {
     const page = n;
     this.setState({ page }, () => this.getResults());
@@ -302,9 +325,14 @@ export class Explorer extends React.Component {
               <Col lg="5" md="12">
                 <FormGroup className="sorts">
                   <Label for="sortBy">Sort:</Label>
-                  <Input type="select" name="sortBy" id="sortBy" disabled="true">
-                    <option defaultValue>Relevance</option>
-                    <option>Alphabetical</option>
+                  <Input type="select" name="sortBy" id="sortBy" value={this.state.selectedSort} onChange={this.handleSortChange} >
+                    <option value="default">Default</option>
+                    <option value="indexed-desc" data-order="desc">Indexed (Desc)</option>
+                    <option value="indexed-asc" data-order="asc">Indexed (Asc)</option>
+                    <option value="modified-desc" data-order="desc">Modified (Desc)</option>
+                    <option value="modified-asc" data-order="asc">Modified (Asc)</option>
+                    <option value="issued-desc" data-order="desc">Issued (Desc)</option>
+                    <option value="issued-asc" data-order="asc">Issued (Asc)</option>
                   </Input>
                   <Label for="resultsNum">Per Page:</Label>
                   <Input type="select" name="resultsNum" id="resultsNum" value={this.state.perpage} onChange={this.handlePerPageChange} >
