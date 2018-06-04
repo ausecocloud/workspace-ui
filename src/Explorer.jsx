@@ -64,6 +64,7 @@ export class Explorer extends React.Component {
     this.changePage = this.changePage.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
     this.handleKeywordChange = this.handleKeywordChange.bind(this);
+    this.handlePerPageChange = this.handlePerPageChange.bind(this);
   }
 
   state = {
@@ -227,6 +228,10 @@ export class Explorer extends React.Component {
     }
   }
 
+  handlePerPageChange(e) {
+    this.setState({ perpage: e.target.value }, () => this.getResults());
+  }
+
   changePage(n) {
     const page = n;
     this.setState({ page }, () => this.getResults());
@@ -235,7 +240,6 @@ export class Explorer extends React.Component {
   renderPageButtons() {
     const { page, hits, perpage } = this.state;
     const last = Math.ceil(hits / perpage);
-    console.log(last);
     const pages = pagination(page, last);
     const pageButtons = pages.map((pageNo) => {
       if (pageNo === 'First') {
@@ -269,14 +273,14 @@ export class Explorer extends React.Component {
                 <Button><FontAwesomeIcon icon={faSearch} /> Search</Button>
               </Col>
               <Col lg="5" md="12">
-                <FormGroup className="sorts placeholder">
+                <FormGroup className="sorts">
                   <Label for="sortBy">Sort:</Label>
                   <Input type="select" name="sortBy" id="sortBy">
                     <option defaultValue>Relevance</option>
                     <option>Alphabetical</option>
                   </Input>
                   <Label for="resultsNum">Per Page:</Label>
-                  <Input type="select" name="resultsNum" id="resultsNum" defaultValue="10">
+                  <Input type="select" name="resultsNum" id="resultsNum" value={this.state.perpage} onChange={this.handlePerPageChange} >
                     <option>10</option>
                     <option>25</option>
                     <option>50</option>
