@@ -101,49 +101,6 @@ export class ExplorerController extends React.Component {
         },
       },
       "sort": [],
-    },
-  }
-
-  componentWillMount() {
-    this.getPublishers();
-    this.getFormats();
-    this.getResults(this.state.query);
-  }
-  componentDidMount() {
-    console.log('Explorer: work in progress.');
-  }
-
-  getPublishers() {
-    const query = {
-      "size": 0,
-      "aggs": {
-        "publisher_filter": {
-          "filter": {
-            "terms": {
-              "publisher.name.keyword": restrictedPubs,
-            },
-          },
-          "aggs": {
-            "publishers": {
-              "terms": { "field": "publisher.name.keyword", "size": 25 },
-            },
-          },
-        },
-      },
-    };
-
-    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
-      .then((res) => {
-        this.setState({
-          publishers: res.data.aggregations.publisher_filter.publishers.buckets,
-          publishersLoading: false,
-        });
-      });
-  }
-
-  getFormats() {
-    const query = {
-      "size": 0,
       "aggs": {
         "publisher_filter": {
           "filter": {
@@ -160,38 +117,44 @@ export class ExplorerController extends React.Component {
                 "formats": {
                   "terms": {
                     "field": "distributions.format.keyword",
-                    "size": 25,
                   },
                 },
               },
             },
+            "publishers": {
+              "terms": { "field": "publisher.name.keyword", "size": 100 },
+            },
           },
         },
       },
-    };
+    },
+  }
 
-    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
-      .then((res) => {
-        this.setState({
-          formats: res.data.aggregations.publisher_filter.formats.formats.buckets,
-          formatsLoading: false,
-        });
-      });
+  componentWillMount() {
+    this.getResults(this.state.query);
+  }
+  componentDidMount() {
+    console.log('Explorer: work in progress.');
   }
 
   getResults() {
     const { query } = this.state;
 
-    query.from = ((this.state.page-1) * this.state.perpage);
+    query.from = ((this.state.page - 1) * this.state.perpage);
     query.size = this.state.perpage;
     query.sort = this.state.sort;
 
     axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
       .then((res) => {
+        console.log(res);
         this.setState({
           results: res.data.hits.hits,
           resultsLoading: false,
           hits: res.data.hits.total,
+          publishers: res.data.aggregations.publisher_filter.publishers.buckets,
+          publishersLoading: false,
+          formats: res.data.aggregations.publisher_filter.formats.formats.buckets,
+          formatsLoading: false,
         });
       });
   }
@@ -199,11 +162,7 @@ export class ExplorerController extends React.Component {
   searchHandler = (event) => {
     event.preventDefault();
     const { query } = this.state;
-    if (query.query.bool.must.length > 2 && query.query.bool.must[2].multi_match.query.length > 1) {
-      this.getResults(this.state.query);
-    } else {
-      alert('must have keywords to search');
-    }
+    this.getResults(this.state.query);
   }
 
   handleKeywordChange(e) {
@@ -224,36 +183,45 @@ export class ExplorerController extends React.Component {
         };
         query.query.bool.must.push(keywords);
       } else {
-        // assume any longer query is a keyword search
+        // assume any 3-part query is a keyword search
         // TODO: too fragile, fix later
         // update query
         query.query.bool.must[2].multi_match.query = e.target.value;
       }
-      this.setState({ query });
+    } else {
+      // empty search is still valid
+      // delete object only if it exists
+      query.query.bool.must.splice(2);
     }
+    this.setState({ query });
   }
 
   handleFacetUpdate = (facetData) => {
     const { type, newSelection } = facetData;
     const { query } = this.state;
+    let formats = query.query.bool.must[1].nested.query;
+    const pubs = query.query.bool.must[0];
+
     if (type === 'format') {
       if (newSelection.length > 0) {
-        query.query.bool.must[1].nested.query.terms = {
+        formats.terms = {
           "distributions.format.keyword": newSelection,
         };
       } else {
-        query.query.bool.must[1].nested.query = {};
+        formats = {};
       }
+      query.query.bool.must[1].nested.query = formats;
     } else if (type === 'publisher') {
       if (newSelection.length > 0) {
-        query.query.bool.must[0].terms = {
+        pubs.terms = {
           "publisher.name.keyword": newSelection,
         };
       } else {
-        query.query.bool.must[0].terms = {
+        pubs.terms = {
           "publisher.name.keyword": restrictedPubs,
         };
       }
+      query.query.bool.must[0] = pubs;
     }
     this.setState({ query }, () => this.getResults());
   }
