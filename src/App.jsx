@@ -7,7 +7,7 @@ import { Container, Col, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Colla
 import './App.css';
 import ProjectsController from './ProjectsController';
 import Dashboard from './Dashboard';
-import Explorer from './Explorer';
+import ExplorerController from './ExplorerController';
 import Account from './Account';
 import { getUser, getAuthenticated } from './reducers';
 import Logo from './assets/images/logo.svg';
@@ -159,7 +159,7 @@ class App extends React.Component {
             />,
             <Route key="Drive" exact path="/drive" component={ProjectsListController} />,
             <Route key="Project" exact path="/drive/:id" component={ProjectsController} />,
-            <Route key="Explorer" path="/explorer" component={Explorer} />,
+            <Route key="Explorer" path="/explorer" component={ExplorerController} />,
             <Route key="Compute" exact path="/compute" component={ComputeController} />,
             <Route key="Account" exact path="/account" component={Account} />,
           ]) : (

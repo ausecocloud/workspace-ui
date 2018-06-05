@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Label, Input, Row, Col, Button } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faExternalLinkSquareAlt from '@fortawesome/fontawesome-free-solid/faExternalLinkSquareAlt';
-import { formatDate } from './utils';
+import { formatDate } from '../utils';
 
 export default
 class ResultsList extends React.Component {

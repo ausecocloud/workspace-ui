@@ -9,8 +9,7 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import faQuestionCircle from '@fortawesome/fontawesome-free-solid/faQuestionCircle';
-import SearchFacet from './SearchFacet';
-import ResultsList from './ResultsList';
+import { SearchFacet, ResultsList } from './explorer';
 import { getUser, getAuthenticated } from './reducers';
 
 function mapStateToProps(state) {
@@ -53,7 +52,7 @@ function pagination(currentPage, pageCount) {
 
 const restrictedPubs = ["Geoscience Australia", "Australian Institute of Marine Science (AIMS)", "Office of Environment and Heritage (OEH)", "Natural Resources, Mines and Energy", "State of the Environment"];
 
-export class Explorer extends React.Component {
+export class ExplorerController extends React.Component {
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any).isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
@@ -352,10 +351,10 @@ export class Explorer extends React.Component {
                 Refine Search
               </header>
               <div className="sidebar-body">
-                <BlockUi tag="div" blocking={this.state.publishersLoading} loader={<Loader active type="ball-pulse" />}>
+                <BlockUi blocking={this.state.publishersLoading} loader={<Loader active type="ball-pulse" />}>
                   <SearchFacet title="Publisher" type="publisher" options={this.state.publishers} onUpdate={this.handleFacetUpdate} />
                 </BlockUi>
-                <BlockUi tag="div" blocking={this.state.formatsLoading} loader={<Loader active type="ball-pulse" />}>
+                <BlockUi blocking={this.state.formatsLoading} loader={<Loader active type="ball-pulse" />}>
                   <SearchFacet title="Service Type" type="format" options={this.state.formats} onUpdate={this.handleFacetUpdate} />
                 </BlockUi>
               </div>
@@ -395,4 +394,4 @@ export class Explorer extends React.Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Explorer);
+export default connect(mapStateToProps, mapDispatchToProps)(ExplorerController);
