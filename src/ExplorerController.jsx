@@ -182,7 +182,7 @@ export class ExplorerController extends React.Component {
   getResults() {
     const { query } = this.state;
 
-    query.from = (this.state.page * this.state.perpage);
+    query.from = ((this.state.page-1) * this.state.perpage);
     query.size = this.state.perpage;
     query.sort = this.state.sort;
 
@@ -197,7 +197,6 @@ export class ExplorerController extends React.Component {
   }
 
   searchHandler = (event) => {
-    // validate here
     event.preventDefault();
     const { query } = this.state;
     if (query.query.bool.must.length > 2 && query.query.bool.must[2].multi_match.query.length > 1) {
