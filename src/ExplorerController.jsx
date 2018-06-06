@@ -99,12 +99,18 @@ export class ExplorerController extends React.Component {
                 "formats": {
                   "terms": {
                     "field": "distributions.format.keyword",
+                    "size": 25,
+                  },
+                  "aggs": {
+                    "record_count": {
+                      "reverse_nested": {},
+                    },
                   },
                 },
               },
             },
             "publishers": {
-              "terms": { "field": "publisher.name.keyword", "size": 100 },
+              "terms": { "field": "publisher.name.keyword", "size": 25 },
             },
           },
         },
@@ -146,7 +152,6 @@ export class ExplorerController extends React.Component {
 
     axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
       .then((res) => {
-        console.log(res);
         this.setState({
           results: res.data.hits.hits,
           resultsLoading: false,
@@ -322,7 +327,7 @@ export class ExplorerController extends React.Component {
                   <SearchFacet title="Publisher" type="publisher" options={this.state.publishers} onUpdate={this.handleFacetUpdate} />
                 </BlockUi>
                 <BlockUi blocking={this.state.formatsLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet title="Service Type" type="format" options={this.state.formats} onUpdate={this.handleFacetUpdate} />
+                  <SearchFacet title="Resource Type" type="format" options={this.state.formats} onUpdate={this.handleFacetUpdate} />
                 </BlockUi>
               </div>
             </aside>
