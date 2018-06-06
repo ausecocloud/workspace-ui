@@ -83,24 +83,6 @@ export class ExplorerController extends React.Component {
       keywords: '',
     },
     query: {
-      "query": {
-        "bool": {
-          "must": [
-            {
-              "terms": {
-                "publisher.name.keyword": restrictedPubs,
-              },
-            },
-            {
-              "nested": {
-                "path": "distributions",
-                "query": {},
-              },
-            },
-          ],
-        },
-      },
-      "sort": [],
       "aggs": {
         "publisher_filter": {
           "filter": {
@@ -127,6 +109,24 @@ export class ExplorerController extends React.Component {
           },
         },
       },
+      "post_filter": {
+        "bool": {
+          "must": [
+            {
+              "terms": {
+                "publisher.name.keyword": restrictedPubs,
+              },
+            },
+            {
+              "nested": {
+                "path": "distributions",
+                "query": {},
+              },
+            },
+          ],
+        },
+      },
+      "sort": [],
     },
   }
 
@@ -174,24 +174,24 @@ export class ExplorerController extends React.Component {
     // update query (this could be combined in request handler)
     const { query } = this.state;
     if (e.target.value.length > 0) {
-      if (query.query.bool.must.length === 2) {
+      if (query.post_filter.bool.must.length === 2) {
         const keywords = {
           "multi_match": {
             "query": e.target.value,
             "fields": ["catalog", "description", "title", "themes"],
           },
         };
-        query.query.bool.must.push(keywords);
+        query.post_filter.bool.must.push(keywords);
       } else {
         // assume any 3-part query is a keyword search
         // TODO: too fragile, fix later
         // update query
-        query.query.bool.must[2].multi_match.query = e.target.value;
+        query.post_filter.bool.must[2].multi_match.query = e.target.value;
       }
     } else {
       // empty search is still valid
       // delete object only if it exists
-      query.query.bool.must.splice(2);
+      query.post_filter.bool.must.splice(2);
     }
     this.setState({ query });
   }
@@ -199,8 +199,8 @@ export class ExplorerController extends React.Component {
   handleFacetUpdate = (facetData) => {
     const { type, newSelection } = facetData;
     const { query } = this.state;
-    let formats = query.query.bool.must[1].nested.query;
-    const pubs = query.query.bool.must[0];
+    let formats = query.post_filter.bool.must[1].nested.query;
+    const pubs = query.post_filter.bool.must[0];
 
     if (type === 'format') {
       if (newSelection.length > 0) {
@@ -210,7 +210,7 @@ export class ExplorerController extends React.Component {
       } else {
         formats = {};
       }
-      query.query.bool.must[1].nested.query = formats;
+      query.post_filter.bool.must[1].nested.query = formats;
     } else if (type === 'publisher') {
       if (newSelection.length > 0) {
         pubs.terms = {
@@ -221,7 +221,7 @@ export class ExplorerController extends React.Component {
           "publisher.name.keyword": restrictedPubs,
         };
       }
-      query.query.bool.must[0] = pubs;
+      query.post_filter.bool.must[0] = pubs;
     }
     this.setState({ query }, () => this.getResults());
   }
