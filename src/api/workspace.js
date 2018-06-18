@@ -96,6 +96,7 @@ export function uploadFile(params, progress) {
     data: params.files[0],
     headers: {
       'Content-Type': params.files[0].type,
+      'Content-Length': params.files[0].size,
     },
     onUploadProgress: progress || logProgress,
   });
