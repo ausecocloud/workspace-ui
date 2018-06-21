@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
 import { Breadcrumb } from 'reactstrap';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faHome from '@fortawesome/fontawesome-free-solid/faHome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
 import PathBarItem from './PathBarItem';
 
 

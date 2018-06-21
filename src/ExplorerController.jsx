@@ -5,10 +5,10 @@ import { Row, Col, Button, Label, Form, Input, FormGroup } from 'reactstrap';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import axios from 'axios';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
-import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
-import faQuestionCircle from '@fortawesome/fontawesome-free-solid/faQuestionCircle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
 import { SearchFacet, ResultsList } from './explorer';
 import { getUser, getAuthenticated } from './reducers';
 

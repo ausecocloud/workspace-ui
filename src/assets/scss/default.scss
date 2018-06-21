@@ -112,15 +112,15 @@ label {
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle {
     background-color: darken( $primary-color, 20% );
-    border-color: darken( $primary-color, 20% );		
+    border-color: darken( $primary-color, 20% );
 }
 .btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle {
     background-color: darken( $secondary-color, 20% );
-    border-color: darken( $secondary-color, 20% );		
+    border-color: darken( $secondary-color, 20% );
 }
 .btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active, .show > .btn-danger.dropdown-toggle {
     background-color: darken( $danger-color, 20% );
-    border-color: darken( $danger-color, 20% );		
+    border-color: darken( $danger-color, 20% );
 }
 
 .btn-secondary:focus, .btn-secondary.focus {
@@ -143,11 +143,11 @@ label {
 .logo-text h1 {
 	color:$primary-color;
 	display: inline;
-    margin-left: .5rem;
-    font-weight: 800;
-    font-style: italic;
-    vertical-align: top;
-    line-height: 2rem;
+        margin-left: .5rem;
+        font-weight: 800;
+        font-style: italic;
+        vertical-align: top;
+        line-height: 2rem;
 
 	&:hover {
 
@@ -343,7 +343,7 @@ section#main {
 		    		&:last-child{
 		    			text-align: right;
 		    		}
-		    	} 
+		    	}
 		    }
 		}
 	}
@@ -515,7 +515,7 @@ section#main {
 					border-bottom:0px solid lighten($grey-box-border, 10%);
 				}
 			}
-			a { 
+			a {
 				color:darken($primary-color, 25%);
 				font-size:0.8rem;
 			}
@@ -595,7 +595,7 @@ section#main {
 					margin-right:.5rem;
 					padding:.5rem;
 				}
-				
+
 			}
 			header .pagination {
 				border-bottom:1px solid lighten($body-color, 70%);
@@ -700,7 +700,7 @@ footer#footer {
 	    list-style-type: none;
 	    padding-left:0;
 	    padding-right:1em;
-	} 
+	}
 	li {
 	    line-height: 1.2em;
 	    margin-bottom: .6em;
@@ -722,7 +722,7 @@ footer#footer {
     height: 10px;
 }
 
-.modal-content { 
+.modal-content {
 	border-radius: 0px;
 	border:none;
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faFile from '@fortawesome/fontawesome-free-solid/faFile';
-import faFolder from '@fortawesome/fontawesome-free-solid/faFolder';
-import faTrash from '@fortawesome/fontawesome-free-solid/faTrash';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFile } from '@fortawesome/free-solid-svg-icons/faFile';
+import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder';
+import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { formatDate, bytesToSize } from '../utils';
 
 
@@ -73,4 +73,3 @@ class ContentRow extends React.PureComponent {
       );
     }
 }
-

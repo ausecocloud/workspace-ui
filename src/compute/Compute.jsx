@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faSpinner from '@fortawesome/fontawesome-free-solid/faSpinner';
-import faCheck from '@fortawesome/fontawesome-free-solid/faCheck';
-import faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 
 import { jupyterhub } from '../api';
 

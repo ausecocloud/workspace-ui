@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Label, Input, Row, Col, Button, Alert } from 'reactstrap';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faExternalLinkSquareAlt from '@fortawesome/fontawesome-free-solid/faExternalLinkSquareAlt';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkSquareAlt';
 import { formatDate } from '../utils';
 
 export default

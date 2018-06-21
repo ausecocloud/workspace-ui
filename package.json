@@ -12,9 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.47",
-    "@fortawesome/fontawesome": "^1.1.5",
-    "@fortawesome/fontawesome-free-solid": "^5.0.10",
-    "@fortawesome/react-fontawesome": "^0.0.18",
+    "@fortawesome/fontawesome-svg-core": "^1.2.0",
+    "@fortawesome/free-brands-svg-icons": "^5.1.0",
+    "@fortawesome/free-solid-svg-icons": "^5.1.0",
+    "@fortawesome/react-fontawesome": "^0.1.0",
     "@redux-beacon/google-analytics": "^1.0.2",
     "axios": "^0.18.0",
     "bootstrap": "^4.0.0",

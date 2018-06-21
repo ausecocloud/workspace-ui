@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Table } from 'reactstrap';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faFolder from '@fortawesome/fontawesome-free-solid/faFolder';
-import faExternalLinkAlt from '@fortawesome/fontawesome-free-solid/faExternalLinkAlt';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt';
 import { formatDate, bytesToSize } from '../utils';
 
 
