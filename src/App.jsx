@@ -14,7 +14,7 @@ import Logo from './assets/images/logo.svg';
 import ProjectsListController from './ProjectsListController';
 import Footer from './Footer';
 import Meta from './Meta';
-import ComputeController from './ComputeController';
+import ToolsController from './ToolsController';
 import { jupyterhub } from './api';
 import * as actions from './actions';
 import './assets/scss/default.scss';
@@ -55,7 +55,6 @@ class App extends React.Component {
 
   render() {
     const { isAuthenticated, user } = this.props;
-    const huburl = jupyterhub.getHubUrl();
 
     const anonLinks = (
       <Nav className="ml-auto" navbar>
@@ -77,7 +76,7 @@ class App extends React.Component {
           <NavLink exact to="/explorer">Explorer</NavLink>
         </NavItem>
         <NavItem>
-          <a href={`${huburl}/hub/home`} target="_blank">Compute</a>
+          <NavLink exact to="/tools">Tools</NavLink>
         </NavItem>
         <NavItem>
           <NavLink target="_blank" to="http://support.ecocloud.org.au/support/home">Support &amp; Docs</NavLink>
@@ -126,10 +125,10 @@ class App extends React.Component {
           />
           <Route
             exact
-            path="/compute"
+            path="/tools"
             render={() => ([
-              <span key="compute-text" className="logo-text"><h1>Compute</h1></span>,
-              <Meta key="compute-meta" pagetitle="Compute" pagedesc="ecocloud Compute" />,
+              <span key="tools-text" className="logo-text"><h1>Tools</h1></span>,
+              <Meta key="tools-meta" pagetitle="Tools" pagedesc="ecocloud Tools" />,
             ])}
           />
         </NavbarBrand>
@@ -160,7 +159,7 @@ class App extends React.Component {
             <Route key="Drive" exact path="/drive" component={ProjectsListController} />,
             <Route key="Project" exact path="/drive/:id" component={ProjectsController} />,
             <Route key="Explorer" path="/explorer" component={ExplorerController} />,
-            <Route key="Compute" exact path="/compute" component={ComputeController} />,
+            <Route key="Tools" exact path="/tools" component={ToolsController} />,
             <Route key="Account" exact path="/account" component={Account} />,
           ]) : (
             <Container>
