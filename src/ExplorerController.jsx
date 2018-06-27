@@ -150,7 +150,7 @@ export class ExplorerController extends React.Component {
     query.size = this.state.perpage;
     query.sort = this.state.sort;
 
-    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
+    axios.post(`https://es.knowledgenet.co/datasets32/_search`, query)
       .then((res) => {
         this.setState({
           results: res.data.hits.hits,
