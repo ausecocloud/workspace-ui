@@ -5,6 +5,7 @@ import { Row, Col, Button, Label, Form, Input, FormGroup } from 'reactstrap';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import axios from 'axios';
+import { Map } from 'immutable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
@@ -68,9 +69,9 @@ export class ExplorerController extends React.Component {
   }
 
   state = {
-    publishers: [],
+    publishers: new Map(),
     publishersLoading: true,
-    formats: [],
+    formats: new Map(),
     formatsLoading: true,
     results: [],
     resultsLoading: true,
@@ -84,38 +85,24 @@ export class ExplorerController extends React.Component {
     },
     query: {
       "aggs": {
-        "publisher_filter": {
-          "filter": {
-            "terms": {
-              "publisher.name.keyword": restrictedPubs,
-            },
+        "formats": {
+          "nested": {
+            "path": "distributions",
           },
           "aggs": {
             "formats": {
-              "nested": {
-                "path": "distributions",
+              "terms": {
+                "field": "distributions.format.keyword",
+                "size": 25,
               },
-              "aggs": {
-                "formats": {
-                  "terms": {
-                    "field": "distributions.format.keyword",
-                    "size": 25,
-                  },
-                  "aggs": {
-                    "record_count": {
-                      "reverse_nested": {},
-                    },
-                  },
-                },
-              },
-            },
-            "publishers": {
-              "terms": { "field": "publisher.name.keyword", "size": 25 },
             },
           },
         },
+        "publishers": {
+          "terms": { "field": "publisher.name.keyword", "size": 25 },
+        },
       },
-      "post_filter": {
+      "query": {
         "bool": {
           "must": [
             {
@@ -143,6 +130,14 @@ export class ExplorerController extends React.Component {
     console.log('Explorer: work in progress.');
   }
 
+  zeroingMap(instanceMap){
+    let newInstance = new Map()
+    for(let [key, value] of instanceMap){
+      newInstance = newInstance.set(key, 0)
+    }
+    return newInstance
+  }
+
   getResults() {
     const { query } = this.state;
 
@@ -152,13 +147,23 @@ export class ExplorerController extends React.Component {
 
     axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
       .then((res) => {
+        // reset the value to 0
+        let freshPublisher = this.zeroingMap(this.state.publishers)
+        let freshFormat = this.zeroingMap(this.state.formats)
+        // update the map value to the aggregated value
+        for(let ele of res.data.aggregations.publishers.buckets){
+          freshPublisher = freshPublisher.set(ele.key, ele.doc_count)
+        }
+        for(let ele of res.data.aggregations.formats.formats.buckets){
+          freshFormat = freshFormat.set(ele.key, ele.doc_count)
+        }
         this.setState({
           results: res.data.hits.hits,
           resultsLoading: false,
           hits: res.data.hits.total,
-          publishers: res.data.aggregations.publisher_filter.publishers.buckets,
+          publishers: freshPublisher,
           publishersLoading: false,
-          formats: res.data.aggregations.publisher_filter.formats.formats.buckets,
+          formats: freshFormat,
           formatsLoading: false,
         });
       });
@@ -179,24 +184,24 @@ export class ExplorerController extends React.Component {
     // update query (this could be combined in request handler)
     const { query } = this.state;
     if (e.target.value.length > 0) {
-      if (query.post_filter.bool.must.length === 2) {
+      if (query.query.bool.must.length === 2) {
         const keywords = {
           "multi_match": {
             "query": e.target.value,
             "fields": ["catalog", "description", "title", "themes"],
           },
         };
-        query.post_filter.bool.must.push(keywords);
+        query.query.bool.must.push(keywords);
       } else {
         // assume any 3-part query is a keyword search
         // TODO: too fragile, fix later
         // update query
-        query.post_filter.bool.must[2].multi_match.query = e.target.value;
+        query.query.bool.must[2].multi_match.query = e.target.value;
       }
     } else {
       // empty search is still valid
       // delete object only if it exists
-      query.post_filter.bool.must.splice(2);
+      query.query.bool.must.splice(2);
     }
     this.setState({ query });
   }
@@ -204,8 +209,8 @@ export class ExplorerController extends React.Component {
   handleFacetUpdate = (facetData) => {
     const { type, newSelection } = facetData;
     const { query } = this.state;
-    let formats = query.post_filter.bool.must[1].nested.query;
-    const pubs = query.post_filter.bool.must[0];
+    let formats = query.query.bool.must[1].nested.query;
+    const pubs = query.query.bool.must[0];
 
     if (type === 'format') {
       if (newSelection.length > 0) {
@@ -215,7 +220,7 @@ export class ExplorerController extends React.Component {
       } else {
         formats = {};
       }
-      query.post_filter.bool.must[1].nested.query = formats;
+      query.query.bool.must[1].nested.query = formats;
     } else if (type === 'publisher') {
       if (newSelection.length > 0) {
         pubs.terms = {
@@ -226,7 +231,7 @@ export class ExplorerController extends React.Component {
           "publisher.name.keyword": restrictedPubs,
         };
       }
-      query.post_filter.bool.must[0] = pubs;
+      query.query.bool.must[0] = pubs;
     }
     this.setState({ query }, () => this.getResults());
   }
