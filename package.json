@@ -22,6 +22,7 @@
     "feedme": "^1.2.0",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
+    "immutable": "^3.8.2",
     "keycloak-js": "^4.0.0-beta.2",
     "loaders.css": "^0.1.2",
     "prop-types": "^15.6.1",
