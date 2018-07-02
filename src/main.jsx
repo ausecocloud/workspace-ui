@@ -68,7 +68,7 @@ const initGA = (config) => {
   // Analytics
   // Creates an initial ga() function.
   // The queued commands will be executed once analytics.js loads.
-  window.ga = window.ga || function (...rest) {
+  window.ga = window.ga || function qaQueue(...rest) {
     (window.ga.q = window.ga.q || []).push(...rest);
   };
 
@@ -93,4 +93,3 @@ loadConfig('/config.json')
   })
   .then(() => load());
 // load();
-

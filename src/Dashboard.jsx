@@ -173,7 +173,9 @@ export class Dashboard extends React.Component {
                     <ProjectsTableBasic projects={projects} />
                   </ReduxBlockUi>
                   <div className="table-footer">
-                    <Button onClick={this.toggleProjectModal} className="btn btn-lg btn-success"><FontAwesomeIcon icon={faPlusCircle} /> Create New Project</Button>
+                    <Button onClick={this.toggleProjectModal} className="btn btn-lg btn-success">
+                      <FontAwesomeIcon icon={faPlusCircle} /> Create New Project
+                    </Button>
                   </div>
                   <BasicModal
                     title="Create A Project"

@@ -5,7 +5,7 @@ import { Label, Input } from 'reactstrap';
 export default
 class SearchFacet extends React.Component {
   static propTypes = {
-    options: PropTypes.any.isRequired,
+    options: PropTypes.objectOf(PropTypes.any).isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     onUpdate: PropTypes.func.isRequired,
@@ -39,7 +39,7 @@ class SearchFacet extends React.Component {
   }
 
   renderOptions() {
-    const { options } = this.props; 
+    const { options } = this.props;
     return [...options.keys()].map(key => (
       <li key={key}>
         <Input name={`${key}_checkbox`} id={`${key}_checkbox`} type="checkbox" value={key} onChange={this.handleSelectionChange} />

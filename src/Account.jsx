@@ -13,13 +13,6 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-
 class AccountTable extends React.PureComponent {
   static defaultProps = {
     user: {},
@@ -104,7 +97,7 @@ class AccountTable extends React.PureComponent {
   }
 
   validateForm = () => {
-    Object.entries(this.state.formErrors).forEach(([fieldname, error]) => {
+    Object.entries(this.state.formErrors).forEach(([_fieldname, error]) => {
       if (error.length > 0) {
         this.setState({ formValid: false });
       } else {
@@ -119,12 +112,10 @@ class AccountTable extends React.PureComponent {
       const { name, email, username } = this.state;
       const formData = { name, email };
       formData.preferred_username = username;
-      console.log(formData);
       // submit ajax call
-      // action doesn't exist yet
       this.props.dispatch(actions.userUpdate(formData));
     } else {
-      Object.entries(this.state.formErrors).forEach(([fieldname, error]) => {
+      Object.entries(this.state.formErrors).forEach(([fieldname, _error]) => {
         const formState = { ...this.state.formState };
         formState[fieldname] = 'is-invalid';
         this.setState({ formState });
