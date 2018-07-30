@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Row, Col, Button, Label, Form, Input, FormGroup } from 'reactstrap';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import axios from 'axios';
-import { Map } from 'immutable'
+import { Map } from 'immutable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
@@ -51,12 +51,24 @@ function pagination(currentPage, pageCount) {
   return result;
 }
 
-const restrictedPubs = ["Geoscience Australia", "Australian Institute of Marine Science (AIMS)", "Office of Environment and Heritage (OEH)", "Natural Resources, Mines and Energy", "State of the Environment"];
+function zeroingMap(instanceMap) {
+  let newInstance = new Map();
+  instanceMap.keySeq().forEach((key) => { newInstance = newInstance.set(key, 0); });
+  return newInstance;
+}
+
+const restrictedPubs = [
+  'Geoscience Australia',
+  'Australian Institute of Marine Science (AIMS)',
+  'Office of Environment and Heritage (OEH)',
+  'Natural Resources, Mines and Energy',
+  'State of the Environment',
+];
 
 export class ExplorerController extends React.Component {
   static propTypes = {
-    user: PropTypes.objectOf(PropTypes.any).isRequired,
-    isAuthenticated: PropTypes.bool.isRequired,
+    // user: PropTypes.objectOf(PropTypes.any).isRequired,
+    // isAuthenticated: PropTypes.bool.isRequired,
   }
 
   constructor(props) {
@@ -84,42 +96,42 @@ export class ExplorerController extends React.Component {
       keywords: '',
     },
     query: {
-      "aggs": {
-        "formats": {
-          "nested": {
-            "path": "distributions",
+      aggs: {
+        formats: {
+          nested: {
+            path: 'distributions',
           },
-          "aggs": {
-            "formats": {
-              "terms": {
-                "field": "distributions.format.keyword",
-                "size": 25,
+          aggs: {
+            formats: {
+              terms: {
+                field: 'distributions.format.keyword',
+                size: 25,
               },
             },
           },
         },
-        "publishers": {
-          "terms": { "field": "publisher.name.keyword", "size": 25 },
+        publishers: {
+          terms: { field: 'publisher.name.keyword', size: 25 },
         },
       },
-      "query": {
-        "bool": {
-          "must": [
+      query: {
+        bool: {
+          must: [
             {
-              "terms": {
-                "publisher.name.keyword": restrictedPubs,
+              terms: {
+                'publisher.name.keyword': restrictedPubs,
               },
             },
             {
-              "nested": {
-                "path": "distributions",
-                "query": {},
+              nested: {
+                path: 'distributions',
+                query: {},
               },
             },
           ],
         },
       },
-      "sort": [],
+      sort: [],
     },
   }
 
@@ -140,13 +152,9 @@ export class ExplorerController extends React.Component {
     })
   }
 
-  zeroingMap(instanceMap){
-    let newInstance = new Map()
-    for(let [key, value] of instanceMap){
-      newInstance = newInstance.set(key, 0)
-    }
-    return newInstance
-  }
+  // componentDidMount() {
+  //   console.log('Explorer: work in progress.');
+  // }
 
   getResults() {
     const { query } = this.state;
@@ -155,17 +163,19 @@ export class ExplorerController extends React.Component {
     query.size = this.state.perpage;
     query.sort = this.state.sort;
 
-    axios.post(`https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search`, query)
+    axios.post('https://es.knowledgenet.co/datasets32/_search', query)
       .then((res) => {
         // reset the value to 0
-        let freshPublisher = this.zeroingMap(this.state.publishers)
-        let freshFormat = this.zeroingMap(this.state.formats)
+        let freshPublisher = zeroingMap(this.state.publishers);
+        let freshFormat = zeroingMap(this.state.formats);
         // update the map value to the aggregated value
-        for(let ele of res.data.aggregations.publishers.buckets){
-          freshPublisher = freshPublisher.set(ele.key, ele.doc_count)
+        for (let i = 0, len = res.data.aggregations.publishers.buckets.length; i < len; i += 1) {
+          const ele = res.data.aggregations.publishers.buckets[i];
+          freshPublisher = freshPublisher.set(ele.key, ele.doc_count);
         }
-        for(let ele of res.data.aggregations.formats.formats.buckets){
-          freshFormat = freshFormat.set(ele.key, ele.doc_count)
+        for (let i = 0, len = res.data.aggregations.formats.formats.buckets.length; i < len; i += 1) {
+          const ele = res.data.aggregations.formats.formats.buckets[i];
+          freshFormat = freshFormat.set(ele.key, ele.doc_count);
         }
         this.setState({
           results: res.data.hits.hits,
@@ -182,7 +192,7 @@ export class ExplorerController extends React.Component {
   searchHandler = (event) => {
     event.preventDefault();
     const { query } = this.state;
-    this.getResults(this.state.query);
+    this.getResults(query);
   }
 
   handleKeywordChange(e) {
@@ -196,9 +206,9 @@ export class ExplorerController extends React.Component {
     if (e.target.value.length > 0) {
       if (query.query.bool.must.length === 2) {
         const keywords = {
-          "multi_match": {
-            "query": e.target.value,
-            "fields": ["catalog", "description", "title", "themes"],
+          multi_match: {
+            query: e.target.value,
+            fields: ['catalog', 'description', 'title', 'themes'],
           },
         };
         query.query.bool.must.push(keywords);
@@ -225,7 +235,7 @@ export class ExplorerController extends React.Component {
     if (type === 'format') {
       if (newSelection.length > 0) {
         formats.terms = {
-          "distributions.format.keyword": newSelection,
+          'distributions.format.keyword': newSelection,
         };
       } else {
         formats = {};
@@ -234,11 +244,11 @@ export class ExplorerController extends React.Component {
     } else if (type === 'publisher') {
       if (newSelection.length > 0) {
         pubs.terms = {
-          "publisher.name.keyword": newSelection,
+          'publisher.name.keyword': newSelection,
         };
       } else {
         pubs.terms = {
-          "publisher.name.keyword": restrictedPubs,
+          'publisher.name.keyword': restrictedPubs,
         };
       }
       query.query.bool.must[0] = pubs;
@@ -258,7 +268,7 @@ export class ExplorerController extends React.Component {
     if (attr !== 'default') {
       const sortOption = {
         [attr]: {
-          "order": order,
+          order,
         },
       };
       sort.push(sortOption);
@@ -283,16 +293,16 @@ export class ExplorerController extends React.Component {
       } else if (pageNo === 'Last') {
         return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(last)}>&raquo;</Button>;
       }
-      return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(pageNo)} className={(pageNo === this.state.page) ? "active" : ""} disabled={(pageNo === this.state.page)}>{pageNo}</Button>;
+      return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(pageNo)} className={(pageNo === this.state.page) ? 'active' : ''} disabled={(pageNo === this.state.page)}>{pageNo}</Button>;
     });
 
     return pageButtons;
   }
 
   render() {
-    const {
-      user, isAuthenticated,
-    } = this.props;
+    // const {
+    //   user, isAuthenticated,
+    // } = this.props;
 
     return (
       <section className="explorer">

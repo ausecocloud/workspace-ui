@@ -10,8 +10,8 @@ import {
   CardTitle,
   CardText,
 } from 'reactstrap';
-import ReduxBlockUi from 'react-block-ui/redux';
-import { Loader, Types } from 'react-loaders';
+// import ReduxBlockUi from 'react-block-ui/redux';
+// import { Loader, Types } from 'react-loaders';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faRProject } from '@fortawesome/free-brands-svg-icons/faRProject';
 import Rlogo from './assets/images/Rlogo.svg';
@@ -25,7 +25,7 @@ import BiodiverseLogo from './assets/images/BiodiverseLogo.png';
 import KeplerLogo from './assets/images/KeplerLogo.png';
 import MCASSLogo from './assets/images/MCASSlogo.jpg';
 import AURINLogo from './assets/images/AURINlogo.png';
-import Compute from './compute';
+// import Compute from './compute';
 import * as actions from './compute/actions';
 import { getServers, getUser } from './reducers';
 import { jupyterhub } from './api';
@@ -47,7 +47,7 @@ function mapDispatchToProps(dispatch) {
 
 class ToolsController extends React.Component {
   static propTypes = {
-    servers: PropTypes.arrayOf(PropTypes.any).isRequired,
+    // servers: PropTypes.arrayOf(PropTypes.any).isRequired,
     user: PropTypes.objectOf(PropTypes.any).isRequired,
     dispatch: PropTypes.func.isRequired,
   }
@@ -62,9 +62,9 @@ class ToolsController extends React.Component {
   }
 
   render() {
-    const {
-      servers,
-    } = this.props;
+    // const {
+    //   servers,
+    // } = this.props;
 
     const huburl = jupyterhub.getHubUrl();
 
@@ -91,8 +91,12 @@ class ToolsController extends React.Component {
                 <a href={`${huburl}/hub/home`} target="_blank">
                   <Card>
                     <CardBody>
-                      <CardTitle><img className="card-logo" src={Rlogo} alt="R Logo" /> RStudio & R Jupyter</CardTitle>
-                      <CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</CardText>
+                      <CardTitle>
+                        <img className="card-logo" src={Rlogo} alt="R Logo" /> RStudio & R Jupyter
+                      </CardTitle>
+                      <CardText>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                      </CardText>
                     </CardBody>
                   </Card>
                 </a>
@@ -101,8 +105,12 @@ class ToolsController extends React.Component {
                 <a href={`${huburl}/hub/home`} target="_blank">
                   <Card>
                     <CardBody>
-                      <CardTitle><img className="card-logo" src={JupyterLogo} alt="Jupyter Logo" />  SciPy Jupyter</CardTitle>
-                      <CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</CardText>
+                      <CardTitle>
+                        <img className="card-logo" src={JupyterLogo} alt="Jupyter Logo" />  SciPy Jupyter
+                      </CardTitle>
+                      <CardText>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                      </CardText>
                     </CardBody>
                   </Card>
                 </a>
@@ -120,8 +128,12 @@ class ToolsController extends React.Component {
                     <CardBody>
                       <Row>
                         <Col>
-                          <CardTitle><img className="card-logo" src={CoesraLogo} alt="COESRA Logo" />Virtual Desktop</CardTitle>
-                          <CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</CardText>
+                          <CardTitle>
+                            <img className="card-logo" src={CoesraLogo} alt="COESRA Logo" />Virtual Desktop
+                          </CardTitle>
+                          <CardText>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                          </CardText>
                         </Col>
                         <Col>
                           <Row>
@@ -157,8 +169,12 @@ class ToolsController extends React.Component {
                 <a href="https://spatial.ala.org.au" target="_blank" rel="noopener noreferrer">
                   <Card>
                     <CardBody>
-                      <CardTitle><img className="card-logo" src={ALALogo} alt="ALA Logo" /> ALA Spatial Portal</CardTitle>
-                      <CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</CardText>
+                      <CardTitle>
+                        <img className="card-logo" src={ALALogo} alt="ALA Logo" /> ALA Spatial Portal
+                      </CardTitle>
+                      <CardText>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                      </CardText>
                     </CardBody>
                   </Card>
                 </a>
@@ -167,8 +183,12 @@ class ToolsController extends React.Component {
                 <a href="http://www.bccvl.org.au" target="_blank" rel="noopener noreferrer">
                   <Card>
                     <CardBody>
-                      <CardTitle><img className="card-logo" src={BCCVLLogo} alt="BCCVL Logo" /> BCCVL</CardTitle>
-                      <CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</CardText>
+                      <CardTitle>
+                        <img className="card-logo" src={BCCVLLogo} alt="BCCVL Logo" /> BCCVL
+                      </CardTitle>
+                      <CardText>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                      </CardText>
                     </CardBody>
                   </Card>
                 </a>
@@ -179,8 +199,12 @@ class ToolsController extends React.Component {
                 <a href="http://www.agriculture.gov.au/abares/aclump/multi-criteria-analysis" target="_blank" rel="noopener noreferrer">
                   <Card>
                     <CardBody>
-                      <CardTitle><img className="card-logo" src={MCASSLogo} alt="MCAS-S Logo" /> MCAS-S</CardTitle>
-                      <CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</CardText>
+                      <CardTitle>
+                        <img className="card-logo" src={MCASSLogo} alt="MCAS-S Logo" /> MCAS-S
+                      </CardTitle>
+                      <CardText>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                      </CardText>
                     </CardBody>
                   </Card>
                 </a>
@@ -189,8 +213,12 @@ class ToolsController extends React.Component {
                 <a href="https://aurin.org.au" target="_blank" rel="noopener noreferrer">
                   <Card>
                     <CardBody>
-                      <CardTitle><img className="card-logo" src={AURINLogo} alt="AURIN Logo" /> AURIN</CardTitle>
-                      <CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</CardText>
+                      <CardTitle>
+                        <img className="card-logo" src={AURINLogo} alt="AURIN Logo" /> AURIN
+                      </CardTitle>
+                      <CardText>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                      </CardText>
                     </CardBody>
                   </Card>
                 </a>

@@ -27,7 +27,9 @@ function getClient() {
           }
           return newConfig;
         })
-        .catch((error) => { console.log('Token refresh failed: ', error); throw error; }),
+        .catch((error) => {
+          console.log('Token refresh failed: ', error); throw error;
+        }),
       // Do something with request error
       error => Promise.reject(error),
     );
@@ -130,4 +132,3 @@ export function getStats() {
   data[CANCEL] = cancel;
   return data;
 }
-

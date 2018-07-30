@@ -64,7 +64,7 @@ function getClient(username) {
           return newConfig;
         })
         .catch((error) => {
-          console.log('Token refresh failed: ', error);
+          // console.log('Token refresh failed: ', error);
           throw error;
         }),
       // Do something with request error

@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, NavLink, withRouter } from 'react-router-dom';
-import { Container, Col, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
 import Dashboard from './Dashboard';
@@ -15,7 +15,6 @@ import ProjectsListController from './ProjectsListController';
 import Footer from './Footer';
 import Meta from './Meta';
 import ToolsController from './ToolsController';
-import { jupyterhub } from './api';
 import * as actions from './actions';
 import './assets/scss/default.scss';
 

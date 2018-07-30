@@ -11,14 +11,14 @@ export function* loginTask() {
     if (!kc.authenticated) {
       yield kc.login();
     }
-    console.log('AUTH:', kc.authenticated);
+    // console.log('AUTH:', kc.authenticated);
     if (kc.authenticated) {
       yield put(actions.loginSucceeded(kc));
     } else {
       yield put(actions.loginFailed());
     }
   } catch (error) {
-    console.log('AUTH:', error);
+    // console.log('AUTH:', error);
     yield put(actions.loginFailed());
   }
 }
@@ -29,14 +29,14 @@ export function* updateUserTask(action) {
   try {
     const kc = getKeycloak();
     const user = yield call(updateUserAccount, action.payload);
-    console.log(user);
+    // console.log(user);
     if (kc.authenticated) {
       yield put(actions.userUpdateSucceeded(user));
     } else {
       yield put(actions.userUpdateFailed());
     }
   } catch (error) {
-    console.log('AUTH:', error);
+    // console.log('AUTH:', error);
     yield put(actions.userUpdateFailed());
   }
 }
@@ -54,7 +54,7 @@ export function* logoutTask() {
       yield put(actions.logoutFailed());
     }
   } catch (error) {
-    console.log('LOGOUT:', error);
+    // console.log('LOGOUT:', error);
     yield put(actions.logoutFailed());
   }
 }

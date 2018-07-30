@@ -6,7 +6,7 @@ const rules = {
     specialLink: [ 'to' ],
     aspects: ['invalidHref', 'preferButton'],
   }],
-  "no-restricted-syntax": 1,
+  "no-restricted-syntax": 'warn',
   // TODO: enable this rule again
   'react-redux/prefer-separate-component-file': 'off',
 }
