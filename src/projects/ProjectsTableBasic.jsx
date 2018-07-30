@@ -5,7 +5,7 @@ import { Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt';
-import { formatDate, bytesToSize } from '../utils';
+import { formatDate } from '../utils';
 
 
 export default

@@ -151,6 +151,6 @@ export function getClientToken(clientid) {
 }
 
 
-export function updateUserAccount(formData) {
+export function updateUserAccount(_formData) {
   keycloak.accountManagement();
 }

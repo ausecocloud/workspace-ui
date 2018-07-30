@@ -6,7 +6,7 @@ const rules = {
     specialLink: [ 'to' ],
     aspects: ['invalidHref', 'preferButton'],
   }],
-  "no-restricted-syntax": 1,
+  "no-restricted-syntax": 'warn',
   // TODO: enable this rule again
   'react-redux/prefer-separate-component-file': 'off',
 }
@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
     rules['no-unused-vars'] = ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }];
     rules['import/first'] = ['warn', 'absolute-first'];
     rules["import/no-named-as-default"] = 0;
+    rules["linebreak-style"] = 0;
 }
 
 module.exports = {

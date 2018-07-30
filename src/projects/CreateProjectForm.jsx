@@ -61,7 +61,7 @@ class CreateProjectForm extends React.PureComponent {
   }
 
   validateForm = () => {
-    Object.entries(this.state.formErrors).forEach(([fieldname, error]) => {
+    Object.entries(this.state.formErrors).forEach(([_fieldname, error]) => {
       if (error.length > 0) {
         this.setState({ formValid: false });
       } else {
@@ -76,7 +76,7 @@ class CreateProjectForm extends React.PureComponent {
       const { name, description } = this.state;
       this.props.submit({ name, description });
     } else {
-      Object.entries(this.state.formErrors).forEach(([fieldname, error]) => {
+      Object.entries(this.state.formErrors).forEach(([fieldname, _error]) => {
         const formState = { ...this.state.formState };
         formState[fieldname] = 'is-invalid';
         this.setState({ formState });

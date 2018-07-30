@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { CANCEL } from 'redux-saga';
 
-const KNurl = 'https://kn-v2-dev-es.oznome.csiro.au/datasets30/_search';
+const KNurl = 'https://es.knowledgenet.co/datasets32/_search';
 
 // FIXME: duplicate code
 function callAPI(options) {

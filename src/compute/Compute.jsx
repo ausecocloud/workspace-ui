@@ -22,6 +22,8 @@ export default class Compute extends React.PureComponent {
     const { servers } = this.props;
     const huburl = jupyterhub.getHubUrl();
 
+    const iconfunc = item => (item.pending ? faSpinner : (item.ready && faCheck) || faTimes);
+
     return (
       <div>
         <a href={`${huburl}/hub/home`} target="_blank">Jupyter Hub</a>
@@ -33,7 +35,7 @@ export default class Compute extends React.PureComponent {
                   <td><a href={`${huburl}${item.url}`} target="_blank">{item.name || 'Server'}</a></td>
                   <td>{item.last_activity}</td>
                   <td>{item.started}</td>
-                  <td><FontAwesomeIcon icon={item.pending ? faSpinner : (item.ready && faCheck) || faTimes} /></td>
+                  <td><FontAwesomeIcon icon={iconfunc(item)} /></td>
                 </tr>
               ))
             }
