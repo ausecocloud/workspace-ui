@@ -6,12 +6,12 @@ import { formatDate } from '../utils';
 
 
 class Projects extends React.PureComponent {
-  static defaultProps = {
-    projects: [],
-  }
-
   static propTypes = {
     projects: PropTypes.arrayOf(PropTypes.any),
+  }
+
+  static defaultProps = {
+    projects: [],
   }
 
   renderProjectOptions() {

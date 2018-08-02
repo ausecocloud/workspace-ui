@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Form, FormGroup, Label, Input, Container, FormFeedback } from 'reactstrap';
+import {
+  Button, Form, FormGroup, Label, Input, Container, FormFeedback,
+} from 'reactstrap';
 import * as actions from './actions';
 import { getUser, getAuthenticated } from './reducers';
 
@@ -14,15 +16,15 @@ function mapStateToProps(state) {
 }
 
 class AccountTable extends React.PureComponent {
-  static defaultProps = {
-    user: {},
-    isAuthenticated: false,
-  }
-
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any),
     isAuthenticated: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    user: {},
+    isAuthenticated: false,
   }
 
   constructor(props) {
@@ -44,14 +46,15 @@ class AccountTable extends React.PureComponent {
     const { target } = event;
     const { value, name } = target;
     const [fieldState, fieldError] = this.validateField(name, value);
+    const { formState, formErrors } = this.state;
     this.setState({
       [name]: value,
       formState: {
-        ...this.state.formState,
+        ...formState,
         [name]: fieldState,
       },
       formErrors: {
-        ...this.state.formErrors,
+        ...formErrors,
         [name]: fieldError,
       },
     }, () => this.validateForm());
@@ -116,9 +119,11 @@ class AccountTable extends React.PureComponent {
       this.props.dispatch(actions.userUpdate(formData));
     } else {
       Object.entries(this.state.formErrors).forEach(([fieldname, _error]) => {
-        const formState = { ...this.state.formState };
-        formState[fieldname] = 'is-invalid';
-        this.setState({ formState });
+        this.setState((prevState) => {
+          const formState = { ...prevState.formState };
+          formState[fieldname] = 'is-invalid';
+          return { formState };
+        });
       });
     }
   }

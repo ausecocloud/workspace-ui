@@ -23,53 +23,53 @@ function getIcon(type) {
 
 export default
 class ContentRow extends React.PureComponent {
-    static defaultProps = {
-      item: {},
-      onClick: null,
-      onDelete: null,
-    }
+  static propTypes = {
+    item: PropTypes.objectOf(PropTypes.any),
+    onClick: PropTypes.func,
+    onDelete: PropTypes.func,
+  }
 
-    static propTypes = {
-      item: PropTypes.objectOf(PropTypes.any),
-      onClick: PropTypes.func,
-      onDelete: PropTypes.func,
-    }
+  static defaultProps = {
+    item: {},
+    onClick: null,
+    onDelete: null,
+  }
 
-    onClick = (e) => {
-      const { item, onClick } = this.props;
-      e.preventDefault();
-      e.stopPropagation();
-      if (onClick) {
-        onClick(item);
-      }
+  onClick = (e) => {
+    const { item, onClick } = this.props;
+    e.preventDefault();
+    e.stopPropagation();
+    if (onClick) {
+      onClick(item);
     }
+  }
 
-    onDelete = (e) => {
-      const { item, onDelete } = this.props;
-      e.preventDefault();
-      e.stopPropagation();
-      if (onDelete) {
-        onDelete(item);
-      }
+  onDelete = (e) => {
+    const { item, onDelete } = this.props;
+    e.preventDefault();
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete(item);
     }
+  }
 
-    render() {
-      const { item } = this.props;
-      let lastMod = '';
-      if (typeof item.last_modified !== 'undefined') {
-        lastMod = formatDate(item.last_modified);
-      }
-      const size = bytesToSize(item.bytes);
-      return (
-        <tr key={item.name} onClick={this.onClick}>
-          <td><FontAwesomeIcon icon={getIcon(item.content_type)} /></td>
-          <td>{item.name}</td>
-          <td>{lastMod}</td>
-          <td>{size}</td>
-          <td>
-            <Button color="danger" size="sm" onClick={this.onDelete}><FontAwesomeIcon icon={faTrash} /></Button>
-          </td>
-        </tr>
-      );
+  render() {
+    const { item } = this.props;
+    let lastMod = '';
+    if (typeof item.last_modified !== 'undefined') {
+      lastMod = formatDate(item.last_modified);
     }
+    const size = bytesToSize(item.bytes);
+    return (
+      <tr key={item.name} onClick={this.onClick}>
+        <td><FontAwesomeIcon icon={getIcon(item.content_type)} /></td>
+        <td>{item.name}</td>
+        <td>{lastMod}</td>
+        <td>{size}</td>
+        <td>
+          <Button color="danger" size="sm" onClick={this.onDelete}><FontAwesomeIcon icon={faTrash} /></Button>
+        </td>
+      </tr>
+    );
+  }
 }

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Input, Button } from 'reactstrap';
+import {
+  Form, FormGroup, Input, Button,
+} from 'reactstrap';
 
 export default
 class DeleteProjectForm extends React.PureComponent {

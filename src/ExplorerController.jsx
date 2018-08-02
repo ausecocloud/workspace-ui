@@ -1,7 +1,9 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Row, Col, Button, Label, Form, Input, FormGroup } from 'reactstrap';
+import {
+  Row, Col, Button, Label, Form, Input, FormGroup,
+} from 'reactstrap';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import axios from 'axios';
@@ -138,18 +140,10 @@ export class ExplorerController extends React.Component {
   componentWillMount() {
     this.getResults(this.state.query);
   }
+
   componentDidMount() {
     console.log('Explorer: work in progress.');
-    this.loadLicense()
-  }
-
-  loadLicense(){
-    fetch('https://raw.githubusercontent.com/CSIRO-enviro-informatics/licences-register/master/licences.json').then(res => {
-      return res.json()
-    }).then(json =>{
-      // console.log(json)
-      this.setState({license: json})
-    })
+    this.loadLicense();
   }
 
   // componentDidMount() {
@@ -165,26 +159,28 @@ export class ExplorerController extends React.Component {
 
     axios.post('https://es.knowledgenet.co/datasets32/_search', query)
       .then((res) => {
-        // reset the value to 0
-        let freshPublisher = zeroingMap(this.state.publishers);
-        let freshFormat = zeroingMap(this.state.formats);
-        // update the map value to the aggregated value
-        for (let i = 0, len = res.data.aggregations.publishers.buckets.length; i < len; i += 1) {
-          const ele = res.data.aggregations.publishers.buckets[i];
-          freshPublisher = freshPublisher.set(ele.key, ele.doc_count);
-        }
-        for (let i = 0, len = res.data.aggregations.formats.formats.buckets.length; i < len; i += 1) {
-          const ele = res.data.aggregations.formats.formats.buckets[i];
-          freshFormat = freshFormat.set(ele.key, ele.doc_count);
-        }
-        this.setState({
-          results: res.data.hits.hits,
-          resultsLoading: false,
-          hits: res.data.hits.total,
-          publishers: freshPublisher,
-          publishersLoading: false,
-          formats: freshFormat,
-          formatsLoading: false,
+        this.setState((prevState) => {
+          // reset the value to 0
+          let freshPublisher = zeroingMap(prevState.publishers);
+          let freshFormat = zeroingMap(prevState.formats);
+          // update the map value to the aggregated value
+          for (let i = 0, len = res.data.aggregations.publishers.buckets.length; i < len; i += 1) {
+            const ele = res.data.aggregations.publishers.buckets[i];
+            freshPublisher = freshPublisher.set(ele.key, ele.doc_count);
+          }
+          for (let i = 0, len = res.data.aggregations.formats.formats.buckets.length; i < len; i += 1) {
+            const ele = res.data.aggregations.formats.formats.buckets[i];
+            freshFormat = freshFormat.set(ele.key, ele.doc_count);
+          }
+          return {
+            results: res.data.hits.hits,
+            resultsLoading: false,
+            hits: res.data.hits.total,
+            publishers: freshPublisher,
+            publishersLoading: false,
+            formats: freshFormat,
+            formatsLoading: false,
+          };
         });
       });
   }
@@ -193,6 +189,36 @@ export class ExplorerController extends React.Component {
     event.preventDefault();
     const { query } = this.state;
     this.getResults(query);
+  }
+
+  handleFacetUpdate = (facetData) => {
+    const { type, newSelection } = facetData;
+    const { query } = this.state;
+    let formats = query.query.bool.must[1].nested.query;
+    const pubs = query.query.bool.must[0];
+
+    if (type === 'format') {
+      if (newSelection.length > 0) {
+        formats.terms = {
+          'distributions.format.keyword': newSelection,
+        };
+      } else {
+        formats = {};
+      }
+      query.query.bool.must[1].nested.query = formats;
+    } else if (type === 'publisher') {
+      if (newSelection.length > 0) {
+        pubs.terms = {
+          'publisher.name.keyword': newSelection,
+        };
+      } else {
+        pubs.terms = {
+          'publisher.name.keyword': restrictedPubs,
+        };
+      }
+      query.query.bool.must[0] = pubs;
+    }
+    this.setState({ query }, () => this.getResults());
   }
 
   handleKeywordChange(e) {
@@ -226,34 +252,13 @@ export class ExplorerController extends React.Component {
     this.setState({ query });
   }
 
-  handleFacetUpdate = (facetData) => {
-    const { type, newSelection } = facetData;
-    const { query } = this.state;
-    let formats = query.query.bool.must[1].nested.query;
-    const pubs = query.query.bool.must[0];
-
-    if (type === 'format') {
-      if (newSelection.length > 0) {
-        formats.terms = {
-          'distributions.format.keyword': newSelection,
-        };
-      } else {
-        formats = {};
-      }
-      query.query.bool.must[1].nested.query = formats;
-    } else if (type === 'publisher') {
-      if (newSelection.length > 0) {
-        pubs.terms = {
-          'publisher.name.keyword': newSelection,
-        };
-      } else {
-        pubs.terms = {
-          'publisher.name.keyword': restrictedPubs,
-        };
-      }
-      query.query.bool.must[0] = pubs;
-    }
-    this.setState({ query }, () => this.getResults());
+  loadLicense() {
+    fetch('https://raw.githubusercontent.com/CSIRO-enviro-informatics/licences-register/master/licences.json')
+      .then(res => res.json())
+      .then((json) => {
+        // console.log(json)
+        this.setState({ license: json });
+      });
   }
 
   handlePerPageChange(e) {
@@ -290,7 +295,8 @@ export class ExplorerController extends React.Component {
     const pageButtons = pages.map((pageNo) => {
       if (pageNo === 'First') {
         return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(1)}>&laquo;</Button>;
-      } else if (pageNo === 'Last') {
+      }
+      if (pageNo === 'Last') {
         return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(last)}>&raquo;</Button>;
       }
       return <Button color="primary" size="sm" key={pageNo} onClick={() => this.changePage(pageNo)} className={(pageNo === this.state.page) ? 'active' : ''} disabled={(pageNo === this.state.page)}>{pageNo}</Button>;
@@ -321,7 +327,7 @@ export class ExplorerController extends React.Component {
               <Col lg="5" md="12">
                 <FormGroup className="sorts">
                   <Label for="sortBy">Sort:</Label>
-                  <Input type="select" name="sortBy" id="sortBy" value={this.state.selectedSort} onChange={this.handleSortChange} >
+                  <Input type="select" name="sortBy" id="sortBy" value={this.state.selectedSort} onChange={this.handleSortChange}>
                     <option value="default">Default</option>
                     <option value="indexed-desc" data-order="desc">Indexed (Desc)</option>
                     <option value="indexed-asc" data-order="asc">Indexed (Asc)</option>
@@ -331,7 +337,7 @@ export class ExplorerController extends React.Component {
                     <option value="issued-asc" data-order="asc">Issued (Asc)</option>
                   </Input>
                   <Label for="resultsNum">Per Page:</Label>
-                  <Input type="select" name="resultsNum" id="resultsNum" value={this.state.perpage} onChange={this.handlePerPageChange} >
+                  <Input type="select" name="resultsNum" id="resultsNum" value={this.state.perpage} onChange={this.handlePerPageChange}>
                     <option>10</option>
                     <option>25</option>
                     <option>50</option>

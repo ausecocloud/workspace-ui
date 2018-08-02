@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Container } from 'reactstrap';
+import {
+  Button, Row, Col, Container,
+} from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
 import { Loader } from 'react-loaders';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -40,7 +42,7 @@ class ProjectsController extends React.Component {
   }
 
   toggleProjectModal = () => {
-    this.setState({ projectModalActive: !this.state.projectModalActive });
+    this.setState(prevState => ({ projectModalActive: !prevState.projectModalActive }));
   }
 
   newProjectSubmit = (formData) => {
@@ -64,32 +66,34 @@ class ProjectsController extends React.Component {
     return (
       <Container>
         <Row>
-          { projects &&
-            <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
-              <Col sm={{ size: 10, offset: 1 }}>
-                <h1>Your Projects</h1>
-                <Row>
-                  <Projects key="projects" projects={projects} />
-                  <hr />
-                </Row>
-                <Row>
-                  <Col>
-                    <Button color="primary" onClick={this.toggleProjectModal}><FontAwesomeIcon icon={faPlusCircle} /> New Project</Button>
-                    <BasicModal
-                      title="Create A Project"
-                      desc="You can create a new project to organise your work using this form."
-                      active={this.state.projectModalActive}
-                      close={this.toggleProjectModal}
-                    >
-                      <CreateProjectForm
-                        submit={this.newProjectSubmit}
+          { projects
+            && (
+              <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
+                <Col sm={{ size: 10, offset: 1 }}>
+                  <h1>Your Projects</h1>
+                  <Row>
+                    <Projects key="projects" projects={projects} />
+                    <hr />
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Button color="primary" onClick={this.toggleProjectModal}><FontAwesomeIcon icon={faPlusCircle} /> New Project</Button>
+                      <BasicModal
+                        title="Create A Project"
+                        desc="You can create a new project to organise your work using this form."
+                        active={this.state.projectModalActive}
                         close={this.toggleProjectModal}
-                      />
-                    </BasicModal>
-                  </Col>
-                </Row>
-              </Col>
-            </ReduxBlockUi>
+                      >
+                        <CreateProjectForm
+                          submit={this.newProjectSubmit}
+                          close={this.toggleProjectModal}
+                        />
+                      </BasicModal>
+                    </Col>
+                  </Row>
+                </Col>
+              </ReduxBlockUi>
+            )
           }
         </Row>
       </Container>

@@ -5,12 +5,6 @@ import ContentRow from './ContentRow';
 
 
 class Contents extends React.PureComponent {
-  static defaultProps = {
-    project: '',
-    path: '/',
-    contents: [],
-  }
-
   static propTypes = {
     project: PropTypes.string,
     path: PropTypes.string,
@@ -18,6 +12,12 @@ class Contents extends React.PureComponent {
     onClick: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     // dispatch: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    project: '',
+    path: '/',
+    contents: [],
   }
 
   onClick = (item) => {

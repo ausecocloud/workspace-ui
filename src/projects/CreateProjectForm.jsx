@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, FormGroup, FormFeedback, Input, Label, Button } from 'reactstrap';
+import {
+  Form, FormGroup, FormFeedback, Input, Label, Button,
+} from 'reactstrap';
 
 export default
 class CreateProjectForm extends React.PureComponent {
@@ -22,23 +24,31 @@ class CreateProjectForm extends React.PureComponent {
     };
   }
 
+  componentDidUpdate = () => {
+    // a new state, validate the form.
+    const valid = this.validateForm();
+    if (this.state.formValid !== valid) {
+      this.setState({ formValid: valid });
+    }
+  }
+
   closeHandler = e => this.props.close(e.target.value)
 
   handleChange = (event) => {
     const { target } = event;
     const { value, name } = target;
     const [fieldState, fieldError] = this.validateField(name, value);
-    this.setState({
+    this.setState(prevState => ({
       [name]: value,
       formState: {
-        ...this.state.formState,
+        ...prevState.formState,
         [name]: fieldState,
       },
       formErrors: {
-        ...this.state.formErrors,
+        ...prevState.formErrors,
         [name]: fieldError,
       },
-    }, () => this.validateForm());
+    }));
   }
 
   validateField = (fieldName, value) => {
@@ -63,10 +73,9 @@ class CreateProjectForm extends React.PureComponent {
   validateForm = () => {
     Object.entries(this.state.formErrors).forEach(([_fieldname, error]) => {
       if (error.length > 0) {
-        this.setState({ formValid: false });
-      } else {
-        this.setState({ formValid: true });
+        return false;
       }
+      return true;
     });
   }
 
@@ -77,9 +86,11 @@ class CreateProjectForm extends React.PureComponent {
       this.props.submit({ name, description });
     } else {
       Object.entries(this.state.formErrors).forEach(([fieldname, _error]) => {
-        const formState = { ...this.state.formState };
-        formState[fieldname] = 'is-invalid';
-        this.setState({ formState });
+        this.setState((prevState) => {
+          const formState = { ...prevState.formState };
+          formState[fieldname] = 'is-invalid';
+          return { formState };
+        });
       });
     }
   }

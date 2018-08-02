@@ -1,4 +1,6 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import {
+  call, put, takeEvery, takeLatest,
+} from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 import { workspace } from '../api';
 import * as actions from './actions';
