@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, NavLink, withRouter } from 'react-router-dom';
 import {
-  Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+  Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse,
+  UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+  NavLink as ExtNavLink,
 } from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
@@ -78,7 +80,7 @@ class App extends React.Component {
           <NavLink exact to="/tools">Tools</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink target="_blank" to="http://support.ecocloud.org.au/support/home">Support &amp; Docs</NavLink>
+          <ExtNavLink target="_blank" href="http://support.ecocloud.org.au/support/home">Support &amp; Docs</ExtNavLink>
         </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>
