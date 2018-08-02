@@ -138,6 +138,19 @@ export class ExplorerController extends React.Component {
   componentWillMount() {
     this.getResults(this.state.query);
   }
+  componentDidMount() {
+    console.log('Explorer: work in progress.');
+    this.loadLicense()
+  }
+
+  loadLicense(){
+    fetch('https://raw.githubusercontent.com/CSIRO-enviro-informatics/licences-register/master/licences.json').then(res => {
+      return res.json()
+    }).then(json =>{
+      // console.log(json)
+      this.setState({license: json})
+    })
+  }
 
   // componentDidMount() {
   //   console.log('Explorer: work in progress.');
@@ -361,7 +374,7 @@ export class ExplorerController extends React.Component {
                     { this.renderPageButtons() }
                   </div>
                 </header>
-                <ResultsList data={this.state.results} />
+                <ResultsList data={this.state.results} license={this.state.license} />
                 <footer>
                   <div className="pagination">
                     <span className="pages">Page {this.state.page} / { Math.ceil(this.state.hits / this.state.perpage) }</span>

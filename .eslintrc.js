@@ -12,16 +12,17 @@ const rules = {
 }
 
 if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
-  // relax some rules in development mode
-  rules['no-console'] = 'warn';
-  rules['max-len'] = 'warn';
-  rules['quotes'] = 'warn';
-  rules['quote-props'] = 'warn';
-  rules['no-underscore-dangle'] = 'off';
-  // disallow declaration of variables that are not used in the code
-  rules['no-unused-vars'] = ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: true, argsIgnorePattern: "^_" }];
-  rules['import/first'] = ['warn', 'absolute-first'];
-  rules["import/no-named-as-default"] = 'warn';
+    // relax some rules in development mode
+    rules['no-console'] = 'warn';
+    rules['max-len'] = 'warn';
+    rules['quotes'] = 1;
+    rules['quote-props'] = 1;
+    rules['no-underscore-dangle'] = 1;
+    // disallow declaration of variables that are not used in the code
+    rules['no-unused-vars'] = ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }];
+    rules['import/first'] = ['warn', 'absolute-first'];
+    rules["import/no-named-as-default"] = 0;
+    rules["linebreak-style"] = 0;
 }
 
 module.exports = {
