@@ -14,14 +14,14 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
 import { SearchFacet, ResultsList } from './explorer';
-import { getUser, getAuthenticated, getSelectedDatasets } from './reducers';
+import { getUser, getAuthenticated, getSelectedDistributions } from './reducers';
 import * as snippetActions from "./snippets/actions";
 
 function mapStateToProps(state) {
   return {
     user: getUser(state),
     isAuthenticated: getAuthenticated(state),
-    selectedDatasets: getSelectedDatasets(state),
+    selectedDistributions: getSelectedDistributions(state),
   };
 }
 
@@ -72,12 +72,12 @@ const restrictedPubs = [
 
 export class ExplorerController extends React.Component {
   static propTypes = {
-    selectedDatasets: PropTypes.instanceOf(Map),
+    selectedDistributions: PropTypes.instanceOf(Map),
     dispatch: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    selectedDatasets: Map(),
+    selectedDistributions: Map(),
   }
 
   constructor(props) {
@@ -192,12 +192,19 @@ export class ExplorerController extends React.Component {
       });
   }
 
-  addDatasetToSelect = (dataset) => {
-    this.props.dispatch(snippetActions.selectionAddDataset(dataset));
+  /**
+   * Adds a given distribution to the selection set for snippets
+   */
+  addDistToSelection = (dataset) => {
+    this.props.dispatch(snippetActions.selectionAddDistribution(dataset));
   }
 
-  delDatasetFromSelect = (id) => {
-    this.props.dispatch(snippetActions.selectionDeleteDataset(id));
+  /**
+   * Deletes the distribution with the given ID from the selection set for
+   * snippets
+   */
+  deleteDistFromSelection = (id) => {
+    this.props.dispatch(snippetActions.selectionDeleteDistribution(id));
   }
 
   searchHandler = (event) => {
@@ -380,14 +387,14 @@ export class ExplorerController extends React.Component {
           </Col>
           <Col lg="9" md="12">
             <div className="selected placeholder">
-              <h4>Datasets Selected: 1</h4>
+              <h4>Datasets Selected: { this.props.selectedDistributions.size }</h4>
               <a href="#" className="help-link"><FontAwesomeIcon icon={faQuestionCircle} /> How Do I Use This Selection?</a>
               {/* <a href="#" className="btn btn-primary float-right">View Snippets </a> */}
-              <Link to="/snippets" params={{ selectedDatasets: this.state.selectedDatasets }} className="btn btn-primary float-right">View Snippets </Link>
+              <Link to="/snippets" params={{ selectedDistributions: this.state.selectedDistributions }} className="btn btn-primary float-right">View Snippets </Link>
               <ul className="selected-datasets">
                 {
-                  [...this.props.selectedDatasets.values()].map((record, index) => (
-                    <li key={record._id}><a className="selected-dataset"> { record._source.title } <FontAwesomeIcon onClick={() => this.delDatasetFromSelect(record._id)} icon={faTimes} /></a></li>
+                  [...this.props.selectedDistributions.values()].map(dist => (
+                    <li key={dist.identifier}><a className="selected-dataset"> { dist.title } <FontAwesomeIcon onClick={() => this.deleteDistFromSelection(dist.identifier)} icon={faTimes} /></a></li>
                   ))
                 }
               </ul>
@@ -400,7 +407,7 @@ export class ExplorerController extends React.Component {
                     { this.renderPageButtons() }
                   </div>
                 </header>
-                <ResultsList data={this.state.results} license={this.state.license} addDatasetToSelect={this.addDatasetToSelect} />
+                <ResultsList data={this.state.results} license={this.state.license} addDistToSelection={this.addDistToSelection} />
 
                 <footer>
                   <div className="pagination">

@@ -61,4 +61,4 @@ export const getAuthenticated = state => state.auth && state.auth.authenticated;
 
 export const getServers = state => compute.getServers(state.compute);
 
-export const getSelectedDatasets = state => snippets.getSelectedDatasets(state.snippets);
+export const getSelectedDistributions = state => snippets.getSelectedDistributions(state.snippets);

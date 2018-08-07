@@ -12,7 +12,7 @@ class ResultsList extends React.Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.any).isRequired,
     license: PropTypes.objectOf(PropTypes.any),
-    addDatasetToSelect: PropTypes.func.isRequired,
+    addDistToSelection: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -54,6 +54,7 @@ class ResultsList extends React.Component {
                 <UncontrolledTooltip placement="top" target={`dist-${ridx}-${didx}`}>
                   {dist.license ? dist.license.name : 'None'}
                 </UncontrolledTooltip>
+                <Button className="btn-sm" onClick={() => this.props.addDistToSelection(dist)}>Add To Selection</Button>
               </li>
             );
           });
@@ -114,7 +115,6 @@ class ResultsList extends React.Component {
                   r.landingPage && r.landingPage.length > 0
                   && <a className="btn btn-primary btn-sm" href={r.landingPage}>Go to website <FontAwesomeIcon icon={faExternalLinkSquareAlt} /></a>
                 }
-                <Button className="btn-sm" onClick={() => this.props.addDatasetToSelect(record)}>Add To Selection</Button>
               </Col>
             </Row>
           </div>

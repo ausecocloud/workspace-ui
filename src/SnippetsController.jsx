@@ -11,11 +11,11 @@ import {
   faArrowCircleLeft, faCaretDown, faServer, faChevronDown, faChevronRight,
   faCopy, faDownload, faCloudUploadAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { getSelectedDatasets } from './reducers';
+import { getSelectedDistributions } from './reducers';
 
 function mapStateToProps(state) {
   return {
-    selectedDatasets: getSelectedDatasets(state),
+    selectedDatasets: getSelectedDistributions(state),
   };
 }
 
