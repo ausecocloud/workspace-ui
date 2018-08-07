@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Row, Col, Button, Label, Form, Input, FormGroup,
@@ -14,12 +14,14 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
 import { SearchFacet, ResultsList } from './explorer';
-import { getUser, getAuthenticated } from './reducers';
+import { getUser, getAuthenticated, getSelectedDatasets } from './reducers';
+import * as snippetActions from "./snippets/actions";
 
 function mapStateToProps(state) {
   return {
     user: getUser(state),
     isAuthenticated: getAuthenticated(state),
+    selectedDatasets: getSelectedDatasets(state),
   };
 }
 
@@ -69,17 +71,13 @@ const restrictedPubs = [
 ];
 
 export class ExplorerController extends React.Component {
-  static updateDatasetCache(datasets) {
-    // let oldItems = localStorage.getItem('selectedDatasets')
-    // console.log(oldItems)
-    // localStorage.setItem('selectedDatasets', oldItems +','+  JSON.stringify(datasets))
-    localStorage.setItem('selectedDatasets', JSON.stringify(datasets));
-    // console.log(localStorage.getItem('selectedDatasets'))
+  static propTypes = {
+    selectedDatasets: PropTypes.instanceOf(Map),
+    dispatch: PropTypes.func.isRequired,
   }
 
-  static propTypes = {
-    // user: PropTypes.objectOf(PropTypes.any).isRequired,
-    // isAuthenticated: PropTypes.bool.isRequired,
+  static defaultProps = {
+    selectedDatasets: Map(),
   }
 
   constructor(props) {
@@ -106,7 +104,6 @@ export class ExplorerController extends React.Component {
     search: {
       keywords: '',
     },
-    selectedDatasets: new Map(JSON.parse(localStorage.getItem('selectedDatasets'))),
     query: {
       aggs: {
         formats: {
@@ -196,19 +193,11 @@ export class ExplorerController extends React.Component {
   }
 
   addDatasetToSelect = (dataset) => {
-    this.setState((prevState) => {
-      const temp = prevState.selectedDatasets.set(dataset._id, dataset);
-      ExplorerController.updateDatasetCache(temp);
-      return { selectedDatasets: temp };
-    });
+    this.props.dispatch(snippetActions.selectionAddDataset(dataset));
   }
 
   delDatasetFromSelect = (id) => {
-    this.setState((prevState) => {
-      const temp = prevState.selectedDatasets.delete(id);
-      ExplorerController.updateDatasetCache(temp);
-      return { selectedDatasets: temp };
-    });
+    this.props.dispatch(snippetActions.selectionDeleteDataset(id));
   }
 
   searchHandler = (event) => {
@@ -397,7 +386,7 @@ export class ExplorerController extends React.Component {
               <Link to="/snippets" params={{ selectedDatasets: this.state.selectedDatasets }} className="btn btn-primary float-right">View Snippets </Link>
               <ul className="selected-datasets">
                 {
-                  [...this.state.selectedDatasets.values()].map((record, index) => (
+                  [...this.props.selectedDatasets.values()].map((record, index) => (
                     <li key={record._id}><a className="selected-dataset"> { record._source.title } <FontAwesomeIcon onClick={() => this.delDatasetFromSelect(record._id)} icon={faTimes} /></a></li>
                   ))
                 }

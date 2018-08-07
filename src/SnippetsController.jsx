@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Row, Col,
@@ -11,12 +11,11 @@ import {
   faArrowCircleLeft, faCaretDown, faServer, faChevronDown, faChevronRight,
   faCopy, faDownload, faCloudUploadAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { getUser, getAuthenticated } from './reducers';
+import { getSelectedDatasets } from './reducers';
 
 function mapStateToProps(state) {
   return {
-    user: getUser(state),
-    isAuthenticated: getAuthenticated(state),
+    selectedDatasets: getSelectedDatasets(state),
   };
 }
 
@@ -28,26 +27,19 @@ function mapDispatchToProps(dispatch) {
 
 export class SnippetsController extends React.Component {
   static propTypes = {
-    // user: PropTypes.objectOf(PropTypes.any).isRequired,
-    // isAuthenticated: PropTypes.bool.isRequired,
+    selectedDatasets: PropTypes.instanceOf(Map),
+  }
+
+  static defaultProps = {
+    selectedDatasets: Map(),
   }
 
   constructor(props) {
     super(props);
     this.state = {
       collapsedDataset: new Map(),
-      selectedDatasets: new Map(),
       snippetLanguages: ['Python', 'R', 'Bash', 'Web Access'],
     };
-  }
-
-  componentWillMount() {
-    // console.log(this.props)
-  }
-
-  componentDidMount() {
-    const tempSelectDatasets = JSON.parse(localStorage.getItem('selectedDatasets'));
-    this.setState({ selectedDatasets: new Map(tempSelectDatasets) });
   }
 
   collapseDataset(id) {
@@ -85,7 +77,7 @@ export class SnippetsController extends React.Component {
           <Col xs="12">
             <ul className="selected-datasets">
               {
-                [...this.state.selectedDatasets.values()].map((record) => {
+                [...this.props.selectedDatasets.values()].map((record) => {
                   const distributionUrls = record._source.distributions.map(dist => (dist.downloadURL ? dist.downloadURL : ''));
                   // console.log(distributionUrls)
                   if (this.state.collapsedDataset.get(record._id)) {
@@ -106,8 +98,8 @@ export class SnippetsController extends React.Component {
                             <p className="source">Provider: <a href={record._source.landingPage}> {record._source.landingPage} </a></p>
                           </div>
                           {
-                            this.state.snippetLanguages.map((language, index) => (
-                              <div key={index}>
+                            this.state.snippetLanguages.map(language => (
+                              <div key={language}>
                                 <div>
                                   {language}
                                   <a href="#" className="float-right source"> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></a>
