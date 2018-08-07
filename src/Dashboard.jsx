@@ -142,18 +142,19 @@ export class Dashboard extends React.Component {
                     </Link>
                   </Col>
                   <Col md="4">
-                    <Link to="drive" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
+                    <Link to="drive" className="btn btn-lg btn-dashboard btn-primary" title="Manage files in Drive">
                       <FontAwesomeIcon icon={faFolderOpen} /> <br /> Manage files in <strong><em>Drive</em></strong>
                     </Link>
                   </Col>
                   <Col md="4">
-                    <a href={`${huburl}/hub/home`} target="_blank" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
+                    <a href={`${huburl}/hub/home`} target="_blank" className="btn btn-lg btn-dashboard btn-primary" title="Start a service in Compute">
                       <FontAwesomeIcon icon={faServer} /> <br /> Start a service in <strong><em>Compute</em></strong>
                     </a>
                   </Col>
                 </Row>
               </Col>
             </Row>
+            
             <Row>
               <Col sm="12">
                 <div className="storage">
