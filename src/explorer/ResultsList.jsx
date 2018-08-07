@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Row, Col, Alert, UncontrolledTooltip,
+  Button, Row, Col, Alert, UncontrolledTooltip,
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkSquareAlt';
@@ -12,6 +12,7 @@ class ResultsList extends React.Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.any).isRequired,
     license: PropTypes.objectOf(PropTypes.any),
+    addDatasetToSelect: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -113,6 +114,7 @@ class ResultsList extends React.Component {
                   r.landingPage && r.landingPage.length > 0
                   && <a className="btn btn-primary btn-sm" href={r.landingPage}>Go to website <FontAwesomeIcon icon={faExternalLinkSquareAlt} /></a>
                 }
+                <Button className="btn-sm" onClick={() => this.props.addDatasetToSelect(record)}>Add To Selection</Button>
               </Col>
             </Row>
           </div>

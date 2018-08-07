@@ -10,12 +10,12 @@ import { jupyterhub } from '../api';
 
 
 export default class Compute extends React.PureComponent {
-  static defaultProps = {
-    servers: [],
-  }
-
   static propTypes = {
     servers: PropTypes.arrayOf(PropTypes.any),
+  }
+
+  static defaultProps = {
+    servers: [],
   }
 
   render() {

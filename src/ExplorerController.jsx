@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {
   Row, Col, Button, Label, Form, Input, FormGroup,
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import axios from 'axios';
@@ -68,6 +69,14 @@ const restrictedPubs = [
 ];
 
 export class ExplorerController extends React.Component {
+  static updateDatasetCache(datasets) {
+    // let oldItems = localStorage.getItem('selectedDatasets')
+    // console.log(oldItems)
+    // localStorage.setItem('selectedDatasets', oldItems +','+  JSON.stringify(datasets))
+    localStorage.setItem('selectedDatasets', JSON.stringify(datasets));
+    // console.log(localStorage.getItem('selectedDatasets'))
+  }
+
   static propTypes = {
     // user: PropTypes.objectOf(PropTypes.any).isRequired,
     // isAuthenticated: PropTypes.bool.isRequired,
@@ -97,6 +106,7 @@ export class ExplorerController extends React.Component {
     search: {
       keywords: '',
     },
+    selectedDatasets: new Map(JSON.parse(localStorage.getItem('selectedDatasets'))),
     query: {
       aggs: {
         formats: {
@@ -183,6 +193,22 @@ export class ExplorerController extends React.Component {
           };
         });
       });
+  }
+
+  addDatasetToSelect = (dataset) => {
+    this.setState((prevState) => {
+      const temp = prevState.selectedDatasets.set(dataset._id, dataset);
+      ExplorerController.updateDatasetCache(temp);
+      return { selectedDatasets: temp };
+    });
+  }
+
+  delDatasetFromSelect = (id) => {
+    this.setState((prevState) => {
+      const temp = prevState.selectedDatasets.delete(id);
+      ExplorerController.updateDatasetCache(temp);
+      return { selectedDatasets: temp };
+    });
   }
 
   searchHandler = (event) => {
@@ -367,9 +393,14 @@ export class ExplorerController extends React.Component {
             <div className="selected placeholder">
               <h4>Datasets Selected: 1</h4>
               <a href="#" className="help-link"><FontAwesomeIcon icon={faQuestionCircle} /> How Do I Use This Selection?</a>
-              <a href="#" className="btn btn-primary float-right">View Snippets </a>
+              {/* <a href="#" className="btn btn-primary float-right">View Snippets </a> */}
+              <Link to="/snippets" params={{ selectedDatasets: this.state.selectedDatasets }} className="btn btn-primary float-right">View Snippets </Link>
               <ul className="selected-datasets">
-                <li><a className="selected-dataset"> Marine Assets, data.vic.gov.au <FontAwesomeIcon icon={faTimes} /></a></li>
+                {
+                  [...this.state.selectedDatasets.values()].map((record, index) => (
+                    <li key={record._id}><a className="selected-dataset"> { record._source.title } <FontAwesomeIcon onClick={() => this.delDatasetFromSelect(record._id)} icon={faTimes} /></a></li>
+                  ))
+                }
               </ul>
             </div>
             <BlockUi tag="div" blocking={this.state.resultsLoading} loader={<Loader active type="ball-pulse" />}>
@@ -380,7 +411,8 @@ export class ExplorerController extends React.Component {
                     { this.renderPageButtons() }
                   </div>
                 </header>
-                <ResultsList data={this.state.results} license={this.state.license} />
+                <ResultsList data={this.state.results} license={this.state.license} addDatasetToSelect={this.addDatasetToSelect} />
+
                 <footer>
                   <div className="pagination">
                     <span className="pages">Page {this.state.page} / { Math.ceil(this.state.hits / this.state.perpage) }</span>

@@ -577,12 +577,20 @@ section#main {
 				margin-top:.75rem;
 				padding-left:0;
 				list-style-type: none;
+				overflow: hidden;
 				li {
+					position: relative; 
+					float: left;
+					margin: 10px 5px 8px 5px;
 					a {
 						padding:.5rem .85rem;
 						background:rgba(255,255,255,0.2);
 						svg {
 							margin-left:1rem;
+							path:hover {
+								color:goldenrod;
+								cursor: pointer;
+							}
 						}
 					}
 				}
@@ -707,6 +715,32 @@ section#main {
 			}
 		}
 
+	}
+	.snippets{
+		.snippets-body{
+			.selected-datasets{
+				padding-left: 0px;
+				list-style: none;
+				li {	
+					padding-top: 20px;
+					border-bottom: $grey-box-border solid 1px;
+					.selected-dataset {
+						text-decoration: none;
+						font-size: 24px;
+					}
+					.snippet-body{
+						font-size: 16px;
+						padding-left: 28px;
+						pre{
+							background-color: #EFEFEF;
+							padding: 15px;
+							font-size: 12px;
+							color: $light-gray;
+						}
+					}
+				}
+			}
+		}
 	}
 
 }

@@ -12,6 +12,7 @@ import './App.css';
 import ProjectsController from './ProjectsController';
 import Dashboard from './Dashboard';
 import ExplorerController from './ExplorerController';
+import SnippetsController from './SnippetsController';
 import Account from './Account';
 import { getUser, getAuthenticated } from './reducers';
 import Logo from './assets/images/logo.svg';
@@ -160,6 +161,7 @@ class App extends React.Component {
             <Route key="Drive" exact path="/drive" component={ProjectsListController} />,
             <Route key="Project" exact path="/drive/:id" component={ProjectsController} />,
             <Route key="Explorer" path="/explorer" component={ExplorerController} />,
+            <Route key="Snippets" path="/snippets" component={SnippetsController} />,
             <Route key="Tools" exact path="/tools" component={ToolsController} />,
             <Route key="Account" exact path="/account" component={Account} />,
           ]) : (
