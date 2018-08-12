@@ -389,7 +389,6 @@ export class ExplorerController extends React.Component {
             <div className="selected placeholder">
               <h4>Datasets Selected: { this.props.selectedDistributions.size }</h4>
               <a href="#" className="help-link"><FontAwesomeIcon icon={faQuestionCircle} /> How Do I Use This Selection?</a>
-              {/* <a href="#" className="btn btn-primary float-right">View Snippets </a> */}
               <Link to="/snippets" params={{ selectedDistributions: this.state.selectedDistributions }} className="btn btn-primary float-right">View Snippets </Link>
               <ul className="selected-datasets">
                 {
