@@ -5,7 +5,7 @@ import {
   Row, Col,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowCircleLeft, faCaretDown, faServer, faChevronDown, faChevronRight,
@@ -15,7 +15,7 @@ import { getSelectedDistributions } from './reducers';
 
 function mapStateToProps(state) {
   return {
-    selectedDatasets: getSelectedDistributions(state),
+    selectedDistributions: getSelectedDistributions(state),
   };
 }
 
@@ -27,33 +27,40 @@ function mapDispatchToProps(dispatch) {
 
 export class SnippetsController extends React.Component {
   static propTypes = {
-    selectedDatasets: PropTypes.instanceOf(Map),
+    selectedDistributions: PropTypes.instanceOf(Map),
   }
 
   static defaultProps = {
-    selectedDatasets: Map(),
+    selectedDistributions: Map(),
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      collapsedDataset: new Map(),
+      collapsedDataset: new Set(),
       snippetLanguages: ['Python', 'R', 'Bash', 'Web Access'],
     };
   }
 
-  collapseDataset(id) {
-    // console.log(this.state.collapsedDataset)
-    if (this.state.collapsedDataset.get(id)) {
-      this.setState((prevState) => {
-        const tempCollapsedDataset = prevState.collapsedDataset.set(id, false);
-        return { collapsedDataset: tempCollapsedDataset };
-      });
+  /**
+   * Toggles the collapsed state of the panel containing a given distribution's
+   * snippets
+   *
+   * @param {string} distId Distribution identifier
+   */
+  toggleCollapseDistribution(distId) {
+    if (this.state.collapsedDataset.has(distId)) {
+      // Distribution already exists in set, delete entry => "show distribution"
+      this.setState(prevState => ({
+        ...prevState,
+        collapsedDataset: prevState.collapsedDataset.delete(distId),
+      }));
     } else {
-      this.setState((prevState) => {
-        const tempCollapsedDataset = prevState.collapsedDataset.set(id, true);
-        return { collapsedDataset: tempCollapsedDataset };
-      });
+      // Distribution not in set, add entry => "hide distribution"
+      this.setState(prevState => ({
+        ...prevState,
+        collapsedDataset: prevState.collapsedDataset.add(distId),
+      }));
     }
   }
 
@@ -77,59 +84,74 @@ export class SnippetsController extends React.Component {
           <Col xs="12">
             <ul className="selected-datasets">
               {
-                [...this.props.selectedDatasets.values()].map((record) => {
-                  const distributionUrls = record._source.distributions.map(dist => (dist.downloadURL ? dist.downloadURL : ''));
-                  // console.log(distributionUrls)
-                  if (this.state.collapsedDataset.get(record._id)) {
+                [...this.props.selectedDistributions.values()].map((dist) => {
+                  /**
+                   * URL of the distribution
+                   *
+                   * @type {string | undefined}
+                   */
+                  const url = dist.downloadURL;
+                  const distId = dist.identifier;
+
+                  const isCollapsed = this.state.collapsedDataset.has(distId);
+
+                  // If collapsed, render only the collapsed portion
+                  if (isCollapsed) {
                     return (
-                      <li key={record._id}>
-                        <a className="selected-dataset" href="#" onClick={() => this.collapseDataset(record._id)}>
-                          <FontAwesomeIcon icon={faChevronDown} /> &nbsp;
-                          {record._source.title}
+                      <li key={distId}>
+                        <a className="selected-dataset" href="#" onClick={() => this.toggleCollapseDistribution(distId)}>
+                          <FontAwesomeIcon icon={faChevronRight} /> &nbsp;
+                          {dist.title}
                         </a>
-                        <div className="float-right">
-                          <a className="btn btn-primary btn-sm"> Store in Drive &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} /> </a> &nbsp;
-                          <a className="btn btn-primary btn-sm"> Download <FontAwesomeIcon icon={faDownload} /></a>
-                        </div>
-
-                        <div className="snippet-body">
-                          <div>
-                            <p>{record._source.description}</p>
-                            <p className="source">Provider: <a href={record._source.landingPage}> {record._source.landingPage} </a></p>
-                          </div>
-                          {
-                            this.state.snippetLanguages.map(language => (
-                              <div key={language}>
-                                <div>
-                                  {language}
-                                  <a href="#" className="float-right source"> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></a>
-                                </div>
-
-                                <div>
-                                  <pre>
-                                    <code>
-                                      {language === 'Python' ? `dataset_urls = [\n${distributionUrls.join(',\t\t\n')} \t\n]` : ''}
-                                      {language === 'R' ? `dataset_urls <- array(c(\n${distributionUrls.join(',\t\t\n')}\t\n), dim=c(1, ${distributionUrls.length}, 1))` : ''}
-                                      {language === 'Bash' ? distributionUrls.join('\n') : ''}
-                                      {language === 'Web Access' ? distributionUrls.join('\n') : ''}
-                                    </code>
-                                  </pre>
-                                </div>
-
-                              </div>
-                            ))
-                          }
-                        </div>
-                      </li>);
+                      </li>
+                    );
                   }
+
                   return (
-                    <li key={record._id}>
-                      <a className="selected-dataset" href="#" onClick={() => this.collapseDataset(record._id)}>
-                        <FontAwesomeIcon icon={faChevronRight} /> &nbsp;
-                        {record._source.title}
-                        <p className="source" />
+                    <li key={distId}>
+                      <a className="selected-dataset" href="#" onClick={() => this.toggleCollapseDistribution(distId)}>
+                        <FontAwesomeIcon icon={faChevronDown} /> &nbsp;
+                        {dist.title}
                       </a>
-                    </li>);
+                      <div className="float-right">
+                        <a className="btn btn-primary btn-sm"> Store in Drive &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} /> </a> &nbsp;
+                        <a className="btn btn-primary btn-sm"> Download <FontAwesomeIcon icon={faDownload} /></a>
+                      </div>
+
+                      <div className="snippet-body">
+                        <div>
+                          <p>{dist.description}</p>
+                        </div>
+                        {
+                          this.state.snippetLanguages.map(language => (
+                            <div key={language}>
+                              <div>
+                                {language}
+                                <a href="#" className="float-right source"> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></a>
+                              </div>
+
+                              <div>
+                                <pre>
+                                  <code>
+                                    {language === 'Python'
+&& `import urllib.request
+url = '${url}'
+data = urllib.request.urlopen(url).read().decode('utf-8')`}
+                                    {language === 'R'
+&& `url <- "${url}"
+# TODO: Download code`}
+                                    {language === 'Bash' && `curl -O ${url}`}
+                                    {language === 'Web Access' && url}
+                                  </code>
+                                </pre>
+                              </div>
+
+                            </div>
+                          ))
+                        }
+                      </div>
+                    </li>
+                  );
                 })
               }
             </ul>
