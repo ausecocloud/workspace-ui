@@ -35,7 +35,7 @@ function generateSnippetText(language, url) {
   switch (language) {
     case 'Python':
       return `import urllib.request
-url = '${url}'
+url = '${url.replace(/'/g, '\\\'')}'
 data = urllib.request.urlopen(url).read().decode('utf-8')`;
 
     case 'R':
