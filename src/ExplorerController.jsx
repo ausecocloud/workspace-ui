@@ -406,7 +406,7 @@ export class ExplorerController extends React.Component {
                     { this.renderPageButtons() }
                   </div>
                 </header>
-                <ResultsList data={this.state.results} license={this.state.license} addDistToSelection={this.addDistToSelection} />
+                <ResultsList data={this.state.results} license={this.state.license} addDistToSelection={this.addDistToSelection} deleteDistFromSelection={this.deleteDistFromSelection} selectedDistributions={this.props.selectedDistributions} />
 
                 <footer>
                   <div className="pagination">

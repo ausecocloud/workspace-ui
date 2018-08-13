@@ -13,6 +13,8 @@ class ResultsList extends React.Component {
     data: PropTypes.arrayOf(PropTypes.any).isRequired,
     license: PropTypes.objectOf(PropTypes.any),
     addDistToSelection: PropTypes.func.isRequired,
+    deleteDistFromSelection: PropTypes.func.isRequired,
+    selectedDistributions: PropTypes.objectOf(PropTypes.any).isRequired,
   }
 
   static defaultProps = {
@@ -34,6 +36,26 @@ class ResultsList extends React.Component {
     return longName;
   }
 
+  /**
+   * Handler for adding/removing distributions through checkboxes
+   *
+   * @param {object} dist Distribution object
+   * @param {boolean} checked Whether the distribution has been checked to be
+   *        added to the selection list
+   */
+  handleCheckboxChange(dist, checked) {
+    // TODO: Component needs to be split so the distribution ID doesn't need to
+    // be provided to the handler and instead should be read from the
+    // subcomponent's props
+
+    // If checked, add to selection, otherwise remove
+    if (checked === true) {
+      this.props.addDistToSelection(dist);
+    } else {
+      this.props.deleteDistFromSelection(dist.identifier);
+    }
+  }
+
   renderResults() {
     const { data } = this.props;
 
@@ -45,7 +67,9 @@ class ResultsList extends React.Component {
           dists = r.distributions.map((dist, didx) => {
             const url = dist.downloadURL || dist.accessURL;
             return (
-              <li key={dist.identifier}><a href={url}>{dist.title}</a>
+              <li key={dist.identifier}>
+                <input type="checkbox" checked={this.props.selectedDistributions.has(dist.identifier)} onChange={e => this.handleCheckboxChange(dist, e.target.checked)} />
+                <a href={url}> {dist.title} </a>
                 <small className="licence-header"> Format </small>
                 <small className="format">{dist.format}</small>
                 <i className="licence-hover" id={`dist-${ridx}-${didx}`}> <small className="licence-header">  Licence </small>
@@ -54,7 +78,6 @@ class ResultsList extends React.Component {
                 <UncontrolledTooltip placement="top" target={`dist-${ridx}-${didx}`}>
                   {dist.license ? dist.license.name : 'None'}
                 </UncontrolledTooltip>
-                <Button className="btn-sm" onClick={() => this.props.addDistToSelection(dist)}>Add To Selection</Button>
               </li>
             );
           });
