@@ -33,20 +33,20 @@ function mapDispatchToProps(dispatch) {
  */
 function generateSnippetText(language, url) {
   switch (language) {
-    case "Python":
+    case 'Python':
       return `import urllib.request
 url = '${url}'
 data = urllib.request.urlopen(url).read().decode('utf-8')`;
 
-    case "R":
+    case 'R':
       // TODO: Generate download code
       return `url <- "${url}"
 # TODO: Download code`;
 
-    case "Bash":
+    case 'Bash':
       return `curl -O ${url}`;
 
-    case "Web Access":
+    case 'Web Access':
       return url;
 
     default:
@@ -77,6 +77,8 @@ function selectElementText(element) {
  *
  * @param {string} text Text to copy to clipboard (not guaranteed; see
  *        `copyTextToClipboard()`)
+ *
+ * @returns {Promise}
  */
 function generateClipboardCopyPromise(text) {
   // Detect whether we can use the latest Clipboard API methods
@@ -87,7 +89,7 @@ function generateClipboardCopyPromise(text) {
   // Use old `execCommand` based API
   // NOTE: Requires active selection in the window
   return new Promise((resolve, reject) => {
-    const success = document.execCommand("copy");
+    const success = document.execCommand('copy');
     if (success) {
       resolve();
     } else {
@@ -111,7 +113,7 @@ function copyTextToClipboard(text) {
   return textCopyPromise
     .catch(() => {
       // Alert when copy failed
-      alert("Text was not copied; please copy manually");
+      alert('Text was not copied; please copy manually');
     });
 }
 

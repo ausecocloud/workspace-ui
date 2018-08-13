@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Row, Col, Alert, UncontrolledTooltip,
+  Row, Col, Alert, UncontrolledTooltip,
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkSquareAlt';
@@ -69,7 +69,7 @@ class ResultsList extends React.Component {
             return (
               <li key={dist.identifier}>
                 <input type="checkbox" checked={this.props.selectedDistributions.has(dist.identifier)} onChange={e => this.handleCheckboxChange(dist, e.target.checked)} />
-                {" "}<a href={url}>{dist.title}</a>{" "}
+                {' '}<a href={url}>{dist.title}</a>{' '}
                 <small className="licence-header"> Format </small>
                 <small className="format">{dist.format}</small>
                 <i className="licence-hover" id={`dist-${ridx}-${didx}`}> <small className="licence-header">  Licence </small>
