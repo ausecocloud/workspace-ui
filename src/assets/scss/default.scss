@@ -733,11 +733,15 @@ section#main {
 					.snippet-body{
 						font-size: 16px;
 						padding-left: 28px;
-						pre{
+						code{
+							display: block;
 							background-color: #EFEFEF;
 							padding: 15px;
+							margin: 0.5em 0;
 							font-size: 12px;
 							color: $light-gray;
+							overflow: auto;
+							white-space: pre;
 						}
 					}
 				}
