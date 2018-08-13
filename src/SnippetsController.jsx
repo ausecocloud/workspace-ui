@@ -192,7 +192,7 @@ export class SnippetsController extends React.Component {
                     return (
                       <li key={distId}>
                         <a className="selected-dataset" href="#" onClick={() => this.toggleCollapseDistribution(distId)}>
-                          <FontAwesomeIcon icon={faChevronRight} /> &nbsp;
+                          <FontAwesomeIcon className="arrow-icon" icon={faChevronRight} /> &nbsp;
                           {dist.title}
                         </a>
                       </li>
@@ -202,7 +202,7 @@ export class SnippetsController extends React.Component {
                   return (
                     <li key={distId}>
                       <a className="selected-dataset" href="#" onClick={() => this.toggleCollapseDistribution(distId)}>
-                        <FontAwesomeIcon icon={faChevronDown} /> &nbsp;
+                        <FontAwesomeIcon className="arrow-icon" icon={faChevronDown} /> &nbsp;
                         {dist.title}
                       </a>
                       <div className="float-right">

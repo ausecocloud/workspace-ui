@@ -724,8 +724,11 @@ section#main {
 				padding-left: 0px;
 				list-style: none;
 				li {	
-					padding-top: 20px;
+					padding: 1em 0;
 					border-bottom: $grey-box-border solid 1px;
+					.arrow-icon {
+						width: 1em;
+					}
 					.selected-dataset {
 						text-decoration: none;
 						font-size: 24px;
