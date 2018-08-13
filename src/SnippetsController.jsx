@@ -206,8 +206,8 @@ export class SnippetsController extends React.Component {
                         {dist.title}
                       </a>
                       <div className="float-right">
-                        <a className="btn btn-primary btn-sm"> Store in Drive &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} /> </a> &nbsp;
-                        <a className="btn btn-primary btn-sm"> Download <FontAwesomeIcon icon={faDownload} /></a>
+                        { /* <a className="btn btn-primary btn-sm"> Store in Drive &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} /> </a> &nbsp; */ }
+                        <a className="btn btn-primary btn-sm" href={url} target="_blank" rel="noopener noreferrer"> Download file <FontAwesomeIcon icon={faDownload} /></a>
                       </div>
 
                       <div className="snippet-body">
