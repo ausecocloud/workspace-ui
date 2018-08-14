@@ -162,7 +162,7 @@ class AccountTable extends React.PureComponent {
     );
 
     const noContent = (
-      <h1>You are not logged in.</h1>
+      <h1>You are not signed in</h1>
     );
 
     return (

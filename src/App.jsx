@@ -61,7 +61,7 @@ class App extends React.Component {
     const anonLinks = (
       <Nav className="ml-auto" navbar>
         <NavItem>
-          <NavLink to="/login" onClick={this.onLogin}>Login <i className="fa fa-user-circle" /></NavLink>
+          <NavLink to="/login" onClick={this.onLogin}>Sign in <i className="fa fa-user-circle" /></NavLink>
         </NavItem>
       </Nav>
     );
@@ -166,8 +166,8 @@ class App extends React.Component {
             <Route key="Account" exact path="/account" component={Account} />,
           ]) : (
             <Container>
-              <h1>You are not logged in.</h1>
-              <p>Please <NavLink to="/login" onClick={this.onLogin}>log in</NavLink> to continue</p>
+              <h1>You are not signed in</h1>
+              <p>Please <NavLink to="/login" onClick={this.onLogin}>sign in</NavLink> to continue.</p>
             </Container>
           )}
         </section>
