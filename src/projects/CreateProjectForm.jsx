@@ -38,16 +38,26 @@ class CreateProjectForm extends React.PureComponent {
     const { target } = event;
     const { value, name } = target;
     const [fieldState, fieldError] = this.validateField(name, value);
+
+    const formErrors = {
+      ...this.state.formErrors,
+    };
+
+    // Blank error message is interpreted as no error, otherwise update the
+    // error message in the `formErrors` object
+    if (fieldError.length === 0) {
+      delete formErrors[name];
+    } else {
+      formErrors[name] = fieldError;
+    }
+
     this.setState(prevState => ({
       [name]: value,
       formState: {
         ...prevState.formState,
         [name]: fieldState,
       },
-      formErrors: {
-        ...prevState.formErrors,
-        [name]: fieldError,
-      },
+      formErrors,
     }));
   }
 
@@ -71,12 +81,8 @@ class CreateProjectForm extends React.PureComponent {
   }
 
   validateForm = () => {
-    Object.entries(this.state.formErrors).forEach(([_fieldname, error]) => {
-      if (error.length > 0) {
-        return false;
-      }
-      return true;
-    });
+    // Return whether every error message is blank string
+    return Object.entries(this.state.formErrors).every(([_fieldname, error]) => error.length === 0);
   }
 
   submitHandler = (e) => {
