@@ -80,10 +80,10 @@ class CreateProjectForm extends React.PureComponent {
     return [state, errorMsg];
   }
 
-  validateForm = () => {
-    // Return whether every error message is blank string
-    return Object.entries(this.state.formErrors).every(([_fieldname, error]) => error.length === 0);
-  }
+  /**
+   * Returns whether every error message for form fields is a blank string
+   */
+  validateForm = () => Object.entries(this.state.formErrors).every(([_fieldname, error]) => error.length === 0);
 
   submitHandler = (e) => {
     e.preventDefault();
