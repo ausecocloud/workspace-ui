@@ -127,7 +127,7 @@ export class SnippetItem extends React.Component {
     if (isCollapsed) {
       return (
         <li key={distId}>
-          <a className="selected-dataset" href="#" onClick={() => this.props.toggleCollapsed(distId)}>
+          <a className="selected-dataset" href="#" onClick={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}>
             <FontAwesomeIcon className="arrow-icon" icon={faChevronRight} /> &nbsp;
             {dist.title}
           </a>
@@ -137,7 +137,7 @@ export class SnippetItem extends React.Component {
 
     return (
       <li key={distId}>
-        <a className="selected-dataset" href="#" onClick={() => this.props.toggleCollapsed(distId)}>
+        <a className="selected-dataset" href="#" onClick={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}>
           <FontAwesomeIcon className="arrow-icon" icon={faChevronDown} /> &nbsp;
           {dist.title}
         </a>
