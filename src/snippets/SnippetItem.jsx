@@ -162,7 +162,7 @@ export class SnippetItem extends React.Component {
                 <div key={language}>
                   <div>
                     {language}
-                    <a href="#" className="float-right source" onClick={() => { selectElementText(snippetTextElementRef.current); copyTextToClipboard(snippetText); }}> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></a>
+                    <a href="#" className="float-right source" onClick={(e) => { selectElementText(snippetTextElementRef.current); copyTextToClipboard(snippetText); e.preventDefault(); }}> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></a>
                   </div>
 
                   <div>
