@@ -14,6 +14,7 @@ import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
 import { faSearchPlus } from '@fortawesome/free-solid-svg-icons/faSearchPlus';
 import axios from 'axios';
 import * as actions from './projects/actions';
+import * as computeActions from './compute/actions';
 import BasicModal from './BasicModal';
 import { jupyterhub } from './api';
 import {
@@ -54,12 +55,22 @@ export class Dashboard extends React.Component {
   }
 
   componentWillMount() {
+    const { user } = this.props;
+
     this.getFeed();
+
+    // Start polling for JupyterHub server information
+    this.props.dispatch(computeActions.serversListStart(user.sub));
   }
 
   componentDidMount() {
     this.props.dispatch(actions.projectsList());
     this.props.dispatch(actions.getStats());
+  }
+
+  componentWillUnmount() {
+    // Stop polling for JupyterHub server information
+    this.props.dispatch(computeActions.serversListStop());
   }
 
   getFeed = () => {
