@@ -19,7 +19,7 @@ class ToolCard extends React.PureComponent {
 
   static defaultProps = {
     imageSource: undefined,
-    imageAltText: "",
+    imageAltText: '',
     openInNewWindow: true,
   }
 
@@ -32,7 +32,7 @@ class ToolCard extends React.PureComponent {
     }
 
     return (
-      <Card>
+      <Card className="tool-card">
         <CardBody>
           <CardTitle>
             {this.props.imageSource && <img className="card-logo" src={this.props.imageSource} alt={this.props.imageAltText} />}
