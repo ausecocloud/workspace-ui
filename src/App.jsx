@@ -72,7 +72,7 @@ class App extends React.Component {
           <NavLink exact to="/">Dashboard</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink exact to="/drive">Drive</NavLink>
+          <NavLink exact to="/projects">Projects</NavLink>
         </NavItem>
         <NavItem>
           <NavLink exact to="/explorer">Explorer</NavLink>
@@ -111,10 +111,10 @@ class App extends React.Component {
             )}
           />
           <Route
-            path="/drive"
+            path="/projects"
             render={() => ([
-              <span key="drive-text" className="logo-text"><h1>Drive</h1></span>,
-              <Meta key="drive-meta" pagetitle="Drive" pagedesc="ecocloud Drive" />,
+              <span key="projects-text" className="logo-text"><h1>Projects</h1></span>,
+              <Meta key="projects-meta" pagetitle="Projects" pagedesc="ecocloud Projects" />,
             ])}
           />
           <Route
@@ -158,8 +158,8 @@ class App extends React.Component {
               user={user}
               component={Dashboard}
             />,
-            <Route key="Drive" exact path="/drive" component={ProjectsListController} />,
-            <Route key="Project" exact path="/drive/:id" component={ProjectsController} />,
+            <Route key="Projects" exact path="/projects" component={ProjectsListController} />,
+            <Route key="Project" exact path="/projects/:id" component={ProjectsController} />,
             <Route key="Explorer" path="/explorer" component={ExplorerController} />,
             <Route key="Snippets" path="/snippets" component={SnippetsController} />,
             <Route key="Tools" exact path="/tools" component={ToolsController} />,

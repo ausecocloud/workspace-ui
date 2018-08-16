@@ -161,7 +161,7 @@ export class Dashboard extends React.Component {
                 <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
                   <ProjectsTableBasic projects={projects} />
                 </ReduxBlockUi>
-                <div class="storage">
+                <div className="storage">
                   <ReduxBlockUi tag="div" block={actions.PROJECTS_STATS} unblock={[actions.PROJECTS_STATS_SUCCEEDED, actions.PROJECTS_STATS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
                     <p>Persistent storage used <span className="storage-int">{usageNum}</span></p>
                     <Progress color={progColor()} value={usagePercent} />
