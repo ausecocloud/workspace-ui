@@ -559,7 +559,7 @@ section#main {
 			}
 		}
 		.selected {
-			background:$brown-black;
+			background:$dull-header;
 			color:white;
 			padding:1rem;
 			margin:1rem 0;
@@ -572,6 +572,7 @@ section#main {
 			.help-link {
 				display: inline-block;
 				font-size:0.875rem;
+				color:darken($dull-header, 50%);
 			}
 			.selected-datasets {
 				margin-top:.75rem;
@@ -584,7 +585,7 @@ section#main {
 					margin: 10px 5px 8px 5px;
 					a {
 						padding:.5rem .85rem;
-						background:rgba(255,255,255,0.2);
+						background:darken($dull-header, 15%);
 						svg {
 							margin-left:1rem;
 							path:hover {
