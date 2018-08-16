@@ -3,22 +3,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
-  Row, Col, Container, Progress, Button,
+  Row, Col, Container, Progress, Table,
 } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
 import { Loader } from 'react-loaders';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
-import { faServer } from '@fortawesome/free-solid-svg-icons/faServer';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
-import { faSearchPlus } from '@fortawesome/free-solid-svg-icons/faSearchPlus';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import axios from 'axios';
 import * as actions from './projects/actions';
 import * as computeActions from './compute/actions';
-import BasicModal from './BasicModal';
 import { jupyterhub } from './api';
 import {
-  getProjects, getUser, getAuthenticated, getStats,
+  getProjects, getUser, getAuthenticated, getStats, getServers,
 } from './reducers';
 import { ProjectsTableBasic, CreateProjectForm } from './projects';
 import { formatDate, bytesToSize } from './utils';
@@ -31,6 +29,7 @@ function mapStateToProps(state) {
     isAuthenticated: getAuthenticated(state),
     projects: getProjects(state),
     stats: getStats(state),
+    servers: getServers(state),
   };
 }
 
@@ -47,6 +46,7 @@ export class Dashboard extends React.Component {
     isAuthenticated: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     stats: PropTypes.objectOf(PropTypes.any).isRequired,
+    servers: PropTypes.arrayOf(PropTypes.any).isRequired,
   }
 
   state = {
@@ -163,7 +163,20 @@ export class Dashboard extends React.Component {
             <Row>
               <Col sm="12">
                 <h2>Servers</h2>
-                <p>...servers...</p>
+                <Table>
+                  <tbody>
+                    {
+                      this.props.servers.map(item => (
+                        <tr key={item.name}>
+                          <td><a href={`${huburl}${item.url}`} target="_blank" rel="noopener noreferrer">{item.name || 'Server'}</a></td>
+                          <td>{item.last_activity}</td>
+                          <td>{item.started}</td>
+                          <td><FontAwesomeIcon icon={(item.pending ? faSpinner : (item.ready && faCheck) || faTimes)} /></td>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                </Table>
               </Col>
             </Row>
             <Row>
