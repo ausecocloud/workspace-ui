@@ -119,8 +119,7 @@ class ToolsController extends React.Component {
         <Row>
           <Col>
             <h2 className="tools-section-header">Virtual Desktop</h2>
-            <p>A virtual desktop environment provides you with popular software applications such as QGIS, OpenRefine, Biodiverse and many more.</p>
-            <p>Read more about the virtual desktop environments here [link to article describing how servers work].</p>
+            <p>The virtual desktop service provides you with a computer in the cloud. This service is provided by <a href="https://portal.coesra.org.au/strudel-web/" target="_blank" rel="noopener noreferrer">TERN</a>.</p>
             <Row>
               <Col>
                 <Card>
@@ -128,10 +127,10 @@ class ToolsController extends React.Component {
                     <Row>
                       <Col>
                         <CardTitle>
-                          <img className="card-logo" src={CoesraLogo} alt="COESRA Logo" /><a href="https://www.coesra.org.au" target="_blank" rel="noopener noreferrer">Virtual Desktop</a>
+                          <img className="card-logo" src={CoesraLogo} alt="COESRA Logo" /><a href="https://portal.coesra.org.au/strudel-web/" target="_blank" rel="noopener noreferrer">Virtual Desktop</a>
                         </CardTitle>
                         <CardText>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                        This Virtual Desktop environment provides a CentOS Linux based virtual desktop environment with tools like QGIS, Kepler Scientific Workflow, KNIME, Panoply, OpenRefine and Biodiverse.
                         </CardText>
                       </Col>
                       <Col>
