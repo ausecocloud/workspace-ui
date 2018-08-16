@@ -47,7 +47,6 @@ export class Dashboard extends React.Component {
 
   state = {
     feed: ['No new notifications.'],
-    projectModalActive: false,
   }
 
   componentWillMount() {
@@ -100,23 +99,6 @@ export class Dashboard extends React.Component {
       });
   }
 
-  toggleProjectModal = () => {
-    this.setState(prevState => ({ projectModalActive: !prevState.projectModalActive }));
-  }
-
-  newProjectSubmit = (formData) => {
-    if (formData && Object.keys(formData).length > 0) {
-      // submit ajax call
-      this.props.dispatch(actions.createProject(formData));
-      // close modal
-      this.setState({
-        projectModalActive: false,
-      });
-    } else {
-      console.log('return invalid here');
-    }
-  }
-
   render() {
     const {
       user, projects, isAuthenticated, stats, servers,
@@ -159,7 +141,7 @@ export class Dashboard extends React.Component {
               <Col sm="12">
                 <h2>Servers</h2>
                 <ReduxBlockUi tag="div" block={computeActions.SERVERS_LIST} unblock={[computeActions.SERVERS_SUCCEEDED, computeActions.SERVERS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
-                  <ComputeTableBasic servers={servers} />
+                  <ComputeTableBasic servers={servers} username={user.sub} />
                 </ReduxBlockUi>
               </Col>
             </Row>

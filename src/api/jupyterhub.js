@@ -100,3 +100,10 @@ export function getUser(username) {
   data[CANCEL] = cancel;
   return data;
 }
+
+export function terminateServer(username) {
+  const { promise, cancel } = callAPI({ url: `hub/api/users/${username}/server`, method: 'DELETE' }, username);
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
+}

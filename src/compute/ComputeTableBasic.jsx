@@ -1,12 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
+import * as actions from "./actions";
 import { jupyterhub } from '../api';
 import { formatDate, formatTime } from '../utils';
+
+function mapStateToProps(state, ownProps) {
+  return {};
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
 
 /**
  * Renders a table cell for displaying the status of the server
@@ -44,21 +56,40 @@ function renderStartDateCell(date) {
   );
 }
 
-export default
-class ComputeTableBasic extends React.PureComponent {
+class ComputeTableBasic extends React.Component {
   static propTypes = {
     servers: PropTypes.arrayOf(PropTypes.any).isRequired,
+    username: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired,
+  }
+
+  /**
+   * Terminates user's JupyterHub server
+   *
+   * @param {object} username User's username
+   */
+  terminateServer(username) {
+    this.props.dispatch(actions.serverTerminate(username));
   }
 
   renderServers() {
     const huburl = jupyterhub.getHubUrl();
+    const { username } = this.props;
 
     return this.props.servers.map(server => (
       <tr key={server.name}>
         <td><a href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">{server.name || 'Server'}</a></td>
         { renderStartDateCell(server.started) }
         { renderStatusCell(server) }
-        <td>Open | Terminate</td>
+        <td className="right-align">
+          <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>
+          {
+            /*
+            {' '}
+            <a className="btn btn-danger btn-sm" href="#" onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}>Terminate</a>
+            */
+          }
+        </td>
       </tr>
     ));
   }
@@ -83,3 +114,5 @@ class ComputeTableBasic extends React.PureComponent {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ComputeTableBasic);
