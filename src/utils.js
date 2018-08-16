@@ -6,6 +6,31 @@ function action(type, error = false) {
   });
 }
 
+/**
+ * Pads configured string to the start of the target string
+ *
+ * @param {string} str Target string
+ * @param {number} len Length to pad string to
+ * @param {string} pad String to pad with
+ */
+export function padStart(str, len, pad = ' ') {
+  // Based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart#Polyfill
+  let length = Math.floor(len);
+
+  // String longer than expected length
+  if (str.length >= length) {
+    return str;
+  }
+
+  // Otherwise, repeat pad to at least fill up the remaining characters required
+  length -= str.length;
+  let padString = pad;
+  if (length > pad.length) {
+    padString += pad.repeat(length / pad.length);
+  }
+  return padString.slice(0, length) + str;
+}
+
 export
 function formatDate(date) {
   const formattedDate = new Date(date);
@@ -13,6 +38,17 @@ function formatDate(date) {
   const string = `${formattedDate.getDate()} ${months[formattedDate.getMonth()]} ${formattedDate.getFullYear()}`;
 
   return string;
+}
+
+/**
+ * Formats the time of a given date-time string as H:MM:SS
+ *
+ * @param {string} date Date-time value as a string
+ */
+export function formatTime(date) {
+  const dateObj = new Date(date);
+
+  return `${dateObj.getHours()}:${padStart(dateObj.getMinutes().toString(), 2, '0')}:${padStart(dateObj.getSeconds().toString(), 2, '0')}`;
 }
 
 /**

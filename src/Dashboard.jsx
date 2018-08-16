@@ -3,22 +3,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
-  Row, Col, Container, Progress, Table,
+  Row, Col, Container, Progress,
 } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
 import { Loader } from 'react-loaders';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
-import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
-import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import axios from 'axios';
 import * as actions from './projects/actions';
 import * as computeActions from './compute/actions';
-import { jupyterhub } from './api';
 import {
   getProjects, getUser, getAuthenticated, getStats, getServers,
 } from './reducers';
-import { ProjectsTableBasic, CreateProjectForm } from './projects';
+import { ProjectsTableBasic } from './projects';
+import { ComputeTableBasic } from './compute';
 import { formatDate, bytesToSize } from './utils';
 
 const FeedMe = require('feedme');
@@ -123,7 +119,7 @@ export class Dashboard extends React.Component {
 
   render() {
     const {
-      user, projects, isAuthenticated, stats,
+      user, projects, isAuthenticated, stats, servers,
     } = this.props;
 
     // Quota figure can be `null`, in which case we replace with `0`
@@ -142,7 +138,6 @@ export class Dashboard extends React.Component {
       if (usagePercent < 75) return 'warning';
       return 'danger';
     };
-    const huburl = jupyterhub.getHubUrl();
 
     return (
       <Container className="dashboard">
@@ -163,20 +158,9 @@ export class Dashboard extends React.Component {
             <Row>
               <Col sm="12">
                 <h2>Servers</h2>
-                <Table>
-                  <tbody>
-                    {
-                      this.props.servers.map(item => (
-                        <tr key={item.name}>
-                          <td><a href={`${huburl}${item.url}`} target="_blank" rel="noopener noreferrer">{item.name || 'Server'}</a></td>
-                          <td>{item.last_activity}</td>
-                          <td>{item.started}</td>
-                          <td><FontAwesomeIcon icon={(item.pending ? faSpinner : (item.ready && faCheck) || faTimes)} /></td>
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </Table>
+                <ReduxBlockUi tag="div" block={computeActions.SERVERS_LIST} unblock={[computeActions.SERVERS_SUCCEEDED, computeActions.SERVERS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
+                  <ComputeTableBasic servers={servers} />
+                </ReduxBlockUi>
               </Col>
             </Row>
             <Row>
