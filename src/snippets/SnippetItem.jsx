@@ -24,9 +24,9 @@ url = '${url.replace(/'/g, '\\\'')}'
 data = urllib.request.urlopen(url).read().decode('utf-8')`;
 
     case 'R':
-      // TODO: Generate download code
-      return `url <- "${url}"
-# TODO: Download code`;
+      return `library(RCurl)
+url <- "${url.replace(/"/g, '\\"')}"
+data <- getURLContent(url)`;
 
     case 'Bash':
       return `curl -O ${url}`;
