@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { getSelectedDistributions } from './reducers';
 import SnippetItem from "./snippets/SnippetItem";
+import { jupyterhub } from './api';
 
 function mapStateToProps(state) {
   return {
@@ -65,6 +66,8 @@ export class SnippetsController extends React.Component {
   }
 
   render() {
+    const huburl = jupyterhub.getHubUrl();
+
     return (
       <div className="container snippets">
         <h1>Snippets</h1>
@@ -74,8 +77,8 @@ export class SnippetsController extends React.Component {
           </Col>
           <Col xs="9">
             <div className="float-right">
-              <a className="btn btn-primary btn-sm"> Download All Snippets &nbsp; <FontAwesomeIcon icon={faCaretDown} /> </a> &nbsp;
-              <a className="btn btn-secondary btn-sm"><FontAwesomeIcon icon={faServer} /> Launch Notebook</a>
+              { /* <a className="btn btn-primary btn-sm"> Download All Snippets &nbsp; <FontAwesomeIcon icon={faCaretDown} /> </a> &nbsp; */ }
+              <a className="btn btn-secondary btn-sm" href={`${huburl}/hub/home`} target="_blank" title="Launch a notebook in ecocloud Compute" rel="noopener noreferrer"><FontAwesomeIcon icon={faServer} /> Launch Notebook</a>
             </div>
           </Col>
         </Row>
