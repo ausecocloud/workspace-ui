@@ -287,7 +287,7 @@ class ProjectsController extends React.Component {
               <Row>
                 <Col className="footerCallToAction">
                   <a className="btn btn-xl btn-secondary" href={`${huburl}/hub/home`} target="_blank" title="Launch this project in ecocloud Compute" rel="noopener noreferrer"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></a>
-                  <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
+                  <p>Need additional datasets? Find them in <Link to="/explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
                 </Col>
               </Row>
             </ReduxBlockUi>

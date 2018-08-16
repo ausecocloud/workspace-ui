@@ -29,7 +29,7 @@ import AURINLogo from './assets/images/AURINlogo.png';
 import * as actions from './compute/actions';
 import { getServers, getUser } from './reducers';
 import { jupyterhub } from './api';
-
+import ToolCard from "./tools/ToolCard";
 
 function mapStateToProps(state) {
   return {
@@ -88,32 +88,22 @@ class ToolsController extends React.Component {
             <h1>Command-line Tools</h1>
             <Row>
               <Col>
-                <a href={`${huburl}/hub/home`} target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={Rlogo} alt="R Logo" /> RStudio & R Jupyter
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
+                <ToolCard
+                  title="RStudio & R Jupyter"
+                  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
+                  url={`${huburl}/hub/home`}
+                  imageSource={Rlogo}
+                  imageAltText="R Logo"
+                />
               </Col>
               <Col>
-                <a href={`${huburl}/hub/home`} target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={JupyterLogo} alt="Jupyter Logo" />  SciPy Jupyter
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
+                <ToolCard
+                  title="SciPy Jupyter"
+                  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
+                  url={`${huburl}/hub/home`}
+                  imageSource={JupyterLogo}
+                  imageAltText="Jupyter Logo"
+                />
               </Col>
             </Row>
           </Col>
@@ -166,62 +156,42 @@ class ToolsController extends React.Component {
             <h1>Point-and-click tools</h1>
             <Row>
               <Col>
-                <a href="https://spatial.ala.org.au" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={ALALogo} alt="ALA Logo" /> ALA Spatial Portal
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
+                <ToolCard
+                  title="ALA Spatial Portal"
+                  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
+                  url="https://spatial.ala.org.au"
+                  imageSource={ALALogo}
+                  imageAltText="ALA Logo"
+                />
               </Col>
               <Col>
-                <a href="http://www.bccvl.org.au" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={BCCVLLogo} alt="BCCVL Logo" /> BCCVL
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
+                <ToolCard
+                  title="BCCVL"
+                  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
+                  url="http://www.bccvl.org.au"
+                  imageSource={BCCVLLogo}
+                  imageAltText="BCCVL Logo"
+                />
               </Col>
             </Row>
             <Row>
               <Col>
-                <a href="http://www.agriculture.gov.au/abares/aclump/multi-criteria-analysis" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={MCASSLogo} alt="MCAS-S Logo" /> MCAS-S
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
+                <ToolCard
+                  title="MCAS-S"
+                  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
+                  url="http://www.agriculture.gov.au/abares/aclump/multi-criteria-analysis"
+                  imageSource={MCASSLogo}
+                  imageAltText="MCAS-S Logo"
+                />
               </Col>
               <Col>
-                <a href="https://aurin.org.au" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={AURINLogo} alt="AURIN Logo" /> AURIN
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
+                <ToolCard
+                  title="AURIN"
+                  description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod."
+                  url="https://aurin.org.au"
+                  imageSource={AURINLogo}
+                  imageAltText="AURIN Logo"
+                />
               </Col>
             </Row>
           </Col>

@@ -115,10 +115,17 @@ export class Dashboard extends React.Component {
       user, projects, isAuthenticated, stats,
     } = this.props;
 
-    const used = bytesToSize(stats.used);
-    const total = bytesToSize(stats.quota);
-    const usageNum = `${used} / ${total}`;
-    const usagePercent = (stats.used / stats.quota) * 100;
+    // Quota figure can be `null`, in which case we replace with `0`
+    const quota = stats.quota || 0;
+    const { used } = stats;
+
+    const usedBytes = bytesToSize(used, false);
+    const totalBytes = bytesToSize(quota);
+
+    // Usage is rendered as 0% usage when the quota itself is 0
+    const usagePercent = quota === 0 ? 0 : (used / quota) * 100;
+    const usageNum = `${usedBytes} / ${totalBytes}`;
+
     const progColor = () => {
       if (usagePercent < 50) return 'primary';
       if (usagePercent < 75) return 'warning';
