@@ -81,7 +81,7 @@ class App extends React.Component {
           <NavLink exact to="/tools">Tools</NavLink>
         </NavItem>
         <NavItem>
-          <ExtNavLink target="_blank" href="http://support.ecocloud.org.au/support/home">Support &amp; Docs</ExtNavLink>
+          <ExtNavLink target="_blank" href="http://support.ecocloud.org.au/support/home">Support</ExtNavLink>
         </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>
