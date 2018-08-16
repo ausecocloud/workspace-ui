@@ -143,36 +143,27 @@ export class Dashboard extends React.Component {
           </Col>
         </Row>
         <Row>
+          <Col>
+            <p>[intro text]</p>
+          </Col>
+        </Row>
+        <Row>
           <Col sm={{ size: 9 }}>
             <Row>
               <Col sm="12">
-                <h2>Getting Started</h2>
-                <Row>
-                  <Col md="4">
-                    <Link to="explorer" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
-                      <FontAwesomeIcon icon={faSearchPlus} /> <br /> Find datasets in <strong><em>Explorer</em></strong>
-                    </Link>
-                  </Col>
-                  <Col md="4">
-                    <Link to="drive" className="btn btn-lg btn-dashboard btn-primary" title="Manage files in Drive">
-                      <FontAwesomeIcon icon={faFolderOpen} /> <br /> Manage files in <strong><em>Drive</em></strong>
-                    </Link>
-                  </Col>
-                  <Col md="4">
-                    <a href={`${huburl}/hub/home`} target="_blank" className="btn btn-lg btn-dashboard btn-primary" title="Start a service in Compute" rel="noopener noreferrer">
-                      <FontAwesomeIcon icon={faServer} /> <br /> Start a service in <strong><em>Compute</em></strong>
-                    </a>
-                  </Col>
-                </Row>
+                <h2>Servers</h2>
+                <p>...servers...</p>
               </Col>
             </Row>
-
             <Row>
               <Col sm="12">
-                <div className="storage">
-                  <h2>Your Resources</h2>
+                <h2>Projects</h2>
+                <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
+                  <ProjectsTableBasic projects={projects} />
+                </ReduxBlockUi>
+                <div class="storage">
                   <ReduxBlockUi tag="div" block={actions.PROJECTS_STATS} unblock={[actions.PROJECTS_STATS_SUCCEEDED, actions.PROJECTS_STATS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
-                    <p>Storage Space <span className="storage-int">{usageNum}</span></p>
+                    <p>Persistent storage used <span className="storage-int">{usageNum}</span></p>
                     <Progress color={progColor()} value={usagePercent} />
                   </ReduxBlockUi>
                 </div>
@@ -180,32 +171,20 @@ export class Dashboard extends React.Component {
             </Row>
             <Row>
               <Col sm="12">
-                <div className="home-projects-table">
-                  <h2>Your Projects</h2>
-                  <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
-                    <ProjectsTableBasic projects={projects} />
-                  </ReduxBlockUi>
-                  <div className="table-footer">
-                    <Button onClick={this.toggleProjectModal} className="btn btn-lg btn-success">
-                      <FontAwesomeIcon icon={faPlusCircle} /> Create New Project
-                    </Button>
-                  </div>
-                  <BasicModal
-                    title="Create A Project"
-                    desc="You can create a new project to organise your work using this form."
-                    active={this.state.projectModalActive}
-                    close={this.toggleProjectModal}
-                  >
-                    <CreateProjectForm
-                      submit={this.newProjectSubmit}
-                      close={this.toggleProjectModal}
-                    />
-                  </BasicModal>
-                </div>
+                <h2>Find Datasets</h2>
+                <p>Find datasets from hundreds of publishers through our <Link to="/explorer"><em>ecocloud <strong>Explorer</strong></em></Link> page.</p>
               </Col>
             </Row>
           </Col>
           <Col sm={{ size: 3 }}>
+            <Row>
+              <h2>Getting Started</h2>
+              <div className="dash-activity">
+                <ul>
+                  <li><p>[links to support articles]</p></li>
+                </ul>
+              </div>
+            </Row>
             <Row>
               <h2>Notifications</h2>
               <div className="dash-activity">
