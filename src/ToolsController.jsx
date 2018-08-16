@@ -9,7 +9,7 @@ import {
   CardText,
 } from 'reactstrap';
 import Rlogo from './assets/images/Rlogo.svg';
-import JupyterLogo from './assets/images/JupyterLogo.svg';
+import PythonLogo from './assets/images/PythonLogo.png';
 import CoesraLogo from './assets/images/CoesraLogo.png';
 import ALALogo from './assets/images/ALAlogo.jpg';
 import BCCVLLogo from './assets/images/BCCVLlogo.png';
@@ -53,8 +53,8 @@ const ToolsController = () => {
                 title="Scientific Python (SciPy Jupyter)"
                 description="SciPy is a Python-based ecosystem of open-source software for mathematics, science, and engineering. This server will run through a JupyterLab interface."
                 url={`${huburl}/hub/home`}
-                imageSource={JupyterLogo}
-                imageAltText="Jupyter Logo"
+                imageSource={PythonLogo}
+                imageAltText="Python Logo"
               />
             </Col>
           </Row>
