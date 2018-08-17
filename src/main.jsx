@@ -6,7 +6,9 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import blockUiMiddleware from 'react-block-ui/reduxMiddleware';
 import createHistory from 'history/createBrowserHistory';
-import { ConnectedRouter, routerReducer, routerMiddleware, LOCATION_CHANGE } from 'react-router-redux';
+import {
+  ConnectedRouter, routerReducer, routerMiddleware, LOCATION_CHANGE,
+} from 'react-router-redux';
 import { createMiddleware } from 'redux-beacon';
 import GoogleAnalytics, { trackPageView, trackEvent } from '@redux-beacon/google-analytics';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';

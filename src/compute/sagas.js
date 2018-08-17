@@ -1,5 +1,7 @@
 import { delay } from 'redux-saga';
-import { call, put, race, take, takeLatest } from 'redux-saga/effects';
+import {
+  call, put, race, take, takeLatest,
+} from 'redux-saga/effects';
 import { jupyterhub } from '../api';
 import * as actions from './actions';
 

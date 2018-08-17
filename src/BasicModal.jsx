@@ -4,11 +4,6 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 export default
 class BasicModal extends React.Component {
-  static defaultProps = {
-    title: '',
-    desc: '',
-  }
-
   static propTypes = {
     title: PropTypes.string,
     desc: PropTypes.string,
@@ -16,6 +11,11 @@ class BasicModal extends React.Component {
     close: PropTypes.func.isRequired,
     // submit: PropTypes.func.isRequired,
     children: PropTypes.element.isRequired,
+  }
+
+  static defaultProps = {
+    title: '',
+    desc: '',
   }
 
   closeHandler = e => this.props.close(e.target.value);

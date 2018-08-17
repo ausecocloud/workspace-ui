@@ -43,7 +43,7 @@ class SearchFacet extends React.Component {
     return [...options.keys()].map(key => (
       <li key={key}>
         <Input name={`${key}_checkbox`} id={`${key}_checkbox`} type="checkbox" value={key} onChange={this.handleSelectionChange} />
-        <Label for={`${key}_checkbox`} >{key} <span className="count"> {options.get(key)}</span></Label>
+        <Label for={`${key}_checkbox`}>{key} <span className="count"> {options.get(key)}</span></Label>
       </li>
     ));
   }

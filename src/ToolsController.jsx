@@ -88,7 +88,7 @@ class ToolsController extends React.Component {
             <h1>Command-line Tools</h1>
             <Row>
               <Col>
-                <a href={`${huburl}/hub/home`} target="_blank">
+                <a href={`${huburl}/hub/home`} target="_blank" rel="noopener noreferrer">
                   <Card>
                     <CardBody>
                       <CardTitle>
@@ -102,7 +102,7 @@ class ToolsController extends React.Component {
                 </a>
               </Col>
               <Col>
-                <a href={`${huburl}/hub/home`} target="_blank">
+                <a href={`${huburl}/hub/home`} target="_blank" rel="noopener noreferrer">
                   <Card>
                     <CardBody>
                       <CardTitle>

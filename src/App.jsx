@@ -3,7 +3,11 @@ import { hot } from 'react-hot-loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, NavLink, withRouter } from 'react-router-dom';
-import { Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import {
+  Container, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, Collapse,
+  UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem,
+  NavLink as ExtNavLink,
+} from 'reactstrap';
 import './App.css';
 import ProjectsController from './ProjectsController';
 import Dashboard from './Dashboard';
@@ -22,15 +26,15 @@ import './assets/scss/default.scss';
 require('./assets/images/favicon.ico');
 
 class App extends React.Component {
-  static defaultProps = {
-    user: {},
-    isAuthenticated: false,
-  }
-
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any),
     isAuthenticated: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    user: {},
+    isAuthenticated: false,
   }
 
   state = {
@@ -48,9 +52,7 @@ class App extends React.Component {
   }
 
   toggle = () => {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
+    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
   }
 
   render() {
@@ -79,7 +81,7 @@ class App extends React.Component {
           <NavLink exact to="/tools">Tools</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink target="_blank" to="http://support.ecocloud.org.au/support/home">Support &amp; Docs</NavLink>
+          <ExtNavLink target="_blank" href="http://support.ecocloud.org.au/support/home">Support &amp; Docs</ExtNavLink>
         </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>

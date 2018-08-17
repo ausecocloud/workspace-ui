@@ -1,4 +1,6 @@
-import { call, put, takeEvery, fork } from 'redux-saga/effects';
+import {
+  call, put, takeEvery, fork,
+} from 'redux-saga/effects';
 import * as actions from './actions';
 import projectsSaga from './projects/sagas';
 import computeSaga from './compute/sagas';

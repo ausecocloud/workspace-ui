@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Row, Col, Container, Progress, Button } from 'reactstrap';
+import {
+  Row, Col, Container, Progress, Button,
+} from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
 import { Loader } from 'react-loaders';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,7 +16,9 @@ import axios from 'axios';
 import * as actions from './projects/actions';
 import BasicModal from './BasicModal';
 import { jupyterhub } from './api';
-import { getProjects, getUser, getAuthenticated, getStats } from './reducers';
+import {
+  getProjects, getUser, getAuthenticated, getStats,
+} from './reducers';
 import { ProjectsTableBasic, CreateProjectForm } from './projects';
 import { formatDate, bytesToSize } from './utils';
 
@@ -52,6 +56,7 @@ export class Dashboard extends React.Component {
   componentWillMount() {
     this.getFeed();
   }
+
   componentDidMount() {
     this.props.dispatch(actions.projectsList());
     this.props.dispatch(actions.getStats());
@@ -72,7 +77,7 @@ export class Dashboard extends React.Component {
             <li key={item.link}>
               <p><strong>{date}</strong></p>
               <p>{item.title}</p>
-              <p><span dangerouslySetInnerHTML={{ __html: desc }} /> <a href={item.link} target="_blank">... Read more</a></p>
+              <p><span dangerouslySetInnerHTML={{ __html: desc }} /> <a href={item.link} target="_blank" rel="noopener noreferrer">... Read more</a></p>
             </li>
           );
           feed.push(feedItem);
@@ -89,7 +94,7 @@ export class Dashboard extends React.Component {
   }
 
   toggleProjectModal = () => {
-    this.setState({ projectModalActive: !this.state.projectModalActive });
+    this.setState(prevState => ({ projectModalActive: !prevState.projectModalActive }));
   }
 
   newProjectSubmit = (formData) => {
@@ -116,7 +121,7 @@ export class Dashboard extends React.Component {
     const usagePercent = (stats.used / stats.quota) * 100;
     const progColor = () => {
       if (usagePercent < 50) return 'primary';
-      else if (usagePercent < 75) return 'warning';
+      if (usagePercent < 75) return 'warning';
       return 'danger';
     };
     const huburl = jupyterhub.getHubUrl();
@@ -125,8 +130,8 @@ export class Dashboard extends React.Component {
       <Container className="dashboard">
         <Row>
           <Col>
-            {isAuthenticated &&
-              <h1>Welcome {user.name}</h1>
+            { isAuthenticated
+              && <h1>Welcome {user.name}</h1>
             }
           </Col>
         </Row>
@@ -147,14 +152,14 @@ export class Dashboard extends React.Component {
                     </Link>
                   </Col>
                   <Col md="4">
-                    <a href={`${huburl}/hub/home`} target="_blank" className="btn btn-lg btn-dashboard btn-primary" title="Start a service in Compute">
+                    <a href={`${huburl}/hub/home`} target="_blank" className="btn btn-lg btn-dashboard btn-primary" title="Start a service in Compute" rel="noopener noreferrer">
                       <FontAwesomeIcon icon={faServer} /> <br /> Start a service in <strong><em>Compute</em></strong>
                     </a>
                   </Col>
                 </Row>
               </Col>
             </Row>
-            
+
             <Row>
               <Col sm="12">
                 <div className="storage">

@@ -6,16 +6,16 @@ import { BreadcrumbItem } from 'reactstrap';
 
 export default
 class PathBarItem extends React.PureComponent {
-  static defaultProps = {
-    path: '',
-    name: '',
-    onClick: null,
-  }
-
   static propTypes = {
     path: PropTypes.string,
     name: PropTypes.string,
     onClick: PropTypes.func,
+  }
+
+  static defaultProps = {
+    path: '',
+    name: '',
+    onClick: null,
   }
 
   onClick = (e) => {

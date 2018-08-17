@@ -688,6 +688,8 @@ section#main {
 				}
 				.distributions {
 					line-height: 1.5rem;
+					padding: 0;
+					list-style: none;
 					.format {
 						background:$dull-header;
 						color:white;
@@ -722,8 +724,11 @@ section#main {
 				padding-left: 0px;
 				list-style: none;
 				li {	
-					padding-top: 20px;
+					padding: 1em 0;
 					border-bottom: $grey-box-border solid 1px;
+					.arrow-icon {
+						width: 1rem;
+					}
 					.selected-dataset {
 						text-decoration: none;
 						font-size: 24px;
@@ -731,11 +736,15 @@ section#main {
 					.snippet-body{
 						font-size: 16px;
 						padding-left: 28px;
-						pre{
+						code{
+							display: block;
 							background-color: #EFEFEF;
 							padding: 15px;
+							margin: 0.5em 0;
 							font-size: 12px;
 							color: $light-gray;
+							overflow: auto;
+							white-space: pre;
 						}
 					}
 				}

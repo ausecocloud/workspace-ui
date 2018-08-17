@@ -62,14 +62,14 @@ module.exports = (env, options) => {
       rules: [
         // First, run the linter.
         // It's important to do this before Babel processes the JS.
-        // {
-        //   enforce: 'pre',
-        //   test: /\.(js|jsx)$/,
-        //   include: paths.src,
-        //   use: [
-        //     'eslint-loader',
-        //   ],
-        // },
+        {
+          enforce: 'pre',
+          test: /\.(js|jsx)$/,
+          include: paths.src,
+          use: [
+            'eslint-loader',
+          ],
+        },
         // Process JS with Babel.
         {
           test: /\.(js|jsx)$/,

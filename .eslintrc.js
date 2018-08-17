@@ -1,14 +1,18 @@
 
 // override rules
 const rules = {
+  "no-prototype-builtins": "off",
+  "no-restricted-syntax": 'warn',
   'jsx-a11y/anchor-is-valid': [ "warn", {
     components: [ 'Link' ],
     specialLink: [ 'to' ],
     aspects: ['invalidHref', 'preferButton'],
   }],
-  "no-restricted-syntax": 'warn',
+  "react/destructuring-assignment": "off",
+  "react/jsx-one-expression-per-line": "off",
   // TODO: enable this rule again
   'react-redux/prefer-separate-component-file': 'off',
+  'react/no-array-index-key': 'warn',
 }
 
 if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {

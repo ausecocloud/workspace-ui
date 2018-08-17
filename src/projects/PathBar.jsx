@@ -9,15 +9,15 @@ import PathBarItem from './PathBarItem';
 
 export default
 class PathBar extends React.PureComponent {
-  static defaultProps = {
-    path: '',
-    onClick: null,
-  }
-
   static propTypes = {
     project: PropTypes.string.isRequired,
     path: PropTypes.string,
     onClick: PropTypes.func,
+  }
+
+  static defaultProps = {
+    path: '',
+    onClick: null,
   }
 
   onClick = (path) => {
@@ -35,8 +35,9 @@ class PathBar extends React.PureComponent {
       <Breadcrumb tag="nav">
         <FontAwesomeIcon icon={faHome} />&nbsp;
         <PathBarItem path="/" name={project} onClick={this.onClick} />
-        { parts.map((part, idx) => (
-          <PathBarItem key={part} path={`/${parts.slice(0, idx + 1).join('/')}`} name={part} onClick={this.onClick} />
+        {
+          parts.map((part, idx) => (
+            <PathBarItem key={part} path={`/${parts.slice(0, idx + 1).join('/')}`} name={part} onClick={this.onClick} />
           ))
         }
       </Breadcrumb>
