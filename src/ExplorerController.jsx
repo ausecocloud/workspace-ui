@@ -68,6 +68,7 @@ const restrictedPubs = [
   'Office of Environment and Heritage (OEH)',
   'Natural Resources, Mines and Energy',
   'State of the Environment',
+  'AGSO-Geoscience Australia'
 ];
 
 export class ExplorerController extends React.Component {
