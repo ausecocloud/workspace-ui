@@ -83,12 +83,8 @@ class ComputeTableBasic extends React.Component {
         { renderStatusCell(server) }
         <td className="right-align">
           <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>
-          {
-            /*
-            {' '}
-            <a className="btn btn-danger btn-sm" href="#" onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}>Terminate</a>
-            */
-          }
+          {' '}
+          <a className="btn btn-danger btn-sm" href="#" onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}>Terminate</a>
         </td>
       </tr>
     ));
