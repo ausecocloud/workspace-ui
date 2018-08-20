@@ -4,9 +4,9 @@ import * as actions from './actions';
 
 function servers(state = [], action) {
   switch (action.type) {
-    case actions.SERVERS_SUCCEEDED:
+    case actions.SERVERS_LIST_SUCCEEDED:
       return action.payload;
-    case actions.SERVERS_FAILED:
+    case actions.SERVERS_LIST_FAILED:
       return [];
     default:
       return state;

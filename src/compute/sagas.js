@@ -11,11 +11,14 @@ import * as actions from './actions';
 // makes it reusable with the repeating poll
 function* serversTask(action) {
   try {
+    // Call the API
     const user = yield call(jupyterhub.getUser, action.payload);
-    // parse response
+
+    // Parse response
     const serverkeys = Object.keys(user.servers).sort();
     const servers = serverkeys.map(key => user.servers[key]);
-    // update server list
+
+    // Update server list
     yield put(actions.serversSucceeded(servers));
   } catch (error) {
     yield put(actions.serversFailed(error));
@@ -25,9 +28,16 @@ function* serversTask(action) {
 function* serversPollTask(action) {
   while (true) {
     try {
-      // fetch servers list
-      yield call(serversTask, action);
-      // wait 10 secconds and start over
+      // Trigger a new fetch of the server list
+      yield put(actions.serversList(action.payload));
+
+      // Wait for response
+      yield take([
+        actions.SERVERS_LIST_SUCCEEDED,
+        actions.SERVERS_LIST_FAILED,
+      ]);
+
+      // Wait 10 secconds and start over
       yield call(delay, 10000);
     } catch (error) {
       console.log('servers poll task failed. keep retrying', error);
@@ -50,17 +60,26 @@ function* serversWatchStopTask(action) {
   }
 }
 
+/**
+ * Task for terminating a given user's JupyterHub server
+ *
+ * @param {object} action Action object, with username as payload
+ */
 function* serverTerminateTask(action) {
   try {
     const data = yield call(jupyterhub.terminateServer, action.payload);
     yield put(actions.serverTerminateSucceeded(data));
   } catch (error) {
     yield put(actions.serverTerminateFailed(error));
+  } finally {
+    // Immediately update server status again
+    yield put(actions.serversList(action.payload));
   }
 }
 
 export default function* computeSaga() {
   // start yourself
+  yield takeLatest(actions.SERVERS_LIST, serversTask);
   // kick off servers list task, on restart it will cancel already running tasks
   yield takeLatest(actions.SERVERS_LIST_START, serversWatchStopTask);
   yield takeEvery(actions.SERVER_TERMINATE, serverTerminateTask);
