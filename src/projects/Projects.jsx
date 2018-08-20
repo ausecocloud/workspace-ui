@@ -17,7 +17,7 @@ class Projects extends React.PureComponent {
   renderProjectOptions() {
     const { projects } = this.props;
     return projects.map(project => (
-      <Link key={project.name} to={`/drive/${project.name}`} className="project-link">
+      <Link key={project.name} to={`/projects/${project.name}`} className="project-link">
         <div className="project-list-item">
           <h2>{project.name}</h2>
           <p><strong>Date Created:</strong> {formatDate(project.created)}</p>

@@ -26,13 +26,13 @@ export default class Compute extends React.PureComponent {
 
     return (
       <div>
-        <a href={`${huburl}/hub/home`} target="_blank">Jupyter Hub</a>
+        <a href={`${huburl}/hub/home`} target="_blank" rel="noopener noreferrer">Jupyter Hub</a>
         <Table>
           <tbody>
             {
               servers.map(item => (
                 <tr key={item.name}>
-                  <td><a href={`${huburl}${item.url}`} target="_blank">{item.name || 'Server'}</a></td>
+                  <td><a href={`${huburl}${item.url}`} target="_blank" rel="noopener noreferrer">{item.name || 'Server'}</a></td>
                   <td>{item.last_activity}</td>
                   <td>{item.started}</td>
                   <td><FontAwesomeIcon icon={iconfunc(item)} /></td>

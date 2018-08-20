@@ -3,23 +3,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
-  Row, Col, Container, Progress, Button,
+  Row, Col, Container, Progress,
 } from 'reactstrap';
 import ReduxBlockUi from 'react-block-ui/redux';
 import { Loader } from 'react-loaders';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
-import { faServer } from '@fortawesome/free-solid-svg-icons/faServer';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen';
-import { faSearchPlus } from '@fortawesome/free-solid-svg-icons/faSearchPlus';
 import axios from 'axios';
 import * as actions from './projects/actions';
-import BasicModal from './BasicModal';
-import { jupyterhub } from './api';
+import * as computeActions from './compute/actions';
 import {
-  getProjects, getUser, getAuthenticated, getStats,
+  getProjects, getUser, getAuthenticated, getStats, getServers,
 } from './reducers';
-import { ProjectsTableBasic, CreateProjectForm } from './projects';
+import { ProjectsTableBasic } from './projects';
+import { ComputeTableBasic } from './compute';
 import { formatDate, bytesToSize } from './utils';
 
 const FeedMe = require('feedme');
@@ -30,6 +25,7 @@ function mapStateToProps(state) {
     isAuthenticated: getAuthenticated(state),
     projects: getProjects(state),
     stats: getStats(state),
+    servers: getServers(state),
   };
 }
 
@@ -46,20 +42,30 @@ export class Dashboard extends React.Component {
     isAuthenticated: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     stats: PropTypes.objectOf(PropTypes.any).isRequired,
+    servers: PropTypes.arrayOf(PropTypes.any).isRequired,
   }
 
   state = {
     feed: ['No new notifications.'],
-    projectModalActive: false,
   }
 
   componentWillMount() {
+    const { user } = this.props;
+
     this.getFeed();
+
+    // Start polling for JupyterHub server information
+    this.props.dispatch(computeActions.serversListStart(user.sub));
   }
 
   componentDidMount() {
     this.props.dispatch(actions.projectsList());
     this.props.dispatch(actions.getStats());
+  }
+
+  componentWillUnmount() {
+    // Stop polling for JupyterHub server information
+    this.props.dispatch(computeActions.serversListStop());
   }
 
   getFeed = () => {
@@ -93,38 +99,27 @@ export class Dashboard extends React.Component {
       });
   }
 
-  toggleProjectModal = () => {
-    this.setState(prevState => ({ projectModalActive: !prevState.projectModalActive }));
-  }
-
-  newProjectSubmit = (formData) => {
-    if (formData && Object.keys(formData).length > 0) {
-      // submit ajax call
-      this.props.dispatch(actions.createProject(formData));
-      // close modal
-      this.setState({
-        projectModalActive: false,
-      });
-    } else {
-      console.log('return invalid here');
-    }
-  }
-
   render() {
     const {
-      user, projects, isAuthenticated, stats,
+      user, projects, isAuthenticated, stats, servers,
     } = this.props;
 
-    const used = bytesToSize(stats.used);
-    const total = bytesToSize(stats.quota);
-    const usageNum = `${used} / ${total}`;
-    const usagePercent = (stats.used / stats.quota) * 100;
+    // Quota figure can be `null`, in which case we replace with `0`
+    const quota = stats.quota || 0;
+    const { used } = stats;
+
+    const usedBytes = bytesToSize(used, false);
+    const totalBytes = bytesToSize(quota);
+
+    // Usage is rendered as 0% usage when the quota itself is 0
+    const usagePercent = quota === 0 ? 0 : (used / quota) * 100;
+    const usageNum = `${usedBytes} / ${totalBytes}`;
+
     const progColor = () => {
       if (usagePercent < 50) return 'primary';
       if (usagePercent < 75) return 'warning';
       return 'danger';
     };
-    const huburl = jupyterhub.getHubUrl();
 
     return (
       <Container className="dashboard">
@@ -136,36 +131,29 @@ export class Dashboard extends React.Component {
           </Col>
         </Row>
         <Row>
+          <Col>
+            <p>[intro text]</p>
+          </Col>
+        </Row>
+        <Row>
           <Col sm={{ size: 9 }}>
             <Row>
               <Col sm="12">
-                <h2>Getting Started</h2>
-                <Row>
-                  <Col md="4">
-                    <Link to="explorer" className="btn btn-lg btn-dashboard btn-primary" title="Find Datasets in ecocloud Explorer">
-                      <FontAwesomeIcon icon={faSearchPlus} /> <br /> Find datasets in <strong><em>Explorer</em></strong>
-                    </Link>
-                  </Col>
-                  <Col md="4">
-                    <Link to="drive" className="btn btn-lg btn-dashboard btn-primary" title="Manage files in Drive">
-                      <FontAwesomeIcon icon={faFolderOpen} /> <br /> Manage files in <strong><em>Drive</em></strong>
-                    </Link>
-                  </Col>
-                  <Col md="4">
-                    <a href={`${huburl}/hub/home`} target="_blank" className="btn btn-lg btn-dashboard btn-primary" title="Start a service in Compute" rel="noopener noreferrer">
-                      <FontAwesomeIcon icon={faServer} /> <br /> Start a service in <strong><em>Compute</em></strong>
-                    </a>
-                  </Col>
-                </Row>
+                <h2>Servers</h2>
+                <ReduxBlockUi tag="div" block={computeActions.SERVERS_LIST} unblock={[computeActions.SERVERS_SUCCEEDED, computeActions.SERVERS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
+                  <ComputeTableBasic servers={servers} username={user.sub} />
+                </ReduxBlockUi>
               </Col>
             </Row>
-
             <Row>
               <Col sm="12">
+                <h2>Projects</h2>
+                <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
+                  <ProjectsTableBasic projects={projects} />
+                </ReduxBlockUi>
                 <div className="storage">
-                  <h2>Your Resources</h2>
                   <ReduxBlockUi tag="div" block={actions.PROJECTS_STATS} unblock={[actions.PROJECTS_STATS_SUCCEEDED, actions.PROJECTS_STATS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
-                    <p>Storage Space <span className="storage-int">{usageNum}</span></p>
+                    <p>Persistent storage used <span className="storage-int">{usageNum}</span></p>
                     <Progress color={progColor()} value={usagePercent} />
                   </ReduxBlockUi>
                 </div>
@@ -173,32 +161,20 @@ export class Dashboard extends React.Component {
             </Row>
             <Row>
               <Col sm="12">
-                <div className="home-projects-table">
-                  <h2>Your Projects</h2>
-                  <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
-                    <ProjectsTableBasic projects={projects} />
-                  </ReduxBlockUi>
-                  <div className="table-footer">
-                    <Button onClick={this.toggleProjectModal} className="btn btn-lg btn-success">
-                      <FontAwesomeIcon icon={faPlusCircle} /> Create New Project
-                    </Button>
-                  </div>
-                  <BasicModal
-                    title="Create A Project"
-                    desc="You can create a new project to organise your work using this form."
-                    active={this.state.projectModalActive}
-                    close={this.toggleProjectModal}
-                  >
-                    <CreateProjectForm
-                      submit={this.newProjectSubmit}
-                      close={this.toggleProjectModal}
-                    />
-                  </BasicModal>
-                </div>
+                <h2>Find Datasets</h2>
+                <p>Find datasets from hundreds of publishers through our <Link to="/explorer"><em>ecocloud <strong>Explorer</strong></em></Link> page.</p>
               </Col>
             </Row>
           </Col>
           <Col sm={{ size: 3 }}>
+            <Row>
+              <h2>Getting Started</h2>
+              <div className="dash-activity">
+                <ul>
+                  <li><p>[links to support articles]</p></li>
+                </ul>
+              </div>
+            </Row>
             <Row>
               <h2>Notifications</h2>
               <div className="dash-activity">

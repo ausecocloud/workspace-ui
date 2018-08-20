@@ -61,7 +61,7 @@ class App extends React.Component {
     const anonLinks = (
       <Nav className="ml-auto" navbar>
         <NavItem>
-          <NavLink to="/login" onClick={this.onLogin}>Login <i className="fa fa-user-circle" /></NavLink>
+          <NavLink to="/login" onClick={this.onLogin}>Sign in <i className="fa fa-user-circle" /></NavLink>
         </NavItem>
       </Nav>
     );
@@ -72,7 +72,7 @@ class App extends React.Component {
           <NavLink exact to="/">Dashboard</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink exact to="/drive">Drive</NavLink>
+          <NavLink exact to="/projects">Projects</NavLink>
         </NavItem>
         <NavItem>
           <NavLink exact to="/explorer">Explorer</NavLink>
@@ -81,7 +81,7 @@ class App extends React.Component {
           <NavLink exact to="/tools">Tools</NavLink>
         </NavItem>
         <NavItem>
-          <ExtNavLink target="_blank" href="http://support.ecocloud.org.au/support/home">Support &amp; Docs</ExtNavLink>
+          <ExtNavLink target="_blank" href="http://support.ecocloud.org.au/support/home">Support</ExtNavLink>
         </NavItem>
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav>
@@ -111,10 +111,10 @@ class App extends React.Component {
             )}
           />
           <Route
-            path="/drive"
+            path="/projects"
             render={() => ([
-              <span key="drive-text" className="logo-text"><h1>Drive</h1></span>,
-              <Meta key="drive-meta" pagetitle="Drive" pagedesc="ecocloud Drive" />,
+              <span key="projects-text" className="logo-text"><h1>Projects</h1></span>,
+              <Meta key="projects-meta" pagetitle="Projects" pagedesc="ecocloud Projects" />,
             ])}
           />
           <Route
@@ -158,16 +158,16 @@ class App extends React.Component {
               user={user}
               component={Dashboard}
             />,
-            <Route key="Drive" exact path="/drive" component={ProjectsListController} />,
-            <Route key="Project" exact path="/drive/:id" component={ProjectsController} />,
+            <Route key="Projects" exact path="/projects" component={ProjectsListController} />,
+            <Route key="Project" exact path="/projects/:id" component={ProjectsController} />,
             <Route key="Explorer" path="/explorer" component={ExplorerController} />,
             <Route key="Snippets" path="/snippets" component={SnippetsController} />,
             <Route key="Tools" exact path="/tools" component={ToolsController} />,
             <Route key="Account" exact path="/account" component={Account} />,
           ]) : (
             <Container>
-              <h1>You are not logged in.</h1>
-              <p>Please <NavLink to="/login" onClick={this.onLogin}>log in</NavLink> to continue</p>
+              <h1>You are not signed in</h1>
+              <p>Please <NavLink to="/login" onClick={this.onLogin}>sign in</NavLink> to continue.</p>
             </Container>
           )}
         </section>
