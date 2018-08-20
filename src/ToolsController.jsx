@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import {
   Container,
   Col,
@@ -10,12 +8,8 @@ import {
   CardTitle,
   CardText,
 } from 'reactstrap';
-// import ReduxBlockUi from 'react-block-ui/redux';
-// import { Loader, Types } from 'react-loaders';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faRProject } from '@fortawesome/free-brands-svg-icons/faRProject';
 import Rlogo from './assets/images/Rlogo.svg';
-import JupyterLogo from './assets/images/JupyterLogo.svg';
+import PythonLogo from './assets/images/PythonLogo.png';
 import CoesraLogo from './assets/images/CoesraLogo.png';
 import ALALogo from './assets/images/ALAlogo.jpg';
 import BCCVLLogo from './assets/images/BCCVLlogo.png';
@@ -25,210 +19,138 @@ import BiodiverseLogo from './assets/images/BiodiverseLogo.png';
 import KeplerLogo from './assets/images/KeplerLogo.png';
 import MCASSLogo from './assets/images/MCASSlogo.jpg';
 import AURINLogo from './assets/images/AURINlogo.png';
-// import Compute from './compute';
-import * as actions from './compute/actions';
-import { getServers, getUser } from './reducers';
 import { jupyterhub } from './api';
+import ToolCard from "./tools/ToolCard";
 
+const ToolsController = () => {
+  const huburl = jupyterhub.getHubUrl();
 
-function mapStateToProps(state) {
-  return {
-    servers: getServers(state),
-    user: getUser(state),
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-
-class ToolsController extends React.Component {
-  static propTypes = {
-    // servers: PropTypes.arrayOf(PropTypes.any).isRequired,
-    user: PropTypes.objectOf(PropTypes.any).isRequired,
-    dispatch: PropTypes.func.isRequired,
-  }
-
-  componentWillMount() {
-    const { user } = this.props;
-    this.props.dispatch(actions.serversListStart(user.sub));
-  }
-
-  componentWillUnmount() {
-    this.props.dispatch(actions.serversListStop());
-  }
-
-  render() {
-    // const {
-    //   servers,
-    // } = this.props;
-
-    const huburl = jupyterhub.getHubUrl();
-
-    // return (
-    //   <Container>
-    //     <Row>
-    //       <Col>
-    //         <h1>Server Configuration</h1>
-    //         <ReduxBlockUi tag="div" block={actions.SERVERS_LIST} unblock={[actions.SERVERS_SUCCEEDED, actions.SERVERS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
-    //           <Compute servers={servers} />
-    //         </ReduxBlockUi>
-    //       </Col>
-    //     </Row>
-    //   </Container>
-    // );
-
-    return (
-      <Container>
-        <Row>
-          <Col>
-            <h1>Command-line Tools</h1>
-            <Row>
-              <Col>
-                <a href={`${huburl}/hub/home`} target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <h1>Tools</h1>
+          <p>Here you will find a suite of openly available tools that are commonly used in ecosciences.</p>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h2 className="tools-section-header">Interactive Coding Tools</h2>
+          <p><em>ecocloud</em> gives you access to servers with either R or Python. These environments run in your browser and connect to virtual machines in the Nectar cloud. Simply choose your preferred language and we’ll do the rest.</p>
+          <p>Read more about our servers here [link to article describing how servers work].</p>
+          <Row>
+            <Col>
+              <ToolCard
+                title="R (RStudio and Jupyter)"
+                description="R is a popular software environment for statistical computing and graphics. This server will run through a JupyterLab interface, with the added ability to run an RStudio server."
+                url={`${huburl}/hub/home`}
+                imageSource={Rlogo}
+                imageAltText="R Logo"
+              />
+            </Col>
+            <Col>
+              <ToolCard
+                title="Scientific Python (SciPy Jupyter)"
+                description="SciPy is a Python-based ecosystem of open-source software for mathematics, science, and engineering. This server will run through a JupyterLab interface."
+                url={`${huburl}/hub/home`}
+                imageSource={PythonLogo}
+                imageAltText="Python Logo"
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h2 className="tools-section-header">Virtual Desktop</h2>
+          <p>The virtual desktop service provides you with a computer in the cloud. This service is provided by <a href="https://portal.coesra.org.au/strudel-web/" target="_blank" rel="noopener noreferrer">TERN</a>.</p>
+          <Row>
+            <Col>
+              <Card>
+                <CardBody>
+                  <Row>
+                    <Col>
                       <CardTitle>
-                        <img className="card-logo" src={Rlogo} alt="R Logo" /> RStudio & R Jupyter
+                        <img className="card-logo" src={CoesraLogo} alt="COESRA Logo" /><a href="https://portal.coesra.org.au/strudel-web/" target="_blank" rel="noopener noreferrer">Virtual Desktop</a>
                       </CardTitle>
                       <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
+                      This Virtual Desktop environment provides a CentOS Linux based virtual desktop environment with tools like QGIS, Kepler Scientific Workflow, KNIME, Panoply, OpenRefine and Biodiverse.
                       </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
-              </Col>
-              <Col>
-                <a href={`${huburl}/hub/home`} target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={JupyterLogo} alt="Jupyter Logo" />  SciPy Jupyter
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <h1>Virtual Desktop</h1>
-            <Row>
-              <Col>
-                <a href="https://www.coesra.org.au" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
+                    </Col>
+                    <Col>
                       <Row>
                         <Col>
-                          <CardTitle>
-                            <img className="card-logo" src={CoesraLogo} alt="COESRA Logo" />Virtual Desktop
-                          </CardTitle>
-                          <CardText>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                          </CardText>
+                          <img className="card-logo" src={BiodiverseLogo} alt="Biodiverse Logo" />
                         </Col>
                         <Col>
-                          <Row>
-                            <Col>
-                              <img className="card-logo" src={BiodiverseLogo} alt="Biodiverse Logo" />
-                            </Col>
-                            <Col>
-                              <img className="card-logo" src={QGisLogo} alt="QGIS Logo" />
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col>
-                              <img className="card-logo" src={KeplerLogo} alt="Kepler Logo" />
-                            </Col>
-                            <Col>
-                              <img className="card-logo" src={PanoplyLogo} alt="Panoply Logo" />
-                            </Col>
-                          </Row>
+                          <img className="card-logo" src={QGisLogo} alt="QGIS Logo" />
                         </Col>
                       </Row>
-                    </CardBody>
-                  </Card>
-                </a>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <h1>Point-and-click tools</h1>
-            <Row>
-              <Col>
-                <a href="https://spatial.ala.org.au" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={ALALogo} alt="ALA Logo" /> ALA Spatial Portal
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
-              </Col>
-              <Col>
-                <a href="http://www.bccvl.org.au" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={BCCVLLogo} alt="BCCVL Logo" /> BCCVL
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <a href="http://www.agriculture.gov.au/abares/aclump/multi-criteria-analysis" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={MCASSLogo} alt="MCAS-S Logo" /> MCAS-S
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
-              </Col>
-              <Col>
-                <a href="https://aurin.org.au" target="_blank" rel="noopener noreferrer">
-                  <Card>
-                    <CardBody>
-                      <CardTitle>
-                        <img className="card-logo" src={AURINLogo} alt="AURIN Logo" /> AURIN
-                      </CardTitle>
-                      <CardText>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.
-                      </CardText>
-                    </CardBody>
-                  </Card>
-                </a>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
-}
+                      <Row>
+                        <Col>
+                          <img className="card-logo" src={KeplerLogo} alt="Kepler Logo" />
+                        </Col>
+                        <Col>
+                          <img className="card-logo" src={PanoplyLogo} alt="Panoply Logo" />
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h2 className="tools-section-header">Point-and-click tools</h2>
+          <p>This is a catalogue of popular tools used in ecosciences. These are external tools to the <em>ecocloud</em> Platform and the links will take you to the respective websites for each tool.</p>
+          <p>Think there’s a tool missing? Let us know <a href="https://www.ecocloud.org.au/contact/" target="_blank" rel="noopener noreferrer" title="Link to contact the ecocloud team">here</a>.</p>
+          <Row>
+            <Col>
+              <ToolCard
+                title="ALA Spatial Portal"
+                description=" The Spatial Portal is a rich research interface to exploring and investigating the data held in the Atlas of Living Australia."
+                url="https://spatial.ala.org.au"
+                imageSource={ALALogo}
+                imageAltText="ALA Logo"
+              />
+            </Col>
+            <Col>
+              <ToolCard
+                title="BCCVL"
+                description="The Biodiversity and Climate Change Virtual Laboratory (BCCVL) is a “one stop modelling shop” that simplifies the process of biodiversity-climate change modelling. It provides access to curated datasets, modelling workflows and support and training content."
+                url="http://www.bccvl.org.au"
+                imageSource={BCCVLLogo}
+                imageAltText="BCCVL Logo"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <ToolCard
+                title="MCAS-S"
+                description="The Multi-Criteria Analysis Shell for Spatial Decision Support (MCAS-S) is a tool designed for decision-makers. It shows transparently how mapped information can be combined to meet an objective. MCAS-S allows stakeholders to see the effects that their decisions may have. Currently, MCAS-S is only available as a software download, however we’re working with the MCAS-S team to bring this into a cloud solution."
+                url="http://www.agriculture.gov.au/abares/aclump/multi-criteria-analysis"
+                imageSource={MCASSLogo}
+                imageAltText="MCAS-S Logo"
+              />
+            </Col>
+            <Col>
+              <ToolCard
+                title="AURIN"
+                description="AURIN provides urban and built environment researchers with access to diverse sources of data, data integration capabilities, and capability for interrogating those data to make informed decisions about urban environments based on realistic scenarios and evidence-based analysis."
+                url="https://aurin.org.au"
+                imageSource={AURINLogo}
+                imageAltText="AURIN Logo"
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ToolsController);
+export default ToolsController;

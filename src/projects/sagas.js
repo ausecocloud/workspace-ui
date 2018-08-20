@@ -31,7 +31,7 @@ function* projectDeleteTask(action) {
   try {
     const project = yield call(workspace.deleteProject, action.payload);
     yield put(actions.deleteProjectSucceeded(project));
-    yield put(push('/drive'));
+    yield put(push('/projects'));
   } catch (error) {
     yield put(actions.deleteProjectFailed(error));
   }

@@ -200,7 +200,7 @@ class ProjectsController extends React.Component {
             <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
               <Row>
                 <Col>
-                  <Link to="/drive" className="back-crumb">&laquo; Back to <em><strong>Drive</strong></em></Link>
+                  <Link to="/projects" className="back-crumb">&laquo; Back to <em><strong>Projects</strong></em></Link>
                   <h1>{project.name}</h1>
                   <Button color="danger" onClick={this.toggleDeleteModal} className="float-right btn-sm"><FontAwesomeIcon icon={faTrash} /> Delete Project</Button>
                   <BasicModal
@@ -287,7 +287,7 @@ class ProjectsController extends React.Component {
               <Row>
                 <Col className="footerCallToAction">
                   <a className="btn btn-xl btn-secondary" href={`${huburl}/hub/home`} target="_blank" title="Launch this project in ecocloud Compute" rel="noopener noreferrer"><FontAwesomeIcon icon={faServer} />  Launch in <strong><em>Compute</em></strong></a>
-                  <p>Need additional datasets? Find them in <Link to="explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
+                  <p>Need additional datasets? Find them in <Link to="/explorer" title="Find datasets in ecocloud Explorer"><strong><em>Explorer</em></strong></Link></p>
                 </Col>
               </Row>
             </ReduxBlockUi>

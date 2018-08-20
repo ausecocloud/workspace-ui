@@ -1,6 +1,6 @@
 import { delay } from 'redux-saga';
 import {
-  call, put, race, take, takeLatest,
+  call, put, race, take, takeLatest, takeEvery,
 } from 'redux-saga/effects';
 import { jupyterhub } from '../api';
 import * as actions from './actions';
@@ -50,8 +50,18 @@ function* serversWatchStopTask(action) {
   }
 }
 
+function* serverTerminateTask(action) {
+  try {
+    const data = yield call(jupyterhub.terminateServer, action.payload);
+    yield put(actions.serverTerminateSucceeded(data));
+  } catch (error) {
+    yield put(actions.serverTerminateFailed(error));
+  }
+}
+
 export default function* computeSaga() {
   // start yourself
   // kick off servers list task, on restart it will cancel already running tasks
   yield takeLatest(actions.SERVERS_LIST_START, serversWatchStopTask);
+  yield takeEvery(actions.SERVER_TERMINATE, serverTerminateTask);
 }

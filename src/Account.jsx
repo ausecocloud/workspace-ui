@@ -135,7 +135,7 @@ class AccountTable extends React.PureComponent {
 
     const userTable = () => (
       <section className="user-details">
-        <h1>User details for {user.name}</h1>
+        <h1>Account details for {user.name}</h1>
         <Form onSubmit={this.submitHandler}>
           <FormGroup>
             <Label for="userFullName">Name</Label>
@@ -162,7 +162,7 @@ class AccountTable extends React.PureComponent {
     );
 
     const noContent = (
-      <h1>You are not logged in.</h1>
+      <h1>You are not signed in</h1>
     );
 
     return (
