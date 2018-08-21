@@ -15,7 +15,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
 import { SearchFacet, ResultsList } from './explorer';
 import { getUser, getAuthenticated, getSelectedDistributions } from './reducers';
-import * as snippetActions from "./snippets/actions";
+import * as snippetActions from './snippets/actions';
 
 function mapStateToProps(state) {
   return {

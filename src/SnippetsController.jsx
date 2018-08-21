@@ -8,8 +8,7 @@ import { Link } from 'react-router-dom';
 import { Map, Set } from 'immutable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faArrowCircleLeft, faCaretDown, faServer, faChevronDown, faChevronRight,
-  faCopy, faDownload, faCloudUploadAlt,
+  faArrowCircleLeft, faServer,
 } from '@fortawesome/free-solid-svg-icons';
 import { getSelectedDistributions } from './reducers';
 import SnippetItem from "./snippets/SnippetItem";

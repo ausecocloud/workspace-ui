@@ -20,7 +20,7 @@ import KeplerLogo from './assets/images/KeplerLogo.png';
 import MCASSLogo from './assets/images/MCASSlogo.jpg';
 import AURINLogo from './assets/images/AURINlogo.png';
 import { jupyterhub } from './api';
-import ToolCard from "./tools/ToolCard";
+import ToolCard from './tools/ToolCard';
 
 const ToolsController = () => {
   const huburl = jupyterhub.getHubUrl();
