@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Row, Col,
+  Row, Col, Alert,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Map, Set } from 'immutable';
@@ -61,8 +61,10 @@ function renderSnippets(distributions, collapsedDataset, toggleCollapseDistribut
 function renderNoSnippets() {
   return (
     <div className="no-snippets">
-      <h3>No snippets selected</h3>
-      <p>Start by selecting datasets from the <Link to="/explorer">Explorer</Link></p>
+      <Alert color="dark" fade={false}>
+        <h4 className="alert-heading">No snippets selected</h4>
+        <p className="mb-0">Start by selecting datasets from the <Link to="/explorer" className="alert-link">Explorer</Link></p>
+      </Alert>
     </div>
   );
 }
