@@ -47,6 +47,7 @@ export class Dashboard extends React.Component {
 
   state = {
     feed: ['No new notifications.'],
+    feedCancellationSource: undefined,
   }
 
   componentWillMount() {
@@ -66,10 +67,28 @@ export class Dashboard extends React.Component {
   componentWillUnmount() {
     // Stop polling for JupyterHub server information
     this.props.dispatch(computeActions.serversListStop());
+
+    // Cancel outstanding feed fetch
+    const { feedCancellationSource } = this.state;
+
+    if (feedCancellationSource) {
+      feedCancellationSource.cancel();
+    }
   }
 
   getFeed = () => {
-    axios.get('https://www.ecocloud.org.au/category/notifications/feed/')
+    // We keep track of the cancellation token in the state so that this request
+    // can be cancelled when the component is unmounted, especially when a
+    // quick unmount happens due to something like the sign in redirect
+    const feedCancellationSource = axios.CancelToken.source();
+
+    this.setState({
+      feedCancellationSource,
+    });
+
+    axios.get('https://www.ecocloud.org.au/category/notifications/feed/', {
+      cancelToken: feedCancellationSource.token,
+    })
       .then(res => res.data)
       .then((body) => {
         const parser = new FeedMe(false);
