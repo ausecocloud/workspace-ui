@@ -57,7 +57,7 @@ function pagination(currentPage, pageCount) {
 }
 
 function zeroingMap(instanceMap) {
-  let newInstance = new Map();
+  let newInstance = Map();
   instanceMap.keySeq().forEach((key) => { newInstance = newInstance.set(key, 0); });
   return newInstance;
 }
@@ -90,9 +90,9 @@ export class ExplorerController extends React.Component {
   }
 
   state = {
-    publishers: new Map(),
+    publishers: Map(),
     publishersLoading: true,
-    formats: new Map(),
+    formats: Map(),
     formatsLoading: true,
     results: [],
     resultsLoading: true,
