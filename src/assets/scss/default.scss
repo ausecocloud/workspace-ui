@@ -729,6 +729,9 @@ section#main {
 	}
 	.snippets{
 		.snippets-body{
+			.no-snippets {
+				text-align: center;
+			}
 			.selected-datasets{
 				padding-left: 0px;
 				list-style: none;

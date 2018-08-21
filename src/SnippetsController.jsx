@@ -27,6 +27,46 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+
+/**
+ * Renders given distributions into `SnippetItem`s
+ *
+ * @param {object[]} distributions Distribution objects
+ * @param {Set<string>} collapsedDataset Set of distribution IDs where the
+ *        distribution is collapsed
+ * @param {(id: string) => void} toggleCollapseDistribution Handler for toggling
+ *        the collapsed state of the selected distribution
+ */
+function renderSnippets(distributions, collapsedDataset, toggleCollapseDistribution) {
+  return (
+    <ul className="selected-datasets">
+      {
+        distributions.map(dist => (
+          <SnippetItem
+            key={dist.identifier}
+            distribution={dist}
+            collapsed={collapsedDataset.has(dist.identifier)}
+            toggleCollapsed={toggleCollapseDistribution}
+          />
+        ))
+      }
+    </ul>
+  );
+}
+
+/**
+ * Renders elements for displaying information when there are no snippets
+ * available
+ */
+function renderNoSnippets() {
+  return (
+    <div className="no-snippets">
+      <h3>No snippets selected</h3>
+      <p>Start by selecting datasets from the <Link to="/explorer">Explorer</Link></p>
+    </div>
+  );
+}
+
 export class SnippetsController extends React.Component {
   static propTypes = {
     selectedDistributions: PropTypes.instanceOf(Map),
@@ -67,6 +107,7 @@ export class SnippetsController extends React.Component {
 
   render() {
     const huburl = jupyterhub.getHubUrl();
+    const distributionMap = this.props.selectedDistributions;
 
     return (
       <div className="container snippets">
@@ -85,13 +126,7 @@ export class SnippetsController extends React.Component {
         <hr />
         <Row className="snippets-body">
           <Col xs="12">
-            <ul className="selected-datasets">
-              {
-                this.props.selectedDistributions.valueSeq().map(dist => (
-                  <SnippetItem key={dist.identifier} distribution={dist} collapsed={this.state.collapsedDataset.has(dist.identifier)} toggleCollapsed={id => this.toggleCollapseDistribution(id)} />
-                ))
-              }
-            </ul>
+            { distributionMap.size === 0 ? renderNoSnippets() : renderSnippets(distributionMap.valueSeq(), this.state.collapsedDataset, this.toggleCollapseDistribution.bind(this)) }
           </Col>
         </Row>
       </div>
