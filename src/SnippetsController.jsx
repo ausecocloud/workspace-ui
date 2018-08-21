@@ -60,9 +60,9 @@ function renderSnippets(distributions, collapsedDataset, toggleCollapseDistribut
 function renderNoSnippets() {
   return (
     <div className="no-snippets">
-      <Alert color="dark" fade={false}>
+      <Alert color="light" fade={false}>
         <h4 className="alert-heading">No snippets selected</h4>
-        <p className="mb-0">Start by selecting datasets from the <Link to="/explorer" className="alert-link">Explorer</Link></p>
+        <p className="mb-0">Start by selecting datasets from the <em><Link to="/explorer">Explorer</Link></em></p>
       </Alert>
     </div>
   );
