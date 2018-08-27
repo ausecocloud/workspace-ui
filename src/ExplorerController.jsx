@@ -15,7 +15,47 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
 import { SearchFacet, ResultsList } from './explorer';
 import { getUser, getAuthenticated, getSelectedDistributions } from './reducers';
-import * as snippetActions from "./snippets/actions";
+import * as snippetActions from './snippets/actions';
+
+// https://lowrey.me/parsing-a-csv-file-in-es6-javascript/
+class Csv {
+  static parseLine(text) {
+    const regex = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
+    const arr = [];
+    text.replace(regex, (m0, m1, m2, m3) => {
+      if (m1 !== undefined) {
+        arr.push(m1.replace(/\\'/g, "'"));
+      } else if (m2 !== undefined) {
+        arr.push(m2.replace(/\\"/g, '"'));
+      } else if (m3 !== undefined) {
+        arr.push(m3);
+      }
+      return '';
+    });
+    if (/,\s*$/.test(text)) {
+      arr.push('');
+    }
+    return arr;
+  }
+
+  static zipObject(props, values) {
+    return props.reduce((prev, prop, i) => {
+      prev[prop] = values[i]; // eslint-disable-line no-param-reassign
+      return prev;
+    }, {});
+  }
+
+  static parse(csv) {
+    const [properties, ...data] = csv.split('\n').map(Csv.parseLine);
+    return data.map(line => this.zipObject(properties, line));
+  }
+
+  static serialize(obj) {
+    const fields = Object.keys(obj[0]);
+    const csv = obj.map(row => fields.map(fieldName => JSON.stringify(row[fieldName] || '')));
+    return [fields, ...csv].join('\n');
+  }
+}
 
 function mapStateToProps(state) {
   return {
@@ -128,7 +168,7 @@ export class ExplorerController extends React.Component {
             must: [
               {
                 terms: {
-                  'publisher.name.keyword':  this.restrictedPubs, 
+                  'publisher.name.keyword': this.restrictedPubs,
                 },
               },
               {
@@ -141,28 +181,12 @@ export class ExplorerController extends React.Component {
           },
         },
         sort: [],
-      }
-  
-    }
+      },
+    };
   }
-
-  loadPublishers(){
-    axios.get('https://raw.githubusercontent.com/CSIRO-enviro-informatics/workspace-ui/master/config/knv2-publishers.csv')
-    .then(res => {
-      let rawPublishers = (new Csv()).parse(res.data)
-      for(let publisher of rawPublishers){
-        if(publisher['Environmental data? Y/N/Part'] === 'Y'){
-          this.restrictedPubs.push(publisher['Name'])
-        }
-      }
-      this.getResults()
-    })
-  }
-
-  
 
   componentWillMount() {
-    
+
   }
 
   componentDidMount() {
@@ -259,6 +283,20 @@ export class ExplorerController extends React.Component {
       query.query.bool.must[0] = pubs;
     }
     this.setState({ query }, () => this.getResults());
+  }
+
+  loadPublishers() {
+    axios.get('https://raw.githubusercontent.com/CSIRO-enviro-informatics/workspace-ui/master/config/knv2-publishers.csv')
+      .then((res) => {
+        const rawPublishers = Csv.parse(res.data);
+        for (let i = 0, len = rawPublishers.length; i < len; i += 1) {
+          const publisher = rawPublishers[i];
+          if (publisher['Environmental data? Y/N/Part'] === 'Y') {
+            this.restrictedPubs.push(publisher.Name);
+          }
+        }
+        this.getResults();
+      });
   }
 
   handleKeywordChange(e) {
@@ -443,45 +481,3 @@ export class ExplorerController extends React.Component {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerController);
-
-
-//https://lowrey.me/parsing-a-csv-file-in-es6-javascript/
-class Csv {
-  parseLine(text) {
-    const regex =
-    /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
-    let arr = [];
-    text.replace(regex, (m0, m1, m2, m3) => {
-      if (m1 !== undefined) {
-        arr.push(m1.replace(/\\'/g, "'"));
-      } else if (m2 !== undefined) {
-        arr.push(m2.replace(/\\"/g, "\""));
-      } else if (m3 !== undefined) {
-        arr.push(m3);
-      }
-      return "";
-    });
-    if (/,\s*$/.test(text)) {
-      arr.push("");
-    }
-    return arr;
-  }
-
-  zipObject(props, values) {
-    return props.reduce((prev, prop, i) => {
-      prev[prop] = values[i];
-      return prev;
-    }, {});
-  }
-
-  parse(csv) {
-    let [properties, ...data] = csv.split("\n").map(this.parseLine);
-    return data.map((line) => this.zipObject(properties, line))
-  };
-
-  serialize(obj) {
-    let fields = Object.keys(obj[0]);
-    let csv = obj.map(row => fields.map((fieldName) => JSON.stringify(row[fieldName] || "")));
-    return [fields, ...csv].join("\n");
-  }; 
-}
