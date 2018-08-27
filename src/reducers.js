@@ -3,19 +3,8 @@ import projectsReducer, * as projects from './projects/reducers';
 import computeReducer, * as compute from './compute/reducers';
 import snippetsReducer, * as snippets from './snippets/reducers';
 
-/**
- * Reducer for user authentication information
- *
- * Note that the state originally starts with `undefined` as the value of the
- * authenticated flag - this indicates that the application does not yet have
- * the information required to determine whether the user is indeed
- * authenticated (for example, while waiting for Keycloak to confirm that the
- * token is indeed still valid.)
- *
- * @param {object} state State object
- * @param {object} action Action object
- */
-function userReducer(state = { idTokenParsed: {}, authenticated: undefined }, action) {
+
+function userReducer(state = { idTokenParsed: {}, authenticated: false }, action) {
   switch (action.type) {
     case actions.LOGIN_SUCCEEDED:
       return {
