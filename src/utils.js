@@ -63,7 +63,7 @@ export function bytesToSize(bytes, naForZero = true) {
   if (bytes === 0) return naForZero ? 'n/a' : `0 ${sizes[0]}`;
 
   // Calculate the exponent
-  const exp = Math.log(bytes) / Math.log(1024);
+  const exp = Math.log(bytes) / Math.log(1000);
 
   if (exp < 1) {
     return `${bytes} ${sizes[0]}`;
@@ -73,5 +73,5 @@ export function bytesToSize(bytes, naForZero = true) {
   const i = (exp >= sizes.length) ? (sizes.length - 1) : Math.floor(exp);
   const x = exp - i;
 
-  return `${(1024 ** x).toFixed(1)} ${sizes[i]}`;
+  return `${(1000 ** x).toFixed(1)} ${sizes[i]}`;
 }
