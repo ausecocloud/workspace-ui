@@ -159,7 +159,7 @@ export class Dashboard extends React.Component {
             <Row>
               <Col sm="12">
                 <h2>Servers</h2>
-                <ReduxBlockUi tag="div" block={computeActions.SERVERS_LIST} unblock={[computeActions.SERVERS_SUCCEEDED, computeActions.SERVERS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
+                <ReduxBlockUi tag="div" block={[computeActions.SERVERS_LIST, computeActions.SERVER_TERMINATE]} unblock={[computeActions.SERVERS_LIST_SUCCEEDED, computeActions.SERVERS_LIST_FAILED, computeActions.SERVER_TERMINATE_SUCCEEDED, computeActions.SERVER_TERMINATE_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
                   <ComputeTableBasic servers={servers} username={user.sub} />
                 </ReduxBlockUi>
               </Col>
