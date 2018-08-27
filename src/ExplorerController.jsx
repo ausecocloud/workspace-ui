@@ -15,7 +15,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
 import { SearchFacet, ResultsList } from './explorer';
 import { getUser, getAuthenticated, getSelectedDistributions } from './reducers';
-import * as snippetActions from './snippets/actions';
+import * as snippetActions from "./snippets/actions";
 
 function mapStateToProps(state) {
   return {
@@ -62,13 +62,14 @@ function zeroingMap(instanceMap) {
   return newInstance;
 }
 
-const restrictedPubs = [
-  'Geoscience Australia',
-  'Australian Institute of Marine Science (AIMS)',
-  'Office of Environment and Heritage (OEH)',
-  'Natural Resources, Mines and Energy',
-  'State of the Environment',
-];
+// const restrictedPubs = [
+//   'Geoscience Australia',
+//   'Australian Institute of Marine Science (AIMS)',
+//   'Office of Environment and Heritage (OEH)',
+//   'Natural Resources, Mines and Energy',
+//   'State of the Environment',
+//   'AGSO-Geoscience Australia'
+// ];
 
 export class ExplorerController extends React.Component {
   static propTypes = {
@@ -87,69 +88,86 @@ export class ExplorerController extends React.Component {
     this.handleKeywordChange = this.handleKeywordChange.bind(this);
     this.handlePerPageChange = this.handlePerPageChange.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
-  }
-
-  state = {
-    publishers: Map(),
-    publishersLoading: true,
-    formats: Map(),
-    formatsLoading: true,
-    results: [],
-    resultsLoading: true,
-    perpage: 10,
-    hits: 0,
-    page: 1,
-    sort: [],
-    selectedSort: 'default',
-    search: {
-      keywords: '',
-    },
-    query: {
-      aggs: {
-        formats: {
-          nested: {
-            path: 'distributions',
-          },
-          aggs: {
-            formats: {
-              terms: {
-                field: 'distributions.format.keyword',
-                size: 25,
-              },
-            },
-          },
-        },
-        publishers: {
-          terms: { field: 'publisher.name.keyword', size: 25 },
-        },
+    this.restrictedPubs = [];
+    this.state = {
+      publishers: Map(),
+      publishersLoading: true,
+      formats: Map(),
+      formatsLoading: true,
+      results: [],
+      resultsLoading: true,
+      perpage: 10,
+      hits: 0,
+      page: 1,
+      sort: [],
+      selectedSort: 'default',
+      search: {
+        keywords: '',
       },
       query: {
-        bool: {
-          must: [
-            {
-              terms: {
-                'publisher.name.keyword': restrictedPubs,
+        aggs: {
+          formats: {
+            nested: {
+              path: 'distributions',
+            },
+            aggs: {
+              formats: {
+                terms: {
+                  field: 'distributions.format.keyword',
+                  size: 25,
+                },
               },
             },
-            {
-              nested: {
-                path: 'distributions',
-                query: {},
-              },
-            },
-          ],
+          },
+          publishers: {
+            terms: { field: 'publisher.name.keyword', size: 25 },
+          },
         },
-      },
-      sort: [],
-    },
+        query: {
+          bool: {
+            must: [
+              {
+                terms: {
+                  'publisher.name.keyword':  this.restrictedPubs, 
+                },
+              },
+              {
+                nested: {
+                  path: 'distributions',
+                  query: {},
+                },
+              },
+            ],
+          },
+        },
+        sort: [],
+      }
+  
+    }
   }
 
+  loadPublishers(){
+    axios.get('https://raw.githubusercontent.com/CSIRO-enviro-informatics/workspace-ui/master/config/knv2-publishers.csv')
+    .then(res => {
+      let rawPublishers = (new Csv()).parse(res.data)
+      for(let publisher of rawPublishers){
+        if(publisher['Environmental data? Y/N/Part'] === 'Y'){
+          this.restrictedPubs.push(publisher['Name'])
+        }
+      }
+      this.getResults()
+    })
+  }
+
+  
+
   componentWillMount() {
-    this.getResults(this.state.query);
+    
   }
 
   componentDidMount() {
     console.log('Explorer: work in progress.');
+    this.loadPublishers();
     this.loadLicense();
   }
 
@@ -235,7 +253,7 @@ export class ExplorerController extends React.Component {
         };
       } else {
         pubs.terms = {
-          'publisher.name.keyword': restrictedPubs,
+          'publisher.name.keyword': this.state.restrictedPubs,
         };
       }
       query.query.bool.must[0] = pubs;
@@ -425,3 +443,45 @@ export class ExplorerController extends React.Component {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerController);
+
+
+//https://lowrey.me/parsing-a-csv-file-in-es6-javascript/
+class Csv {
+  parseLine(text) {
+    const regex =
+    /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
+    let arr = [];
+    text.replace(regex, (m0, m1, m2, m3) => {
+      if (m1 !== undefined) {
+        arr.push(m1.replace(/\\'/g, "'"));
+      } else if (m2 !== undefined) {
+        arr.push(m2.replace(/\\"/g, "\""));
+      } else if (m3 !== undefined) {
+        arr.push(m3);
+      }
+      return "";
+    });
+    if (/,\s*$/.test(text)) {
+      arr.push("");
+    }
+    return arr;
+  }
+
+  zipObject(props, values) {
+    return props.reduce((prev, prop, i) => {
+      prev[prop] = values[i];
+      return prev;
+    }, {});
+  }
+
+  parse(csv) {
+    let [properties, ...data] = csv.split("\n").map(this.parseLine);
+    return data.map((line) => this.zipObject(properties, line))
+  };
+
+  serialize(obj) {
+    let fields = Object.keys(obj[0]);
+    let csv = obj.map(row => fields.map((fieldName) => JSON.stringify(row[fieldName] || "")));
+    return [fields, ...csv].join("\n");
+  }; 
+}
