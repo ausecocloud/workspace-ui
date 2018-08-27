@@ -25,16 +25,24 @@ import './assets/scss/default.scss';
 
 require('./assets/images/favicon.ico');
 
+function mapStateToProps(state) {
+  return {
+    user: getUser(state),
+    isAuthenticated: getAuthenticated(state),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
 class App extends React.Component {
   static propTypes = {
-    user: PropTypes.objectOf(PropTypes.any),
-    isAuthenticated: PropTypes.bool,
+    user: PropTypes.objectOf(PropTypes.any).isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
-  }
-
-  static defaultProps = {
-    user: {},
-    isAuthenticated: false,
   }
 
   state = {
@@ -43,12 +51,16 @@ class App extends React.Component {
 
   onLogin = (e) => {
     e.preventDefault();
-    this.props.dispatch(actions.login());
+    this.triggerLogin();
   }
 
   onLogout = (e) => {
     e.preventDefault();
     this.props.dispatch(actions.logout());
+  }
+
+  triggerLogin = () => {
+    this.props.dispatch(actions.login());
   }
 
   toggle = () => {
@@ -141,6 +153,46 @@ class App extends React.Component {
       </Navbar>
     );
 
+    const MainContent = () => {
+      switch (isAuthenticated) {
+        case undefined:
+          // Render a placeholder "please wait" while the application checks
+          // with the auth service
+          return (
+            <Container>
+              <h1>Please wait...</h1>
+            </Container>
+          );
+
+        case true:
+          // Enable routes when properly authenticated
+          return (
+            <>
+              <Route key="Dashboard" exact path="/" component={Dashboard} />
+              <Route key="Projects" exact path="/projects" component={ProjectsListController} />
+              <Route key="Project" exact path="/projects/:id" component={ProjectsController} />
+              <Route key="Explorer" path="/explorer" component={ExplorerController} />
+              <Route key="Snippets" path="/snippets" component={SnippetsController} />
+              <Route key="Tools" exact path="/tools" component={ToolsController} />
+              <Route key="Account" exact path="/account" component={Account} />
+            </>
+          );
+
+        case false:
+        default:
+          // Automatically trigger redirect to auth service
+          this.triggerLogin();
+
+          // Render the sign in link as fallback
+          return (
+            <Container>
+              <h1>You are not signed in</h1>
+              <p>Please <NavLink to="/login" onClick={this.onLogin}>sign in</NavLink> to continue.</p>
+            </Container>
+          );
+      }
+    };
+
     return (
       <div className="App">
         <header id="header">
@@ -149,46 +201,12 @@ class App extends React.Component {
           </Container>
         </header>
         <section id="main" className="row-fluid">
-          { isAuthenticated ? ([
-            <Route
-              key="Dashboard"
-              exact
-              path="/"
-              isAuthenticated={isAuthenticated}
-              user={user}
-              component={Dashboard}
-            />,
-            <Route key="Projects" exact path="/projects" component={ProjectsListController} />,
-            <Route key="Project" exact path="/projects/:id" component={ProjectsController} />,
-            <Route key="Explorer" path="/explorer" component={ExplorerController} />,
-            <Route key="Snippets" path="/snippets" component={SnippetsController} />,
-            <Route key="Tools" exact path="/tools" component={ToolsController} />,
-            <Route key="Account" exact path="/account" component={Account} />,
-          ]) : (
-            <Container>
-              <h1>You are not signed in</h1>
-              <p>Please <NavLink to="/login" onClick={this.onLogin}>sign in</NavLink> to continue.</p>
-            </Container>
-          )}
+          <MainContent />
         </section>
         <Footer />
       </div>
     );
   }
-}
-
-
-function mapStateToProps(state) {
-  return {
-    user: getUser(state),
-    isAuthenticated: getAuthenticated(state),
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
 }
 
 // make App hot reloadable

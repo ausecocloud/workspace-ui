@@ -17,14 +17,9 @@ function mapStateToProps(state) {
 
 class AccountTable extends React.PureComponent {
   static propTypes = {
-    user: PropTypes.objectOf(PropTypes.any),
-    isAuthenticated: PropTypes.bool,
+    user: PropTypes.objectOf(PropTypes.any).isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
-  }
-
-  static defaultProps = {
-    user: {},
-    isAuthenticated: false,
   }
 
   constructor(props) {
