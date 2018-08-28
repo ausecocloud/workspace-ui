@@ -117,7 +117,7 @@ class SearchFacet extends React.Component {
     const applyFilter = trimmedFilter.length !== 0;
 
     if (applyFilter) {
-      const filterRegex = new RegExp(trimmedFilter, "i");
+      const filterRegex = new RegExp(trimmedFilter, 'i');
       items = items.filter(item => item.name.search(filterRegex) !== -1);
       limit = items.length;
     } else if (collapsed) {
