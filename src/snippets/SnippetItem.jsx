@@ -117,7 +117,7 @@ export class SnippetItem extends React.Component {
     const dist = this.props.distribution;
 
     /** @type {string | undefined} */
-    const url = dist.downloadURL;
+    const url = dist.downloadURL || dist.accessURL;
     /** @type {string} */
     const distId = dist.identifier;
     /** @type {boolean} */
