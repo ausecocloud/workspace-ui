@@ -24,6 +24,12 @@ class SearchFacet2 extends React.Component {
     };
   }
 
+  getCollapsedItemLimit() {
+    const { items } = this.props;
+    const maxItems = 10;
+    return items.length < maxItems ? items.length : maxItems;
+  }
+
   /**
    * @param {string} id ID of item that has its selection changed
    * @param {object} event Input checkbox change event
@@ -46,7 +52,7 @@ class SearchFacet2 extends React.Component {
 
     // Limit to a maximum of 10 items if collapsed
     if (this.state.collapsed) {
-      limit = items.length < 10 ? items.length : 10;
+      limit = this.getCollapsedItemLimit();
     }
 
     const elements = [];
@@ -71,9 +77,15 @@ class SearchFacet2 extends React.Component {
         <ul>
           { this.renderOptions() }
         </ul>
-        <a href="#" onClick={(e) => { e.preventDefault(); this.toggleCollapsed(); }}>
-          { this.state.collapsed ? 'View more...' : 'View fewer...' }
-        </a>
+        {
+          // Only render collapse toggle link if it is actually useful
+          (this.getCollapsedItemLimit() !== this.props.items.length)
+          && (
+            <a href="#" onClick={(e) => { e.preventDefault(); this.toggleCollapsed(); }}>
+              { this.state.collapsed ? 'More...' : 'Fewer...' }
+            </a>
+          )
+        }
       </div>
     );
   }
