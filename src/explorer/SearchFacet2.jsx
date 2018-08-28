@@ -25,9 +25,21 @@ class SearchFacet2 extends React.Component {
   }
 
   getCollapsedItemLimit() {
-    const { items } = this.props;
+    const { items, selectedItems } = this.props;
     const maxItems = 10;
-    return items.length < maxItems ? items.length : maxItems;
+
+    // Item limit caps the number of maximum items
+    if (items.length < maxItems) {
+      return items.length;
+    }
+
+    // Always show all selected items
+    if (selectedItems.size > maxItems) {
+      return selectedItems.size;
+    }
+
+    // The maximum is determined by the fixed amount set above
+    return maxItems;
   }
 
   /**
@@ -45,8 +57,28 @@ class SearchFacet2 extends React.Component {
     this.setState(prevState => ({ collapsed: !prevState.collapsed }));
   }
 
+  splitItemsBySelection() {
+    const { items, selectedItems: selectedSet } = this.props;
+
+    const selectedItems = [];
+    const nonselectedItems = [];
+
+    items.forEach((item) => {
+      if (selectedSet.has(item.id)) {
+        selectedItems.push(item);
+      } else {
+        nonselectedItems.push(item);
+      }
+    });
+
+    return {
+      selectedItems,
+      nonselectedItems,
+    };
+  }
+
   renderOptions() {
-    const { items, selectedItems } = this.props;
+    const { items, selectedItems: selectedSet } = this.props;
 
     let limit = items.length;
 
@@ -55,13 +87,17 @@ class SearchFacet2 extends React.Component {
       limit = this.getCollapsedItemLimit();
     }
 
-    const elements = [];
+    // Retrieve the split array and recombine them so that the list always puts
+    // selected items first
+    const { selectedItems, nonselectedItems } = this.splitItemsBySelection();
+    const reorderedItems = [...selectedItems, ...nonselectedItems];
 
+    const elements = [];
     for (let i = 0; i < limit; i += 1) {
-      const { id, name, count } = items[i];
+      const { id, name, count } = reorderedItems[i];
       elements.push((
         <li key={id}>
-          <Input name={`${id}_checkbox`} id={`${id}_checkbox`} type="checkbox" checked={selectedItems.has(id)} onChange={e => this.handleSelectionChange(id, e)} />
+          <Input name={`${id}_checkbox`} id={`${id}_checkbox`} type="checkbox" checked={selectedSet.has(id)} onChange={e => this.handleSelectionChange(id, e)} />
           <Label for={`${id}_checkbox`}>{name} <span className="count"> {count}</span></Label>
         </li>
       ));
