@@ -5,11 +5,11 @@ import { Label, Input } from 'reactstrap';
 export default
 class SearchFacet2 extends React.Component {
   static propTypes = {
-    // `items` is an array of { id: string, label: string, count: number }
-    items: PropTypes.arrayOf(PropTypes.object).isRequired,
+    // `items` is an array of { id: string, name: string, count: number }
+    items: PropTypes.arrayOf(PropTypes.any).isRequired,
 
     // `selectedItems` is an ImmutableJS Set of IDs which are selected
-    selectedItems: PropTypes.object.isRequired,
+    selectedItems: PropTypes.objectOf(PropTypes.any).isRequired,
 
     title: PropTypes.string.isRequired,
     onUpdate: PropTypes.func.isRequired,
@@ -21,7 +21,7 @@ class SearchFacet2 extends React.Component {
    */
   handleSelectionChange(id, event) {
     /** @type {boolean} */
-    const checked = event.target.checked;
+    const { checked } = event.target;
 
     this.props.onUpdate({ id, checked });
   }
@@ -29,10 +29,10 @@ class SearchFacet2 extends React.Component {
   renderOptions() {
     const { items, selectedItems } = this.props;
 
-    return items.map(({ id, label, count }) => (
+    return items.map(({ id, name, count }) => (
       <li key={id}>
-        <Input name={`${id}_checkbox`} id={`${id}_checkbox`} type="checkbox" checked={selectedItems.has(id)} onChange={ (e) => this.handleSelectionChange(id, e) } />
-        <Label for={`${id}_checkbox`}>{ label } <span className="count"> { count }</span></Label>
+        <Input name={`${id}_checkbox`} id={`${id}_checkbox`} type="checkbox" checked={selectedItems.has(id)} onChange={e => this.handleSelectionChange(id, e)} />
+        <Label for={`${id}_checkbox`}>{name} <span className="count"> {count}</span></Label>
       </li>
     ));
   }

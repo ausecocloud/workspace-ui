@@ -8,12 +8,12 @@ import { Link } from 'react-router-dom';
 import BlockUi from 'react-block-ui';
 import { Loader } from 'react-loaders';
 import axios from 'axios';
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
-import { SearchFacet, ResultsList } from './explorer';
+import { SearchFacet2, ResultsList } from './explorer';
 import { getUser, getAuthenticated, getSelectedDistributions } from './reducers';
 import * as snippetActions from './snippets/actions';
 
@@ -96,20 +96,80 @@ function pagination(currentPage, pageCount) {
   return result;
 }
 
+/**
+ * Zeros the `count` property of the associated key of each entry in the given
+ * map
+ *
+ * @param {Map<string, { name: string, count: number }>} instanceMap
+ */
 function zeroingMap(instanceMap) {
-  let newInstance = Map();
-  instanceMap.keySeq().forEach((key) => { newInstance = newInstance.set(key, 0); });
-  return newInstance;
+  return instanceMap.map((value) => {
+    if (value === undefined) {
+      throw new Error('No value defined for a certain key in given map');
+    }
+
+    return {
+      ...value,
+      count: 0,
+    };
+  });
 }
 
-// const restrictedPubs = [
-//   'Geoscience Australia',
-//   'Australian Institute of Marine Science (AIMS)',
-//   'Office of Environment and Heritage (OEH)',
-//   'Natural Resources, Mines and Energy',
-//   'State of the Environment',
-//   'AGSO-Geoscience Australia'
-// ];
+/**
+ * Generates a new object that represents the body of an ElasticSearch query to
+ * KnowledgeNet
+ *
+ * @param {string[]} publisherNames Array of publisher names
+ * @param {number} pageSize Number of items to return for each page
+ * @param {number} pageIndex 0-based index of the page to query for
+ * @param {any[]} sort Sorting array
+ */
+function generateESQueryObject(publisherNames, pageSize, pageIndex, sort) {
+  return {
+    aggs: {
+      formats: {
+        nested: {
+          path: 'distributions',
+        },
+        aggs: {
+          formats: {
+            terms: {
+              field: 'distributions.format.keyword',
+              size: 10000,
+            },
+          },
+        },
+      },
+      publishers: {
+        terms: {
+          field: 'publisher.name.keyword',
+          size: 10000,
+        },
+      },
+    },
+    query: {
+      bool: {
+        must: [
+          {
+            terms: {
+              'publisher.name.keyword': publisherNames,
+            },
+          },
+          {
+            nested: {
+              path: 'distributions',
+              query: {},
+            },
+          },
+        ],
+      },
+    },
+
+    from: pageIndex * pageSize,
+    size: pageSize,
+    sort,
+  };
+}
 
 export class ExplorerController extends React.Component {
   static propTypes = {
@@ -128,12 +188,32 @@ export class ExplorerController extends React.Component {
     this.handleKeywordChange = this.handleKeywordChange.bind(this);
     this.handlePerPageChange = this.handlePerPageChange.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
+
+    /**
+     * Restricted set of publishers which are determined to contain
+     * environmental data
+     */
     this.restrictedPubs = [];
+
     this.state = {
+      /**
+       * Map of publisher ID to an object representing the name and returned
+       * item count
+       *
+       * @type {Map<string, { name: string, count: number }>}
+       */
       publishers: Map(),
       publishersLoading: true,
+
+      /**
+       * Map of format ID to an object representing the name and returned item
+       * count
+       *
+       * @type {Map<string, { name: string, count: number }>}
+       */
       formats: Map(),
       formatsLoading: true,
+
       results: [],
       resultsLoading: true,
       perpage: 10,
@@ -144,47 +224,12 @@ export class ExplorerController extends React.Component {
       search: {
         keywords: '',
       },
-      query: {
-        aggs: {
-          formats: {
-            nested: {
-              path: 'distributions',
-            },
-            aggs: {
-              formats: {
-                terms: {
-                  field: 'distributions.format.keyword',
-                  size: 10000,
-                },
-              },
-            },
-          },
-          publishers: {
-            terms: {
-              field: 'publisher.name.keyword',
-              size: 10000,
-            },
-          },
-        },
-        query: {
-          bool: {
-            must: [
-              {
-                terms: {
-                  'publisher.name.keyword': this.restrictedPubs,
-                },
-              },
-              {
-                nested: {
-                  path: 'distributions',
-                  query: {},
-                },
-              },
-            ],
-          },
-        },
-        sort: [],
-      },
+
+      /** Contains IDs of selected publishers in facet */
+      selectedPublishers: Set(),
+
+      /** Contains IDs of selected formats in facet */
+      selectedFormats: Set(),
     };
   }
 
@@ -198,16 +243,15 @@ export class ExplorerController extends React.Component {
     this.loadLicense();
   }
 
-  // componentDidMount() {
-  //   console.log('Explorer: work in progress.');
-  // }
-
   getResults() {
-    const { query } = this.state;
+    const publisherNames = this.restrictedPubs.map(pub => pub.name);
+    const {
+      perpage: pageSize,
+      page,
+      sort,
+    } = this.state;
 
-    query.from = ((this.state.page - 1) * this.state.perpage);
-    query.size = this.state.perpage;
-    query.sort = this.state.sort;
+    const query = generateESQueryObject(publisherNames, pageSize, page - 1, sort);
 
     axios.post('https://es.knowledgenet.co/datasets32/_search', query)
       .then((res) => {
@@ -215,15 +259,19 @@ export class ExplorerController extends React.Component {
           // reset the value to 0
           let freshPublisher = zeroingMap(prevState.publishers);
           let freshFormat = zeroingMap(prevState.formats);
+
           // update the map value to the aggregated value
-          for (let i = 0, len = res.data.aggregations.publishers.buckets.length; i < len; i += 1) {
-            const ele = res.data.aggregations.publishers.buckets[i];
-            freshPublisher = freshPublisher.set(ele.key, ele.doc_count);
-          }
-          for (let i = 0, len = res.data.aggregations.formats.formats.buckets.length; i < len; i += 1) {
-            const ele = res.data.aggregations.formats.formats.buckets[i];
-            freshFormat = freshFormat.set(ele.key, ele.doc_count);
-          }
+          const publishers = res.data.aggregations.publishers.buckets;
+          const formats = res.data.aggregations.formats.formats.buckets;
+
+          publishers.forEach((pub) => {
+            freshPublisher = freshPublisher.set(pub.key, { name: pub.key, count: pub.doc_count });
+          });
+
+          formats.forEach((f) => {
+            freshFormat = freshFormat.set(f.key, { name: f.key, count: f.doc_count });
+          });
+
           return {
             results: res.data.hits.hits,
             resultsLoading: false,
@@ -258,46 +306,87 @@ export class ExplorerController extends React.Component {
     this.getResults(query);
   }
 
-  handleFacetUpdate = (facetData) => {
-    const { type, newSelection } = facetData;
-    const { query } = this.state;
-    let formats = query.query.bool.must[1].nested.query;
-    const pubs = query.query.bool.must[0];
+  /**
+   * Factory for facet update handler
+   *
+   * @param {"publisher" | "format"} type
+   */
+  generateFacetUpdateHandler = type => (data) => {
+    /** @type {Set<string, { name: string, count: number }>} */
+    let selectionSet;
 
-    if (type === 'format') {
-      if (newSelection.length > 0) {
-        formats.terms = {
-          'distributions.format.keyword': newSelection,
-        };
-      } else {
-        formats = {};
-      }
-      query.query.bool.must[1].nested.query = formats;
-    } else if (type === 'publisher') {
-      if (newSelection.length > 0) {
-        pubs.terms = {
-          'publisher.name.keyword': newSelection,
-        };
-      } else {
-        pubs.terms = {
-          'publisher.name.keyword': this.state.restrictedPubs,
-        };
-      }
-      query.query.bool.must[0] = pubs;
+    switch (type) {
+      case 'format':
+        selectionSet = this.state.selectedFormats;
+        break;
+      case 'publisher':
+        selectionSet = this.state.selectedPublishers;
+        break;
+      default:
+        throw new Error('Unknown type');
     }
-    this.setState({ query }, () => this.getResults());
-  }
+
+    // Add or remove from set
+    const { id, checked } = data;
+
+    if (checked) {
+      selectionSet = selectionSet.add(id);
+    } else {
+      selectionSet = selectionSet.delete(id);
+    }
+
+    // Update state
+    switch (type) {
+      case 'format':
+        this.setState({ selectedFormats: selectionSet });
+        break;
+      case 'publisher':
+        this.setState({ selectedPublishers: selectionSet });
+        break;
+      default:
+        throw new Error('Unknown type');
+    }
+  };
+
+  // const { type, newSelection } = facetData;
+  // const { query } = this.state;
+  // let formats = query.query.bool.must[1].nested.query;
+  // const pubs = query.query.bool.must[0];
+
+  // if (type === 'format') {
+  //   if (newSelection.length > 0) {
+  //     formats.terms = {
+  //       'distributions.format.keyword': newSelection,
+  //     };
+  //   } else {
+  //     formats = {};
+  //   }
+  //   query.query.bool.must[1].nested.query = formats;
+  // } else if (type === 'publisher') {
+  //   if (newSelection.length > 0) {
+  //     pubs.terms = {
+  //       'publisher.name.keyword': newSelection,
+  //     };
+  //   } else {
+  //     pubs.terms = {
+  //       'publisher.name.keyword': this.state.restrictedPubs,
+  //     };
+  //   }
+  //   query.query.bool.must[0] = pubs;
+  // }
+  // this.setState({ query }, () => this.getResults());
+  // }
 
   loadPublishers() {
     axios.get('https://raw.githubusercontent.com/CSIRO-enviro-informatics/workspace-ui/master/config/knv2-publishers.csv')
       .then((res) => {
         const rawPublishers = Csv.parse(res.data);
-        for (let i = 0, len = rawPublishers.length; i < len; i += 1) {
-          const publisher = rawPublishers[i];
-          if (publisher['Environmental data? Y/N/Part'] === 'Y') {
-            this.restrictedPubs.push(publisher.Name);
-          }
-        }
+
+        // Capture only those which are flagged as being environmental data
+        this.restrictedPubs = rawPublishers
+          .filter(row => row['Environmental data? Y/N/Part'] === 'Y')
+          .map(row => ({ id: row.ID, name: row.Name }));
+
         this.getResults();
       });
   }
@@ -391,6 +480,11 @@ export class ExplorerController extends React.Component {
     //   user, isAuthenticated,
     // } = this.props;
 
+    const { publishers, formats } = this.state;
+
+    const searchFacetPublishers = publishers.entrySeq().map(([id, v]) => ({ id, ...v })).toArray().sort((a, b) => b.count - a.count);
+    const searchFacetFormats = formats.entrySeq().map(([id, v]) => ({ id, ...v })).toArray().sort((a, b) => b.count - a.count);
+
     return (
       <section className="explorer">
         <Row className="search-header">
@@ -436,10 +530,10 @@ export class ExplorerController extends React.Component {
               </header>
               <div className="sidebar-body">
                 <BlockUi blocking={this.state.publishersLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet title="Publisher" type="publisher" options={this.state.publishers} onUpdate={this.handleFacetUpdate} />
+                  <SearchFacet2 title="Publisher" items={searchFacetPublishers} selectedItems={this.state.selectedPublishers} onUpdate={this.generateFacetUpdateHandler('publisher')} />
                 </BlockUi>
                 <BlockUi blocking={this.state.formatsLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet title="Resource Type" type="format" options={this.state.formats} onUpdate={this.handleFacetUpdate} />
+                  <SearchFacet2 title="Resource Type" items={searchFacetFormats} selectedItems={this.state.selectedFormats} onUpdate={this.generateFacetUpdateHandler('format')} />
                 </BlockUi>
               </div>
             </aside>
