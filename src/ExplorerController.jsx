@@ -170,6 +170,25 @@ function generateBaselineQueryObject(pageSize, pageIndex, sort) {
   };
 }
 
+/**
+ * Sorting function for facets
+ * 
+ * @param {{ name: string, count: number }} a
+ * @param {{ name: string, count: number }} b
+ */
+function facetDefaultSortFunc(a, b) {
+  const aCount = a.count;
+  const bCount = b.count;
+
+  // Sort by count first
+  if (aCount !== bCount) {
+    return bCount - aCount;
+  }
+
+  // If counts are equal, sort by name
+  return a.name.localeCompare(b.name);
+};
+
 export class ExplorerController extends React.Component {
   static propTypes = {
     selectedDistributions: PropTypes.instanceOf(Map),
@@ -496,19 +515,6 @@ export class ExplorerController extends React.Component {
     // } = this.props;
 
     const { publishers, formats } = this.state;
-
-    const facetDefaultSortFunc = (a, b) => {
-      const aCount = a.count;
-      const bCount = b.count;
-
-      // Sort by count first
-      if (aCount !== bCount) {
-        return bCount - aCount;
-      }
-
-      // If counts are equal, sort by name
-      return a.name.localeCompare(b.name);
-    };
 
     const searchFacetPublishers = publishers.entrySeq()
       .map(([id, v]) => ({ id, ...v }))
