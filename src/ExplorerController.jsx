@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
-import { SearchFacet2, ResultsList } from './explorer';
+import { SearchFacet, ResultsList } from './explorer';
 import { getUser, getAuthenticated, getSelectedDistributions } from './reducers';
 import * as snippetActions from './snippets/actions';
 
@@ -589,7 +589,7 @@ export class ExplorerController extends React.Component {
               </header>
               <div className="sidebar-body">
                 <BlockUi blocking={this.state.publishersLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet2
+                  <SearchFacet
                     title="Publisher"
                     items={searchFacetPublishers}
                     selectedItems={this.state.selectedPublishers}
@@ -598,7 +598,7 @@ export class ExplorerController extends React.Component {
                   />
                 </BlockUi>
                 <BlockUi blocking={this.state.formatsLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet2
+                  <SearchFacet
                     title="Resource Type"
                     items={searchFacetFormats}
                     selectedItems={this.state.selectedFormats}
