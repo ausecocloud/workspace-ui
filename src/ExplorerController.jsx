@@ -154,13 +154,16 @@ export class ExplorerController extends React.Component {
               formats: {
                 terms: {
                   field: 'distributions.format.keyword',
-                  size: 25,
+                  size: 10000,
                 },
               },
             },
           },
           publishers: {
-            terms: { field: 'publisher.name.keyword', size: 25 },
+            terms: {
+              field: 'publisher.name.keyword',
+              size: 10000,
+            },
           },
         },
         query: {
