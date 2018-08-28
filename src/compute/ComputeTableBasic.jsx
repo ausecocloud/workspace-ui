@@ -76,18 +76,23 @@ class ComputeTableBasic extends React.Component {
     const huburl = jupyterhub.getHubUrl();
     const { username } = this.props;
 
-    return this.props.servers.map(server => (
-      <tr key={server.name}>
-        <td><a href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">{server.name || 'Server'}</a></td>
-        { renderStartDateCell(server.started) }
-        { renderStatusCell(server) }
-        <td className="right-align">
-          <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>
-          {' '}
-          <a className="btn btn-danger btn-sm" href="#" onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}>Terminate</a>
-        </td>
-      </tr>
-    ));
+    // Drop all entries which have a pending termination because we can't do
+    // much about it and users generally can't interact with the servers at this
+    // point anyway
+    return this.props.servers
+      .filter(server => server.pending !== 'stop')
+      .map(server => (
+        <tr key={server.name}>
+          <td><a href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">{server.name || 'Server'}</a></td>
+          { renderStartDateCell(server.started) }
+          { renderStatusCell(server) }
+          <td className="right-align">
+            <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>
+            {' '}
+            <a className="btn btn-danger btn-sm" href="#" onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}>Terminate</a>
+          </td>
+        </tr>
+      ));
   }
 
   render() {

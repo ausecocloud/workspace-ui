@@ -502,7 +502,8 @@ section#main {
 
 			.facet {
 				border-bottom:1px solid lighten($grey-box-border, 10%);
-				margin-bottom:1rem;
+				padding-bottom: 1rem;
+				margin-bottom: 1rem;
 
 				.form-inline .form-group {
 					width:100%;
@@ -519,6 +520,10 @@ section#main {
 					li {
 						list-style-type: none;
 					}
+				}
+
+				.filter-field {
+					margin-bottom: 0.5rem;
 				}
 
 				.count {

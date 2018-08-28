@@ -73,7 +73,7 @@ class ProjectsController extends React.Component {
                   <h1>Your Projects</h1>
                   <p><em>ecocloud <strong>Projects</strong></em> is where we’ll store all your code from the R and SciPy servers.</p>
                   <ul>
-                    <li>This is your persistent storage space. You have 10 GiB available to you.</li>
+                    <li>This is your persistent storage space. You have 10 GB available to you.</li>
                     <li>We encourage you to only use this as storage for code.</li>
                     <li>You can import and export your data and results from your server.</li>
                     <li>To get the most out of the <em>ecocloud <strong>Projects</strong></em> feature please watch our tutorial [add link to support article with walkthrough video] or read the [ecocloud Projects overview] support article.</li>

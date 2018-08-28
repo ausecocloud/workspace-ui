@@ -91,7 +91,7 @@ class ResultsList extends React.Component {
                   && <h3>{r.title}</h3>
                 }
                 {
-                  r.publisher.name && r.publisher.name.length > 0
+                  r.publisher && r.publisher.name && r.publisher.name.length > 0
                   && <p className="source">{r.publisher.name}</p>
                 }
                 <dl className="dates">
