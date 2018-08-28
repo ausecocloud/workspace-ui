@@ -13,6 +13,11 @@ class SearchFacet2 extends React.Component {
 
     title: PropTypes.string.isRequired,
     onUpdate: PropTypes.func.isRequired,
+    onReset: PropTypes.func,
+  }
+
+  static defaultProps = {
+    onReset: () => {},
   }
 
   constructor(props) {
@@ -21,6 +26,9 @@ class SearchFacet2 extends React.Component {
     this.state = {
       // Collapsed by default
       collapsed: true,
+
+      // Quick filter value
+      filter: '',
     };
   }
 
@@ -40,6 +48,20 @@ class SearchFacet2 extends React.Component {
 
     // The maximum is determined by the fixed amount set above
     return maxItems;
+  }
+
+  handleFilterChange = (event) => {
+    this.setState({
+      filter: (event.target.value || ''),
+    });
+  }
+
+  handleResetClick = () => {
+    this.setState({
+      filter: '',
+    });
+
+    this.props.onReset();
   }
 
   /**
@@ -78,23 +100,34 @@ class SearchFacet2 extends React.Component {
   }
 
   renderOptions() {
-    const { items, selectedItems: selectedSet } = this.props;
-
-    let limit = items.length;
-
-    // Limit to a maximum of 10 items if collapsed
-    if (this.state.collapsed) {
-      limit = this.getCollapsedItemLimit();
-    }
+    const { selectedItems: selectedSet } = this.props;
+    const { collapsed, filter } = this.state;
 
     // Retrieve the split array and recombine them so that the list always puts
     // selected items first
     const { selectedItems, nonselectedItems } = this.splitItemsBySelection();
-    const reorderedItems = [...selectedItems, ...nonselectedItems];
+    let items = [...selectedItems, ...nonselectedItems];
+
+    /** Number of elements that will be rendered */
+    let limit = items.length;
+
+    // If we have a filter typed in, then filter the reordered items by this
+    // keyword
+    const trimmedFilter = filter.trim();
+    const applyFilter = trimmedFilter.length !== 0;
+
+    if (applyFilter) {
+      const filterRegex = new RegExp(trimmedFilter, "i");
+      items = items.filter(item => item.name.search(filterRegex) !== -1);
+      limit = items.length;
+    } else if (collapsed) {
+      // Limit to a maximum of 10 items if collapsed, but not filtering
+      limit = this.getCollapsedItemLimit();
+    }
 
     const elements = [];
     for (let i = 0; i < limit; i += 1) {
-      const { id, name, count } = reorderedItems[i];
+      const { id, name, count } = items[i];
       elements.push((
         <li key={id}>
           <Input name={`${id}_checkbox`} id={`${id}_checkbox`} type="checkbox" checked={selectedSet.has(id)} onChange={e => this.handleSelectionChange(id, e)} />
@@ -103,25 +136,56 @@ class SearchFacet2 extends React.Component {
       ));
     }
 
-    return elements;
+    /** Whether collapse toggle link should be rendered */
+    let renderCollapseToggle = true;
+
+    if (applyFilter) {
+      // Never render collapse toggle when filtering
+      renderCollapseToggle = false;
+    } else if (!collapsed) {
+      // If expanded, always show toggle
+      renderCollapseToggle = true;
+    } else {
+      // Toggle depends on whether we already are showing all items
+      renderCollapseToggle = elements.length !== items.length;
+    }
+
+    return {
+      elements,
+      renderCollapseToggle,
+    };
   }
 
   render() {
+    const { elements, renderCollapseToggle } = this.renderOptions();
+
     return (
       <div className="facet">
         <h5>{this.props.title}</h5>
+        <Input
+          type="text"
+          className="filter-field"
+          name="search_facet_filter"
+          placeholder="Filter..."
+          value={this.state.filter}
+          onChange={this.handleFilterChange}
+        />
         <ul>
-          { this.renderOptions() }
+          { elements }
         </ul>
         {
           // Only render collapse toggle link if it is actually useful
-          (this.getCollapsedItemLimit() !== this.props.items.length)
+          renderCollapseToggle
           && (
-            <a href="#" onClick={(e) => { e.preventDefault(); this.toggleCollapsed(); }}>
-              { this.state.collapsed ? 'More...' : 'Fewer...' }
-            </a>
+            <>
+              <a href="#" onClick={(e) => { e.preventDefault(); this.toggleCollapsed(); }}>
+                { this.state.collapsed ? 'More...' : 'Fewer...' }
+              </a>
+              {' '}
+            </>
           )
         }
+        <a href="#" onClick={this.handleResetClick}>Reset</a>
       </div>
     );
   }

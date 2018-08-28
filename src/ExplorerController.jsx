@@ -435,6 +435,24 @@ export class ExplorerController extends React.Component {
     };
   }
 
+  generateFacetResetHandler(type) {
+    return () => {
+      // Wipe the relevant set
+      switch (type) {
+        case 'format':
+          this.setState({ selectedFormats: Set() }, () => this.getResults());
+          break;
+
+        case 'publisher':
+          this.setState({ selectedPublishers: Set() }, () => this.getResults());
+          break;
+
+        default:
+          throw new Error('Unknown type');
+      }
+    };
+  }
+
   loadPublishers() {
     axios.get('https://raw.githubusercontent.com/CSIRO-enviro-informatics/workspace-ui/master/config/knv2-publishers.csv')
       .then((res) => {
@@ -571,10 +589,22 @@ export class ExplorerController extends React.Component {
               </header>
               <div className="sidebar-body">
                 <BlockUi blocking={this.state.publishersLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet2 title="Publisher" items={searchFacetPublishers} selectedItems={this.state.selectedPublishers} onUpdate={this.generateFacetUpdateHandler('publisher')} />
+                  <SearchFacet2
+                    title="Publisher"
+                    items={searchFacetPublishers}
+                    selectedItems={this.state.selectedPublishers}
+                    onUpdate={this.generateFacetUpdateHandler('publisher')}
+                    onReset={this.generateFacetResetHandler('publisher')}
+                  />
                 </BlockUi>
                 <BlockUi blocking={this.state.formatsLoading} loader={<Loader active type="ball-pulse" />}>
-                  <SearchFacet2 title="Resource Type" items={searchFacetFormats} selectedItems={this.state.selectedFormats} onUpdate={this.generateFacetUpdateHandler('format')} />
+                  <SearchFacet2
+                    title="Resource Type"
+                    items={searchFacetFormats}
+                    selectedItems={this.state.selectedFormats}
+                    onUpdate={this.generateFacetUpdateHandler('format')}
+                    onReset={this.generateFacetResetHandler('format')}
+                  />
                 </BlockUi>
               </div>
             </aside>
