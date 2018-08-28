@@ -377,7 +377,7 @@ export class ExplorerController extends React.Component {
    */
   generateFacetUpdateHandler(type) {
     return (data) => {
-      /** @type {Set<string, { name: string, count: number }>} */
+      /** @type {Set<string>} */
       let selectionSet;
 
       switch (type) {
@@ -497,8 +497,28 @@ export class ExplorerController extends React.Component {
 
     const { publishers, formats } = this.state;
 
-    const searchFacetPublishers = publishers.entrySeq().map(([id, v]) => ({ id, ...v })).toArray().sort((a, b) => b.count - a.count);
-    const searchFacetFormats = formats.entrySeq().map(([id, v]) => ({ id, ...v })).toArray().sort((a, b) => b.count - a.count);
+    const facetDefaultSortFunc = (a, b) => {
+      const aCount = a.count;
+      const bCount = b.count;
+
+      // Sort by count first
+      if (aCount !== bCount) {
+        return bCount - aCount;
+      }
+
+      // If counts are equal, sort by name
+      return a.name.localeCompare(b.name);
+    };
+
+    const searchFacetPublishers = publishers.entrySeq()
+      .map(([id, v]) => ({ id, ...v }))
+      .toArray()
+      .sort(facetDefaultSortFunc);
+
+    const searchFacetFormats = formats.entrySeq()
+      .map(([id, v]) => ({ id, ...v }))
+      .toArray()
+      .sort(facetDefaultSortFunc);
 
     return (
       <section className="explorer">
