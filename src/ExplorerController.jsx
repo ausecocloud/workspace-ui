@@ -172,7 +172,7 @@ function generateBaselineQueryObject(pageSize, pageIndex, sort) {
 
 /**
  * Sorting function for facets
- * 
+ *
  * @param {{ name: string, count: number }} a
  * @param {{ name: string, count: number }} b
  */
@@ -187,7 +187,7 @@ function facetDefaultSortFunc(a, b) {
 
   // If counts are equal, sort by name
   return a.name.localeCompare(b.name);
-};
+}
 
 export class ExplorerController extends React.Component {
   static propTypes = {
