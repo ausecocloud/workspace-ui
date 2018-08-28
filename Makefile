@@ -18,23 +18,28 @@ PREFIX = hub.bccvl.org.au/ecocloud
 IMAGE = workspace-ui
 TAG = latest
 
+# prod commands
+
 build:
 	docker build -t $(PREFIX)/$(IMAGE):$(TAG) .
 
-test:
-	docker run --rm -it -p 5000:80 $(PREFIX)/$(IMAGE):$(TAG)
-
-run:
-	docker run --rm -it -p 5000:5000 -v $(PWD):/code $(PREFIX)/$(IMAGE):$(TAG) bash
-
-dist:
-	docker run --rm -it -v $(PWD):/code $(PREFIX)/$(IMAGE):$(TAG) yarn build
-
-yarn:
-	docker run --rm -it -v $(PWD):/code $(PREFIX)/$(IMAGE):$(TAG) yarn
-
-start:
-	docker run --rm -it -p 5000:5000 -v $(PWD):/code $(PREFIX)/$(IMAGE):$(TAG) yarn start
-
 push:
 	docker push $(PREFIX)/$(IMAGE):$(TAG)
+
+test:
+	docker run --rm -it -p 5000:5000 $(PREFIX)/$(IMAGE):$(TAG)
+
+### dev commands
+
+run:
+	docker run --rm -it -p 5000:5000 -v $(PWD):/code -w /code node:8 bash
+
+dist:
+	docker run --rm -it -v $(PWD):/code -w /code node:8 yarn build
+
+yarn:
+	docker run --rm -it -v $(PWD):/code -w /code node:8 yarn
+
+start:
+	docker run --rm -it -p 5000:5000 -v $(PWD):/code -w /code node:8 yarn start
+
