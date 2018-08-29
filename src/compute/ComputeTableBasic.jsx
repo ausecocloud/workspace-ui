@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
+import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
 import * as actions from './actions';
 import { jupyterhub } from '../api';
 import { formatDate, formatTime } from '../utils';
@@ -26,6 +27,13 @@ function mapDispatchToProps(dispatch) {
  * @param {object} server Server status object
  */
 function renderStatusCell(server) {
+  // Termination is indicated by the value of the pending property
+  if (server.pending === 'stop') {
+    return (
+      <td><FontAwesomeIcon icon={faEraser} /> Terminating</td>
+    );
+  }
+
   if (server.pending) {
     return (
       <td><FontAwesomeIcon icon={faSpinner} /> Pending</td>
@@ -76,20 +84,23 @@ class ComputeTableBasic extends React.Component {
     const huburl = jupyterhub.getHubUrl();
     const { username } = this.props;
 
-    // Drop all entries which have a pending termination because we can't do
-    // much about it and users generally can't interact with the servers at this
-    // point anyway
     return this.props.servers
-      .filter(server => server.pending !== 'stop')
       .map(server => (
         <tr key={server.name}>
           <td><a href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">{server.name || 'Server'}</a></td>
           { renderStartDateCell(server.started) }
           { renderStatusCell(server) }
           <td className="right-align">
-            <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>
-            {' '}
-            <a className="btn btn-danger btn-sm" href="#" onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}>Terminate</a>
+            {
+              // Only render buttons if not in the process of spinning up or down
+              !server.pending && (
+                <>
+                  <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>
+                  {' '}
+                  <a className="btn btn-danger btn-sm" href="#" onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}>Terminate</a>
+                </>
+              )
+            }
           </td>
         </tr>
       ));
