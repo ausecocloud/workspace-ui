@@ -38,8 +38,16 @@ export default class Footer extends React.Component {
               </ul>
             </Col>
             <Col md="3">
-              <h3>Tutorials &amp; Support</h3>
-              <p>Browse our support articles and join our community at <a href="http://support.ecocloud.org.au/" target="_blank" rel="noopener noreferrer" title="Visit ecocloud helpdesk">support.ecocloud.org.au</a></p>
+              <h3>Documentation</h3>
+              <ul>
+                <li><a href="#" target="_blank" rel="noopener noreferrer" title="Tutorials">Tutorials</a></li>
+                <li><a href="#" target="_blank" rel="noopener noreferrer" title="Support articles">Support articles</a></li>
+                <li><a href="#" target="_blank" rel="noopener noreferrer" title="FAQ">FAQ</a></li>
+              </ul>
+              <h3>Support</h3>
+              <ul>
+                <li><a href="https://www.ecocloud.org.au/contact/" target="_blank" rel="noopener noreferrer" title="Contact us">Contact us</a></li>
+              </ul>
             </Col>
           </Row>
         </Container>
