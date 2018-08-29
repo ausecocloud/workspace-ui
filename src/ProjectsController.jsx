@@ -200,7 +200,7 @@ class ProjectsController extends React.Component {
             <ReduxBlockUi tag="div" block={actions.CONTENTS_PATH} unblock={[actions.CONTENTS_SUCCEEDED, actions.CONTENTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
               <Row>
                 <Col>
-                  <Link to="/projects" className="back-crumb">&laquo; Back to <em><strong>Workspace</strong></em></Link>
+                  <Link to="/workspace" className="back-crumb">&laquo; Back to <em><strong>Workspace</strong></em></Link>
                   <h1>{project.name}</h1>
                   <Button color="danger" onClick={this.toggleDeleteModal} className="float-right btn-sm"><FontAwesomeIcon icon={faTrash} /> Delete Project</Button>
                   <BasicModal

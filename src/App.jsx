@@ -71,7 +71,7 @@ class App extends React.Component {
           <NavLink exact to="/">Dashboard</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink exact to="/projects">Workspace</NavLink>
+          <NavLink exact to="/workspace">Workspace</NavLink>
         </NavItem>
         <NavItem>
           <NavLink exact to="/explorer">Explorer</NavLink>
@@ -107,7 +107,7 @@ class App extends React.Component {
             )}
           />
           <Route
-            path="/projects"
+            path="/workspace"
             render={() => ([
               <span key="projects-text" className="logo-text"><h1>Workspace</h1></span>,
               <Meta key="projects-meta" pagetitle="Workspace" pagedesc="ecocloud Workspace" />,
@@ -154,8 +154,8 @@ class App extends React.Component {
               user={user}
               component={Dashboard}
             />,
-            <Route key="Workspace" exact path="/projects" component={ProjectsListController} />,
-            <Route key="Project" exact path="/projects/:id" component={ProjectsController} />,
+            <Route key="Workspace" exact path="/workspace" component={ProjectsListController} />,
+            <Route key="Project" exact path="/workspace/:id" component={ProjectsController} />,
             <Route key="Explorer" path="/explorer" component={ExplorerController} />,
             <Route key="Snippets" path="/snippets" component={SnippetsController} />,
             <Route key="Tools" exact path="/tools" component={ToolsController} />,
