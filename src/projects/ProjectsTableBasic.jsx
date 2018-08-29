@@ -22,7 +22,7 @@ class ProjectsTableBasic extends React.PureComponent {
       <tr key={project.name}>
         <td><FontAwesomeIcon icon={faFolder} /> {project.name}</td>
         <td>{formatDate(project.created)}</td>
-        <td className="right-align"><Link to={`/projects/${project.name}`} title={`Open the "${project.name}" project in ecocloud Projects`}><FontAwesomeIcon icon={faExternalLinkAlt} /> Open in <strong><em>Projects</em></strong></Link></td>
+        <td className="right-align"><Link to={`/projects/${project.name}`} title={`Open the "${project.name}" project in ecocloud Workspace`}><FontAwesomeIcon icon={faExternalLinkAlt} /> Open in <strong><em>Workspace</em></strong></Link></td>
       </tr>
     ));
   }

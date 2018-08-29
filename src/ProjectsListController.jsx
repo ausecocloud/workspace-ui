@@ -70,13 +70,13 @@ class ProjectsController extends React.Component {
             && (
               <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
                 <Col sm={{ size: 12 }}>
-                  <h1>Your Projects</h1>
-                  <p><em>ecocloud <strong>Projects</strong></em> is where we’ll store all your code from the R and SciPy servers.</p>
+                  <h1>Your Workspace</h1>
+                  <p><em>ecocloud <strong>Workspace</strong></em> is where we’ll store all your code from the R and SciPy servers.</p>
                   <ul>
                     <li>This is your persistent storage space. You have 10 GB available to you.</li>
                     <li>We encourage you to only use this as storage for code.</li>
                     <li>You can import and export your data and results from your server.</li>
-                    <li>To get the most out of the <em>ecocloud <strong>Projects</strong></em> feature please watch our tutorial [add link to support article with walkthrough video] or read the [ecocloud Projects overview] support article.</li>
+                    <li>To get the most out of the <em>ecocloud <strong>Workspace</strong></em> feature please watch our tutorial [add link to support article with walkthrough video] or read the [ecocloud Workspace overview] support article.</li>
                   </ul>
                   <Row>
                     <Projects key="projects" projects={projects} />

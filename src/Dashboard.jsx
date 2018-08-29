@@ -166,7 +166,7 @@ export class Dashboard extends React.Component {
             </Row>
             <Row>
               <Col sm="12">
-                <h2>Projects</h2>
+                <h2>Workspace</h2>
                 <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
                   <ProjectsTableBasic projects={projects} />
                 </ReduxBlockUi>

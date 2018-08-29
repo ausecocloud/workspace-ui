@@ -142,7 +142,7 @@ export class SnippetItem extends React.Component {
           {dist.title}
         </a>
         <div className="float-right">
-          { /* <a className="btn btn-primary btn-sm"> Store in Projects &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} /> </a> &nbsp; */ }
+          { /* <a className="btn btn-primary btn-sm"> Store in Workspace &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} /> </a> &nbsp; */ }
           <a className="btn btn-primary btn-sm" href={url} target="_blank" rel="noopener noreferrer"> Download file <FontAwesomeIcon icon={faDownload} /></a>
         </div>
 
