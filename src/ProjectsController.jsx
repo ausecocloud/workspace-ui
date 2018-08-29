@@ -202,19 +202,6 @@ class ProjectsController extends React.Component {
                 <Col>
                   <Link to="/workspace" className="back-crumb">&laquo; Back to <em><strong>Workspace</strong></em></Link>
                   <h1>{project.name}</h1>
-                  <Button color="danger" onClick={this.toggleDeleteModal} className="float-right btn-sm"><FontAwesomeIcon icon={faTrash} /> Delete Project</Button>
-                  <BasicModal
-                    title="Delete Project"
-                    desc="This action is irreversible, are you sure you want to delete this project?"
-                    active={this.state.deleteModalActive}
-                    close={this.toggleDeleteModal}
-                  >
-                    <DeleteProjectForm
-                      submit={this.deleteProjectSubmit}
-                      close={this.toggleDeleteModal}
-                      project={project.name}
-                    />
-                  </BasicModal>
                   <p><strong>Date Created:</strong> {formatDate(project.created)}</p>
                   <p>{project.description}</p>
                 </Col>

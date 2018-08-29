@@ -26,7 +26,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class ProjectsController extends React.Component {
+class ProjectsListController extends React.Component {
   static propTypes = {
     projects: PropTypes.arrayOf(PropTypes.any).isRequired,
     // event handlers
@@ -109,4 +109,4 @@ class ProjectsController extends React.Component {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectsController);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectsListController);
