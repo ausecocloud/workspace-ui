@@ -92,7 +92,7 @@ class App extends React.Component {
               <NavLink exact to="/account">Account</NavLink>
             </DropdownItem>
             <DropdownItem tag="span">
-              <NavLink to="/logout" onClick={this.onLogout}>Logout</NavLink>
+              <NavLink to="/logout" onClick={this.onLogout}>Sign out</NavLink>
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
