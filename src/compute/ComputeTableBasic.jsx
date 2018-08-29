@@ -7,6 +7,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
+import { faServer } from '@fortawesome/free-solid-svg-icons/faServer';
 import * as actions from './actions';
 import { jupyterhub } from '../api';
 import { formatDate, formatTime } from '../utils';
@@ -82,9 +83,18 @@ class ComputeTableBasic extends React.Component {
 
   renderServers() {
     const huburl = jupyterhub.getHubUrl();
-    const { username } = this.props;
+    const { username, servers } = this.props;
 
-    return this.props.servers
+    // If there are no servers, suggest to launch a notebook server
+    if (servers.length === 0) {
+      return (
+        <tr>
+          <td colSpan="4" className="text-center"><a className="btn btn-secondary btn-sm" href={`${huburl}/hub/home`} target="_blank" title="Launch notebook server" rel="noopener noreferrer"><FontAwesomeIcon icon={faServer} /> Launch notebook server</a></td>
+        </tr>
+      );
+    }
+
+    return servers
       .map(server => (
         <tr key={server.name}>
           <td><a href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">{server.name || 'Server'}</a></td>
