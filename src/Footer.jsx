@@ -34,7 +34,7 @@ export default class Footer extends React.Component {
             <Col md="3">
               <h3>Funded By</h3>
               <ul>
-                <li><a href="https://www.ands.org.au/about-us/ands-nectar-rds" target="_blank" rel="noopener noreferrer" title="The ANDS, Nectar and RDS partnership">The ANDS, Nectar and RDS partnership</a></li>
+                <li><a href="https://www.ands.org.au/about-us/ands-nectar-rds" target="_blank" rel="noopener noreferrer" title="Australian Research Data Commons">Australian Research Data Commons</a></li>
               </ul>
             </Col>
             <Col md="3">
