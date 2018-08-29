@@ -13,7 +13,6 @@ import ProjectsController from './ProjectsController';
 import Dashboard from './Dashboard';
 import ExplorerController from './ExplorerController';
 import SnippetsController from './SnippetsController';
-import Account from './Account';
 import { getUser, getAuthenticated } from './reducers';
 import Logo from './assets/images/logo.svg';
 import ProjectsListController from './ProjectsListController';
@@ -89,9 +88,6 @@ class App extends React.Component {
           </DropdownToggle>
           <DropdownMenu right>
             <DropdownItem tag="span">
-              <NavLink exact to="/account">Account</NavLink>
-            </DropdownItem>
-            <DropdownItem tag="span">
               <NavLink to="/logout" onClick={this.onLogout}>Sign out</NavLink>
             </DropdownItem>
           </DropdownMenu>
@@ -163,7 +159,6 @@ class App extends React.Component {
             <Route key="Explorer" path="/explorer" component={ExplorerController} />,
             <Route key="Snippets" path="/snippets" component={SnippetsController} />,
             <Route key="Tools" exact path="/tools" component={ToolsController} />,
-            <Route key="Account" exact path="/account" component={Account} />,
           ]) : (
             <Container>
               <h1>You are not signed in</h1>
