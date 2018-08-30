@@ -92,13 +92,14 @@ export class Dashboard extends React.Component {
         // register all event handlers before we push data into the parser
         parser.on('item', (item) => {
           // need to format date string
-          const desc = item.description.substring(0, 80);
+          let desc = new DOMParser().parseFromString(item.description, 'text/html');
+          desc = desc.documentElement.textContent.substring(0, 80);
           const date = formatDate(item.pubdate);
           const feedItem = (
             <li key={item.link}>
               <p><strong>{date}</strong></p>
               <p>{item.title}</p>
-              <p><span dangerouslySetInnerHTML={{ __html: desc }} /> <a href={item.link} target="_blank" rel="noopener noreferrer">... Read more</a></p>
+              <p><span>{ desc }</span> <a href={item.link} target="_blank" rel="noopener noreferrer">... Read more</a></p>
             </li>
           );
           feed.push(feedItem);
