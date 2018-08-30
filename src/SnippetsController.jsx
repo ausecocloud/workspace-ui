@@ -11,7 +11,7 @@ import {
   faArrowCircleLeft, faServer,
 } from '@fortawesome/free-solid-svg-icons';
 import { getSelectedDistributions } from './reducers';
-import SnippetItem from "./snippets/SnippetItem";
+import SnippetItem from './snippets/SnippetItem';
 import { jupyterhub } from './api';
 
 function mapStateToProps(state) {
