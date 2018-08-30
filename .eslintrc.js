@@ -3,6 +3,7 @@
 const rules = {
   "no-prototype-builtins": "off",
   "no-restricted-syntax": 'warn',
+  "no-underscore-dangle": "off",
   'jsx-a11y/anchor-is-valid': [ "warn", {
     components: [ 'Link' ],
     specialLink: [ 'to' ],
