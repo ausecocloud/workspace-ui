@@ -11,9 +11,8 @@ import axios from 'axios';
 import * as actions from './projects/actions';
 import * as computeActions from './compute/actions';
 import {
-  getProjects, getUser, getAuthenticated, getStats, getServers,
+  getUser, getAuthenticated, getStats, getServers,
 } from './reducers';
-import { ProjectsTableBasic } from './projects';
 import { ComputeTableBasic } from './compute';
 import { formatDate, bytesToSize } from './utils';
 
@@ -23,7 +22,6 @@ function mapStateToProps(state) {
   return {
     user: getUser(state),
     isAuthenticated: getAuthenticated(state),
-    projects: getProjects(state),
     stats: getStats(state),
     servers: getServers(state),
   };
@@ -38,7 +36,6 @@ function mapDispatchToProps(dispatch) {
 export class Dashboard extends React.Component {
   static propTypes = {
     user: PropTypes.objectOf(PropTypes.any).isRequired,
-    projects: PropTypes.arrayOf(PropTypes.any).isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     stats: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -60,7 +57,6 @@ export class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(actions.projectsList());
     this.props.dispatch(actions.getStats());
   }
 
@@ -120,7 +116,7 @@ export class Dashboard extends React.Component {
 
   render() {
     const {
-      user, projects, isAuthenticated, stats, servers,
+      user, isAuthenticated, stats, servers,
     } = this.props;
 
     // Quota figure can be `null`, in which case we replace with `0`
@@ -167,9 +163,6 @@ export class Dashboard extends React.Component {
             <Row>
               <Col sm="12">
                 <h2>Workspace</h2>
-                <ReduxBlockUi tag="div" block={actions.PROJECTS_LIST} unblock={[actions.PROJECTS_SUCCEEDED, actions.PROJECTS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
-                  <ProjectsTableBasic projects={projects} />
-                </ReduxBlockUi>
                 <div className="storage">
                   <ReduxBlockUi tag="div" block={actions.PROJECTS_STATS} unblock={[actions.PROJECTS_STATS_SUCCEEDED, actions.PROJECTS_STATS_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
                     <p>Persistent storage used <span className="storage-int">{usageNum}</span></p>

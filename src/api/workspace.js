@@ -50,13 +50,6 @@ function callAPI(options) {
 }
 
 
-export function listProjects() {
-  const { promise, cancel } = callAPI({ url: 'api/v1/projects' });
-  const data = promise.then(response => response.data);
-  data[CANCEL] = cancel;
-  return data;
-}
-
 export function listContents(params) {
   const { promise, cancel } = callAPI({ url: 'api/v1/folders', params });
   const data = promise.then(response => response.data);
@@ -65,7 +58,7 @@ export function listContents(params) {
 }
 
 export function addFolder(params) {
-  // project, path, name
+  // path, name
   const { folder, ...rest } = params;
   const { promise, cancel } = callAPI({
     url: '/api/v1/folders',
@@ -84,9 +77,8 @@ export function deleteFolder(params) {
 }
 
 export function uploadFile(params, progress) {
-  // project, path, files: FileList
+  // path, files: FileList
   const query = {
-    project: params.project,
     path: params.path.endsWith('/') ? `${params.path}${params.files[0].name}` : `${params.path}/${params.files[0].name}`,
   };
 
@@ -106,24 +98,10 @@ export function uploadFile(params, progress) {
 }
 
 export function deleteFile(params) {
-  // project, path, name
+  // path, name
   const { promise, cancel } = callAPI({ url: 'api/v1/files', method: 'DELETE', params });
   promise[CANCEL] = cancel;
   return promise;
-}
-
-export function createProject(params) {
-  const { promise, cancel } = callAPI({ url: 'api/v1/projects', method: 'POST', data: params });
-  const data = promise.then(response => response.data);
-  data[CANCEL] = cancel;
-  return data;
-}
-
-export function deleteProject(params) {
-  const { promise, cancel } = callAPI({ url: 'api/v1/projects', method: 'DELETE', params });
-  const data = promise.then(response => response.data);
-  data[CANCEL] = cancel;
-  return data;
 }
 
 export function getStats() {

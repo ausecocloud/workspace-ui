@@ -6,7 +6,6 @@ import ContentRow from './ContentRow';
 
 class Contents extends React.PureComponent {
   static propTypes = {
-    project: PropTypes.string,
     path: PropTypes.string,
     contents: PropTypes.arrayOf(PropTypes.any),
     onClick: PropTypes.func.isRequired,
@@ -15,13 +14,12 @@ class Contents extends React.PureComponent {
   }
 
   static defaultProps = {
-    project: '',
     path: '/',
     contents: [],
   }
 
   onClick = (item) => {
-    const { project, path, onClick } = this.props;
+    const { path, onClick } = this.props;
     let newPath;
     if (item.content_type === 'application/directory') {
       if (path.endsWith('/')) {
@@ -29,13 +27,13 @@ class Contents extends React.PureComponent {
       } else {
         newPath = [path, item.name].join('/');
       }
-      onClick(project, newPath);
+      onClick(newPath);
     }
   }
 
   onDelete = (item) => {
-    const { project, path, onDelete } = this.props;
-    onDelete(project, path, item);
+    const { path, onDelete } = this.props;
+    onDelete(path, item);
   }
 
   render() {

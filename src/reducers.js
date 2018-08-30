@@ -38,19 +38,6 @@ export default rootReducers;
 // redefine selectors to match our mapping in rootReducer
 export const getStats = state => projects.getStats(state.projects);
 
-export const getProjects = state => projects.getProjects(state.projects);
-
-export const getProject = (state, name) => {
-  const projectsList = getProjects(state);
-  for (let i = 0; i < projectsList.length; i += 1) {
-    const project = projectsList[i];
-    if (project.name === name) {
-      return project;
-    }
-  }
-  return null;
-};
-
 export const getContents = state => projects.getContents(state.projects);
 
 export const getPath = state => projects.getPath(state.projects);

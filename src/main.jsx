@@ -17,7 +17,6 @@ import reducers from './reducers';
 import rootSaga from './sagas';
 import { loadConfig } from './config';
 import { initAuth } from './api';
-import * as actions from './projects/actions';
 import App from './App';
 
 
@@ -27,10 +26,6 @@ const sagaMiddleware = createSagaMiddleware();
 const eventsMap = {
   [LOCATION_CHANGE]: trackPageView(action => ({
     page: action.payload.pathname,
-  })),
-  [actions.PROJECTS_ADD]: trackEvent(action => ({
-    category: 'Projects',
-    action: action.type,
   })),
 };
 const gaMiddleware = createMiddleware(eventsMap, GoogleAnalytics());

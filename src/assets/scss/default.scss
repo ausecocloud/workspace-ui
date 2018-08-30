@@ -270,34 +270,6 @@ section#main {
     	margin-bottom:.75rem;
     	display:inline-block;
     }
-    .project-list {
-    	a.project-link {
-    		text-decoration:none;
-    	}
-    	a:hover .project-list-item {
-    		background:rgba(red($primary-color), green($primary-color), blue($primary-color), 0.35);
-    		border: 1px solid rgba(red($primary-color), green($primary-color), blue($primary-color), 0.75);
-    		h2 {
-    			text-decoration: none;
-    		}
-    		p {
-    			text-decoration: none;
-    		}
-    	}
-    	.project-list-item {
-    		border:1px solid $grey-box-border;
-    		background: $grey-box-bg;
-    		padding:1rem;
-    		margin-bottom:1rem;
-
-    		h2 {
-    			color:$body-color;
-    		}
-    		p {
-    			color:$body-color;
-    		}
-    	}
-    }
     .project-pathbar {
     	.breadcrumb {
     		background-color:$dull-header;
@@ -342,24 +314,11 @@ section#main {
 	    	color:darken($grey-box-bg, 50%);
 	    }
     }
-    .home-projects-table {
-    	.table {
-    		margin-bottom:0;
-    		border-bottom:1px solid #e6e6e6;
-	    	tr {
-		    	td, th {
-		    		&:last-child{
-		    			text-align: right;
-		    		}
-		    	}
-		    }
-		}
-	}
 	.dash-activity {
 		background:white;
 		padding:1rem;
 		width: 100%;
-		
+
 		ul {
 			line-height: 1.3rem;
 			list-style-type: none;
@@ -593,7 +552,7 @@ section#main {
 				list-style-type: none;
 				overflow: hidden;
 				li {
-					position: relative; 
+					position: relative;
 					float: left;
 					margin: 10px 5px 8px 5px;
 					a {
@@ -715,7 +674,7 @@ section#main {
 						background:$dull-header;
 						color:white;
 						padding:.1rem .35rem;
-						
+
 					}
 					.licence-header{
 						border-bottom-left-radius: 5px;
@@ -740,7 +699,7 @@ section#main {
 			.selected-datasets{
 				padding-left: 0px;
 				list-style: none;
-				li {	
+				li {
 					padding: 1em 0;
 					border-bottom: $grey-box-border solid 1px;
 					.arrow-icon {

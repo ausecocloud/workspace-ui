@@ -15,7 +15,6 @@ import ExplorerController from './ExplorerController';
 import SnippetsController from './SnippetsController';
 import { getUser, getAuthenticated } from './reducers';
 import Logo from './assets/images/logo.svg';
-import ProjectsListController from './ProjectsListController';
 import Footer from './Footer';
 import Meta from './Meta';
 import ToolsController from './ToolsController';
@@ -154,8 +153,7 @@ class App extends React.Component {
               user={user}
               component={Dashboard}
             />,
-            <Route key="Workspace" exact path="/workspace" component={ProjectsListController} />,
-            <Route key="Project" exact path="/workspace/:id" component={ProjectsController} />,
+            <Route key="Workspace" exact path="/workspace" component={ProjectsController} />,
             <Route key="Explorer" path="/explorer" component={ExplorerController} />,
             <Route key="Snippets" path="/snippets" component={SnippetsController} />,
             <Route key="Tools" exact path="/tools" component={ToolsController} />,
