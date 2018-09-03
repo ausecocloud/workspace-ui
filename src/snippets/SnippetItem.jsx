@@ -143,7 +143,7 @@ export class SnippetItem extends React.Component {
         </a>
         <div className="float-right">
           { /* <a className="btn btn-primary btn-sm"> Store in Workspace &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} /> </a> &nbsp; */ }
-          <a className="btn btn-primary btn-sm" href={url} target="_blank" rel="noopener noreferrer"> Download file <FontAwesomeIcon icon={faDownload} /></a>
+          { url && (<a className="btn btn-primary btn-sm" href={url} target="_blank" rel="noopener noreferrer"> Download file <FontAwesomeIcon icon={faDownload} /></a>) }
         </div>
 
         <div className="snippet-body">
@@ -151,7 +151,8 @@ export class SnippetItem extends React.Component {
             <p>{dist.description}</p>
           </div>
           {
-            snippetLanguages.map((language) => {
+            url
+            ? snippetLanguages.map((language) => {
               // Creating a reference so that the actual <code> element may be
               // referred to for copying text
               const snippetTextElementRef = React.createRef();
@@ -171,6 +172,13 @@ export class SnippetItem extends React.Component {
                 </div>
               );
             })
+            : (
+              <div>
+                <div>
+                  <code>No URL available for this resource</code>
+                </div>
+              </div>
+            )
           }
         </div>
       </li>
