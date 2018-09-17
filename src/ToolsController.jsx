@@ -37,7 +37,7 @@ const ToolsController = () => {
         <Col>
           <h2 className="tools-section-header">Interactive Coding Tools</h2>
           <p><em>ecocloud</em> gives you access to servers with either R or Python. These environments run in your browser and connect to virtual machines in the Nectar cloud. Simply choose your preferred language and we’ll do the rest.</p>
-          <p>Read more about our servers here [link to article describing how servers work].</p>
+          <p>Read more about our servers <a href="http://support.ecocloud.org.au/support/solutions/articles/6000200389-using-jupyter-notebooks" target="_blank" rel="noopener noreferrer">here</a>.</p>
           <Row>
             <Col>
               <ToolCard

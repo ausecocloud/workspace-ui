@@ -323,8 +323,11 @@ section#main {
 			line-height: 1.3rem;
 			list-style-type: none;
 			padding-left:0;
+			margin-bottom: 0;
+
 			li {
-				margin-bottom:1rem;
+				margin-bottom: 0.5rem;
+
 				p {
 					margin:0;
 					font-size:0.875rem;
@@ -386,9 +389,6 @@ section#main {
 	}
 
 	.dashboard {
-		h1 {
-			margin-bottom:0rem;
-		}
 		h2 {
 			margin:2rem 0 .5rem;
 		}

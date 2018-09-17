@@ -612,7 +612,7 @@ export class ExplorerController extends React.Component {
           <Col lg="9" md="12">
             <div className="selected">
               <h4>Datasets Selected: { this.props.selectedDistributions.size }</h4>
-              <a href="#" className="help-link"><FontAwesomeIcon icon={faQuestionCircle} /> How Do I Use This Selection?</a>
+              <a href="http://support.ecocloud.org.au/support/solutions/articles/6000200678-code-snippets" target="_blank" rel="noopener noreferrer" className="help-link"><FontAwesomeIcon icon={faQuestionCircle} /> How Do I Use This Selection?</a>
               <Link to="/snippets" params={{ selectedDistributions: this.state.selectedDistributions }} className="btn btn-primary float-right">View Snippets </Link>
               <ul className="selected-datasets">
                 {
