@@ -152,33 +152,33 @@ export class SnippetItem extends React.Component {
           </div>
           {
             url
-            ? snippetLanguages.map((language) => {
-              // Creating a reference so that the actual <code> element may be
-              // referred to for copying text
-              const snippetTextElementRef = React.createRef();
+              ? snippetLanguages.map((language) => {
+                // Creating a reference so that the actual <code> element may be
+                // referred to for copying text
+                const snippetTextElementRef = React.createRef();
 
-              const snippetText = generateSnippetText(language, url);
+                const snippetText = generateSnippetText(language, url);
 
-              return (
-                <div key={language}>
-                  <div>
-                    {language}
-                    <a href="#" className="float-right source" onClick={(e) => { selectElementText(snippetTextElementRef.current); copyTextToClipboard(snippetText); e.preventDefault(); }}> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></a>
+                return (
+                  <div key={language}>
+                    <div>
+                      {language}
+                      <a href="#" className="float-right source" onClick={(e) => { selectElementText(snippetTextElementRef.current); copyTextToClipboard(snippetText); e.preventDefault(); }}> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></a>
+                    </div>
+
+                    <div>
+                      <code ref={snippetTextElementRef}>{snippetText}</code>
+                    </div>
                   </div>
-
-                  <div>
-                    <code ref={snippetTextElementRef}>{snippetText}</code>
-                  </div>
-                </div>
-              );
-            })
-            : (
-              <div>
+                );
+              })
+              : (
                 <div>
-                  <code>No URL available for this resource</code>
+                  <div>
+                    <code>No URL available for this resource</code>
+                  </div>
                 </div>
-              </div>
-            )
+              )
           }
         </div>
       </li>
