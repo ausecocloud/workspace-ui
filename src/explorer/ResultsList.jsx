@@ -65,7 +65,7 @@ class ResultsList extends React.Component {
         let dists;
         if (r.distributions && r.distributions.length > 0) {
           dists = r.distributions.map((dist, didx) => {
-            const distSelectionId = `dist-select-${didx}`;
+            const distSelectionId = `dist-select-${dist.identifier}`;
             return (
               <li key={dist.identifier}>
                 <label htmlFor={distSelectionId}>
