@@ -65,12 +65,12 @@ class ResultsList extends React.Component {
         let dists;
         if (r.distributions && r.distributions.length > 0) {
           dists = r.distributions.map((dist, didx) => {
-            const url = dist.downloadURL || dist.accessURL;
+            const distSelectionId = `dist-select-${didx}`;
             return (
               <li key={dist.identifier}>
-                <label>
-                  <input type="checkbox" checked={this.props.selectedDistributions.has(dist.identifier)} onChange={e => this.handleCheckboxChange(dist, e.target.checked)} />
-                  <span class="title">{dist.title}</span>
+                <label htmlFor={distSelectionId}>
+                  <input type="checkbox" id={distSelectionId} checked={this.props.selectedDistributions.has(dist.identifier)} onChange={e => this.handleCheckboxChange(dist, e.target.checked)} />
+                  <span className="title">{dist.title}</span>
                 </label>
                 <small className="licence-header"> Format </small>
                 <small className="format">{dist.format}</small>
