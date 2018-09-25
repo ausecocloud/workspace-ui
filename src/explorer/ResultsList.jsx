@@ -133,9 +133,16 @@ class ResultsList extends React.Component {
                   r.catalog && r.catalog.length > 0
                   && <p><strong>Provider:</strong> {r.catalog}</p>
                 }
-                <ul className="distributions">
-                  { dists }
-                </ul>
+                { dists
+                  && (
+                    <div className="distributions-container">
+                      <strong>Data and Resources</strong>
+                      <ul className="distributions">
+                        { dists }
+                      </ul>
+                    </div>
+                  )
+                }
                 {
                   r.landingPage && r.landingPage.length > 0
                   && <a className="btn btn-primary btn-sm" href={r.landingPage}>Go to website <FontAwesomeIcon icon={faExternalLinkSquareAlt} /></a>
