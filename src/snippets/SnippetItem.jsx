@@ -29,7 +29,7 @@ url <- "${url.replace(/"/g, '\\"')}"
 data <- getURLContent(url)`;
 
     case 'Bash':
-      return `curl -O ${url}`;
+      return `curl -LO ${url}`;
 
     case 'Web Access':
       return url;
