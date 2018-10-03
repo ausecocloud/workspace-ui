@@ -10,7 +10,7 @@ class Contents extends React.PureComponent {
     contents: PropTypes.arrayOf(PropTypes.any),
     onClick: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
-    // dispatch: PropTypes.func.isRequired,
+    onDownload: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -36,6 +36,11 @@ class Contents extends React.PureComponent {
     onDelete(path, item);
   }
 
+  onDownload = (item) => {
+    const { path, onDownload } = this.props;
+    onDownload(path, item);
+  }
+
   render() {
     const {
       contents,
@@ -58,6 +63,7 @@ class Contents extends React.PureComponent {
               key={item.name}
               onClick={this.onClick}
               onDelete={this.onDelete}
+              onDownload={this.onDownload}
             />))
           }
         </tbody>

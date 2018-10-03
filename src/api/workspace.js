@@ -104,6 +104,20 @@ export function deleteFile(params) {
   return promise;
 }
 
+/**
+ * @param {{ path: string, name: string }} params
+ */
+export function downloadFile(params) {
+  const { promise, cancel } = callAPI({
+    url: 'api/v1/files',
+    method: 'GET',
+    responseType: 'blob',
+    params,
+  });
+  promise[CANCEL] = cancel;
+  return promise;
+}
+
 export function getStats() {
   const { promise, cancel } = callAPI({ url: 'api/v1/stat', method: 'GET' });
   const data = promise.then(response => response.data);

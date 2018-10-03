@@ -59,6 +59,15 @@ function* deleteFileTask(action) {
 }
 
 
+function* downloadFileTask(action) {
+  try {
+    yield call(workspace.downloadFile, action.payload);
+  } catch (error) {
+    // NOTE: Can't do anything about a failed download...
+  }
+}
+
+
 function* getStatsTask() {
   try {
     const stats = yield call(workspace.getStats);
@@ -76,5 +85,6 @@ export default function* projectsSaga() {
   yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);
   yield takeEvery(actions.FILE_UPLOAD, uploadFileTask);
   yield takeEvery(actions.FILE_DELETE, deleteFileTask);
+  yield takeEvery(actions.FILE_DOWNLOAD, downloadFileTask);
   yield takeLatest(actions.PROJECTS_STATS, getStatsTask);
 }
