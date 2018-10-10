@@ -79,8 +79,8 @@ class ContentRow extends React.PureComponent {
         <td>{lastMod}</td>
         <td>{size}</td>
         <td>
-          { item.content_type !== 'application/directory' && <Button color="info" size="sm" onClick={this.onDownload}><FontAwesomeIcon icon={faDownload} /></Button> }
-          <Button color="danger" size="sm" onClick={this.onDelete}><FontAwesomeIcon icon={faTrash} /></Button>
+          { item.content_type !== 'application/directory' && <Button color="info" size="sm" onClick={this.onDownload} title="Download"><FontAwesomeIcon icon={faDownload} /></Button> }
+          <Button color="danger" size="sm" onClick={this.onDelete} title="Delete"><FontAwesomeIcon icon={faTrash} /></Button>
         </td>
       </tr>
     );

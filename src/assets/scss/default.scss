@@ -14,6 +14,7 @@ $misc-border: #E2E2E2;
 $dull-header:#C6CBB9;
 $grey-box-bg: #EFEFEF;
 $grey-box-border: #CECECE;
+$info-color: #17a2b8;
 
 ::selection { background: rgba(red($primary-color), green($primary-color), blue($primary-color), 0.4); }
 
@@ -374,6 +375,14 @@ section#main {
 		    		&:hover {
 		    			background-color:$danger-color;
 		    			color:white;
+		    		};
+		    	}
+		    	&.btn-info {
+		    		color: $info-color;
+		    		background-color: transparent;
+		    		&:hover {
+		    			background-color: $info-color;
+		    			color: white;
 		    		};
 		    	}
 			    svg {
