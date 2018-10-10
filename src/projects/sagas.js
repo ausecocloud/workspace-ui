@@ -61,7 +61,14 @@ function* deleteFileTask(action) {
 
 function* downloadFileTask(action) {
   try {
-    yield call(workspace.downloadFile, action.payload);
+    // `data` contains the JSON response from the API
+    const { data } = yield call(workspace.downloadFile, action.payload);
+    
+    // Direct user to the resource to download it
+    //
+    // The resource location is contained in `tempurl` within the response data
+    // object
+    window.location.href = data.tempurl;
   } catch (error) {
     // NOTE: Can't do anything about a failed download...
   }

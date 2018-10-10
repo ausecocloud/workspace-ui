@@ -109,9 +109,9 @@ export function deleteFile(params) {
  */
 export function downloadFile(params) {
   const { promise, cancel } = callAPI({
-    url: 'api/v1/files',
+    url: 'api/v1/files/tempurl',
     method: 'GET',
-    responseType: 'blob',
+    responseType: 'json',
     params,
   });
   promise[CANCEL] = cancel;
