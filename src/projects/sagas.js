@@ -63,7 +63,7 @@ function* downloadFileTask(action) {
   try {
     // `data` contains the JSON response from the API
     const { data } = yield call(workspace.downloadFile, action.payload);
-    
+
     // Direct user to the resource to download it
     //
     // The resource location is contained in `tempurl` within the response data
