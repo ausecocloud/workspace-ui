@@ -82,7 +82,7 @@ export class Dashboard extends React.Component {
       feedCancellationSource,
     });
 
-    axios.get('https://www.ecocloud.org.au/category/notifications/feed/', {
+    axios.get('https://ecocloud.org.au/category/notifications/feed/', {
       cancelToken: feedCancellationSource.token,
     })
       .then(res => res.data)
@@ -149,7 +149,7 @@ export class Dashboard extends React.Component {
         <Row>
           <Col>
             <p>Welcome to your <em>ecocloud <strong>Platform</strong></em>. This is your Dashboard where you can access and manage your running services.</p>
-            <p>Need help? Visit our <a href="http://support.ecocloud.org.au/support/solutions" target="_blank" rel="noopener noreferrer">support site</a>, or <a href="https://ecocloud.org.au/contact/" target="_blank" rel="noopener noreferrer">contact our support team</a>.</p>
+            <p>Need help? Visit our <a href="https://support.ecocloud.org.au/support/solutions" target="_blank" rel="noopener noreferrer">support site</a>, or <a href="https://ecocloud.org.au/contact/" target="_blank" rel="noopener noreferrer">contact our support team</a>.</p>
           </Col>
         </Row>
         <Row>
@@ -185,10 +185,10 @@ export class Dashboard extends React.Component {
               <h2>Getting Started</h2>
               <div className="dash-activity">
                 <ul>
-                  <li><p>See our <a href="http://support.ecocloud.org.au/support/solutions/articles/6000200387-compute-overview" target="_blank" rel="noopener noreferrer">guide on using Tools</a></p></li>
-                  <li><p>See our <a href="http://support.ecocloud.org.au/support/solutions/articles/6000200390-using-rstudio" target="_blank" rel="noopener noreferrer">guide on using RStudio</a></p></li>
-                  <li><p>See our <a href="http://support.ecocloud.org.au/support/solutions/articles/6000200389-using-jupyter-notebooks" target="_blank" rel="noopener noreferrer">guide on Jupyter Notebooks</a></p></li>
-                  <li><p>See our <a href="http://support.ecocloud.org.au/support/solutions/articles/6000200678-code-snippets" target="_blank" rel="noopener noreferrer">guide on using Snippets for data</a></p></li>
+                  <li><p>See our <a href="https://support.ecocloud.org.au/support/solutions/articles/6000200387-compute-overview" target="_blank" rel="noopener noreferrer">guide on using Tools</a></p></li>
+                  <li><p>See our <a href="https://support.ecocloud.org.au/support/solutions/articles/6000200390-using-rstudio" target="_blank" rel="noopener noreferrer">guide on using RStudio</a></p></li>
+                  <li><p>See our <a href="https://support.ecocloud.org.au/support/solutions/articles/6000200389-using-jupyter-notebooks" target="_blank" rel="noopener noreferrer">guide on Jupyter Notebooks</a></p></li>
+                  <li><p>See our <a href="https://support.ecocloud.org.au/support/solutions/articles/6000200678-code-snippets" target="_blank" rel="noopener noreferrer">guide on using Snippets for data</a></p></li>
                 </ul>
               </div>
             </Row>
