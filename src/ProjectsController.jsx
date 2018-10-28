@@ -43,6 +43,9 @@ function mapDispatchToProps(dispatch) {
     onDeleteFile: (path, name) => {
       dispatch(actions.deleteFile({ path, name }));
     },
+    onDownloadFile: (path, name) => {
+      dispatch(actions.downloadFile({ path, name }));
+    },
     dispatch,
   };
 }
@@ -58,6 +61,7 @@ class ProjectsController extends React.Component {
     onDeleteFolder: PropTypes.func.isRequired,
     onAddFile: PropTypes.func.isRequired,
     onDeleteFile: PropTypes.func.isRequired,
+    onDownloadFile: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
   }
 
@@ -96,6 +100,15 @@ class ProjectsController extends React.Component {
     } else {
       this.props.onDeleteFile(path, item.name);
     }
+  }
+
+  onDownload = (path, item) => {
+    // Reject downloading directories
+    if (item.content_type === 'application/directory') {
+      return;
+    }
+
+    this.props.onDownloadFile(path, item.name);
   }
 
   addFolder = () => {
@@ -173,7 +186,7 @@ class ProjectsController extends React.Component {
               <Row>
                 <Col>
                   <ReduxBlockUi tag="div" block={actions.FILE_UPLOAD} unblock={[actions.FILE_UPLOAD_SUCCEEDED, actions.FILE_UPLOAD_FAILED]} className="loader">
-                    <Contents key="contents" contents={contents} path={path} onClick={onClick} onDelete={this.onDelete} />
+                    <Contents key="contents" contents={contents} path={path} onClick={onClick} onDelete={this.onDelete} onDownload={this.onDownload} />
                   </ReduxBlockUi>
                 </Col>
               </Row>

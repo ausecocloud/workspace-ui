@@ -59,6 +59,22 @@ function* deleteFileTask(action) {
 }
 
 
+function* downloadFileTask(action) {
+  try {
+    // `data` contains the JSON response from the API
+    const { data } = yield call(workspace.downloadFile, action.payload);
+
+    // Direct user to the resource to download it
+    //
+    // The resource location is contained in `tempurl` within the response data
+    // object
+    window.location.href = data.tempurl;
+  } catch (error) {
+    // NOTE: Can't do anything about a failed download...
+  }
+}
+
+
 function* getStatsTask() {
   try {
     const stats = yield call(workspace.getStats);
@@ -76,5 +92,6 @@ export default function* projectsSaga() {
   yield takeEvery(actions.FOLDER_DELETE, deleteFolderTask);
   yield takeEvery(actions.FILE_UPLOAD, uploadFileTask);
   yield takeEvery(actions.FILE_DELETE, deleteFileTask);
+  yield takeEvery(actions.FILE_DOWNLOAD, downloadFileTask);
   yield takeLatest(actions.PROJECTS_STATS, getStatsTask);
 }

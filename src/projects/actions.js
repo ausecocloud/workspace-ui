@@ -43,6 +43,10 @@ export const deleteFile = action(FILE_DELETE);
 export const deleteFileSucceeded = action(FILE_DELETE_SUCCEEDED);
 export const deleteFileFailed = action(FILE_DELETE_FAILED, true);
 
+export const FILE_DOWNLOAD = 'CONTENTS/FILE/DOWNLOAD';
+
+export const downloadFile = action(FILE_DOWNLOAD);
+
 export const PROJECTS_STATS = 'PROJECTS/STATS';
 export const PROJECTS_STATS_SUCCEEDED = 'PROJECTS/STATS/SUCCEEDED';
 export const PROJECTS_STATS_FAILED = 'PROJECTS/STATS/FAILED';
