@@ -87,6 +87,9 @@ export class Dashboard extends React.Component {
     })
       .then(res => res.data)
       .then((body) => {
+        // clear cancelToken
+        this.setState({ feedCancellationSource: null });
+
         const parser = new FeedMe(false);
         const feed = [];
         // register all event handlers before we push data into the parser
@@ -112,7 +115,8 @@ export class Dashboard extends React.Component {
         // trigger end event handler ....
         // could just do setState here as well
         parser.end();
-      });
+      })
+      .catch(error => console.error('Fetch feed failed ', error));
   }
 
   render() {
