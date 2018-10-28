@@ -1,16 +1,15 @@
 {
   "workspace": {
-    "url": "http://localhost:6543",
-    "client_id": "local"
+    "url": "http://localhost:6543"
   },
   "jupyterhub": {
-    "url": "http://localhost:8010",
-    "client_id": "jupyterhub"
+    "url": "http://localhost:8010"
   },
   "keycloak": {
-    "url": "https://auth.ecocloud.org.au/auth",
-    "realm": "test",
-    "clientId": "public"
+    "url": "http://localhost:8080/auth",
+    "realm": "local",
+    "clientId": "workspaceapp",
+    "scope": "openid jupyter/user workspace/user"
   },
   "googleAnalytics": {
     "tracking_id": "UA-119669022-1"

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { CANCEL } from 'redux-saga';
-import { getClientToken } from './keycloak';
+import { getKeycloak } from './keycloak';
 import { getConfig } from '../config';
 
 // TODO: think about keeping 'username' somewhere global or get it from state tree
@@ -15,20 +15,18 @@ export function getHubUrl() {
 
 function getToken(username) {
   // return jupytrehub API token....
-  return getClientToken(getConfig('jupyterhub').client_id)
-    .catch((error) => {
-      // oauth token refresh failed
-      throw error;
-    })
-    .then((accessToken) => {
+  const kc = getKeycloak();
+  return kc.updateToken()
+    .then(() => {
       const token = localStorage.getItem('jupyterhub_api_token');
       if (!token) {
+        // we need a new jupyterhub api token
         return axios({
           url: `hub/api/users/${username}/tokens`,
           baseURL: getHubUrl(),
           method: 'POST',
           data: {
-            auth: { token: accessToken },
+            auth: { token: kc.token },
             note: navigator.userAgent,
             // valid for one week
             expires_in: 604800,
@@ -43,6 +41,10 @@ function getToken(username) {
         });
       }
       return token;
+    })
+    .catch((error) => {
+      // console.log('Token refresh failed: ', error);
+      throw error;
     });
 }
 
@@ -54,7 +56,6 @@ function getClient(username) {
     });
     // add auth interceptor
     client.interceptors.request.use(
-      // Do something before request is sent
       config => getToken(username)
         .then((apiToken) => {
           const newConfig = config;
@@ -64,7 +65,7 @@ function getClient(username) {
           return newConfig;
         })
         .catch((error) => {
-          // console.log('Token refresh failed: ', error);
+          // console.log('Token mint failed: ', error);
           throw error;
         }),
       // Do something with request error
