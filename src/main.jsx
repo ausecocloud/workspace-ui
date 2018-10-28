@@ -86,7 +86,9 @@ const initGA = (config) => {
 loadConfig('/config.json')
   .then((config) => {
     initAuth(config.keycloak, store);
-    initGA(config.googleAnalytics);
+    if (config.googleAnalytics.tracking_id) {
+      initGA(config.googleAnalytics);
+    }
   })
   .then(() => load());
 // load();

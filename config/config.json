@@ -12,6 +12,6 @@
     "scope": "openid jupyter/user workspace/user"
   },
   "googleAnalytics": {
-    "tracking_id": "UA-119669022-1"
+    "tracking_id": null
   }
 }
