@@ -152,7 +152,9 @@ export class Dashboard extends React.Component {
         </Row>
         <Row>
           <Col>
-            <p>Welcome to your <em>ecocloud <strong>Platform</strong></em>. This is your Dashboard where you can access and manage your running services.</p>
+            <p>Welcome to your <em>ecocloud <strong>Platform</strong></em>.
+              This is your Dashboard where you can access and manage your running services.
+            </p>
             <p>Need help? Visit our <a href="https://support.ecocloud.org.au/support/solutions" target="_blank" rel="noopener noreferrer">support site</a>, or <a href="https://ecocloud.org.au/contact/" target="_blank" rel="noopener noreferrer">contact our support team</a>.</p>
           </Col>
         </Row>

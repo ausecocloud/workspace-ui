@@ -30,13 +30,18 @@ const ToolsController = () => {
       <Row>
         <Col>
           <h1>Tools</h1>
-          <p>Here you will find a suite of openly available tools that are commonly used in ecosciences.</p>
+          <p>Here you will find a suite of openly available tools
+             that are commonly used in ecosciences.
+          </p>
         </Col>
       </Row>
       <Row>
         <Col>
           <h2 className="tools-section-header">Interactive Coding Tools</h2>
-          <p><em>ecocloud</em> gives you access to servers with either R or Python. These environments run in your browser and connect to virtual machines in the Nectar cloud. Simply choose your preferred language and we’ll do the rest.</p>
+          <p><em>ecocloud</em> gives you access to servers with either R or Python.
+            These environments run in your browser and connect to virtual machines
+            in the Nectar cloud. Simply choose your preferred language and we’ll do the rest.
+          </p>
           <p>Read more about our servers <a href="https://support.ecocloud.org.au/support/solutions/articles/6000200389-using-jupyter-notebooks" target="_blank" rel="noopener noreferrer">here</a>.</p>
           <Row>
             <Col>
@@ -74,7 +79,9 @@ const ToolsController = () => {
                         <img className="card-logo" src={CoesraLogo} alt="COESRA Logo" /><a href="https://portal.coesra.org.au/strudel-web/" target="_blank" rel="noopener noreferrer">Virtual Desktop</a>
                       </CardTitle>
                       <CardText>
-                      This Virtual Desktop environment provides a CentOS Linux based virtual desktop environment with tools like QGIS, Kepler Scientific Workflow, KNIME, Panoply, OpenRefine and Biodiverse.
+                      This Virtual Desktop environment provides a CentOS Linux based
+                      virtual desktop environment with tools like QGIS, Kepler Scientific Workflow,
+                      KNIME, Panoply, OpenRefine and Biodiverse.
                       </CardText>
                     </Col>
                     <Col>
@@ -105,7 +112,10 @@ const ToolsController = () => {
       <Row>
         <Col>
           <h2 className="tools-section-header">Point-and-click tools</h2>
-          <p>This is a catalogue of popular tools used in ecosciences. These are external tools to the <em>ecocloud</em> Platform and the links will take you to the respective websites for each tool.</p>
+          <p>This is a catalogue of popular tools used in ecosciences.
+            These are external tools to the <em>ecocloud</em> Platform and the
+            links will take you to the respective websites for each tool.
+          </p>
           <p>Think there’s a tool missing? Let us know <a href="https://www.ecocloud.org.au/contact/" target="_blank" rel="noopener noreferrer" title="Link to contact the ecocloud team">here</a>.</p>
           <Row>
             <Col>

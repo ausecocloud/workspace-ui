@@ -270,7 +270,7 @@ export class ExplorerController extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Explorer: work in progress.');
+    console.warn('Explorer: work in progress.');
     this.loadPublishers();
     this.loadLicense();
   }
@@ -630,7 +630,13 @@ export class ExplorerController extends React.Component {
                     { this.renderPageButtons() }
                   </div>
                 </header>
-                <ResultsList data={this.state.results} license={this.state.license} addDistToSelection={this.addDistToSelection} deleteDistFromSelection={this.deleteDistFromSelection} selectedDistributions={this.props.selectedDistributions} />
+                <ResultsList
+                  data={this.state.results}
+                  license={this.state.license}
+                  addDistToSelection={this.addDistToSelection}
+                  deleteDistFromSelection={this.deleteDistFromSelection}
+                  selectedDistributions={this.props.selectedDistributions}
+                />
 
                 <footer>
                   <div className="pagination">

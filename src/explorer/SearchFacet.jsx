@@ -178,14 +178,14 @@ class SearchFacet extends React.Component {
           renderCollapseToggle
           && (
             <>
-              <a href="#" onClick={(e) => { e.preventDefault(); this.toggleCollapsed(); }}>
+              <button type="button" onClick={(e) => { e.preventDefault(); this.toggleCollapsed(); }}>
                 { this.state.collapsed ? 'More...' : 'Fewer...' }
-              </a>
+              </button>
               {' '}
             </>
           )
         }
-        <a href="#" onClick={this.handleResetClick}>Reset</a>
+        <button type="button" onClick={this.handleResetClick}>Reset</button>
       </div>
     );
   }

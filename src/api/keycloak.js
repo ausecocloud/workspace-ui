@@ -23,7 +23,7 @@ function loadTokens() {
     });
     return tokens;
   } catch (error) {
-    console.log("Can't load data from local storage", error);
+    console.error("Can't load data from local storage", error);
   }
   return {};
 }
@@ -39,7 +39,7 @@ function storeTokens(kc) {
       }
     });
   } catch (error) {
-    console.log("Can't persist data to local storage", error);
+    console.error("Can't persist data to local storage", error);
   }
 }
 
@@ -49,8 +49,8 @@ export function initAuth(config, store) {
   keycloak = Keycloak(config);
   // setup token refresh
   keycloak.onTokenExpired = () => keycloak.updateToken()
-    .then(refreshed => console.log('refresh on expire:', refreshed))
-    .catch(error => console.log('refresh on expire failed', error));
+    .then(refreshed => console.warn('refresh on expire:', refreshed))
+    .catch(error => console.error('refresh on expire failed', error));
 
   keycloak.onAuthSuccess = () => storeTokens(keycloak);
   keycloak.onAuthError = () => storeTokens(keycloak);
@@ -67,10 +67,10 @@ export function initAuth(config, store) {
   //        error here. (Exception is thrown async and passed to the browser).
   return keycloak.init({ onLoad: 'check-sso', ...tokens })
     .then(x => x && store.dispatch(actions.loginSucceeded(keycloak)))
-    .catch(e => console.log('E KC:', e));
+    .catch(e => console.error('E KC:', e));
 }
 
 
-export function updateUserAccount(_formData) {
+export function updateUserAccount() {
   keycloak.accountManagement();
 }

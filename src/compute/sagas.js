@@ -40,7 +40,7 @@ function* serversPollTask(action) {
       // Wait 10 secconds and start over
       yield call(delay, 10000);
     } catch (error) {
-      console.log('servers poll task failed. keep retrying', error);
+      console.error('servers poll task failed. keep retrying', error);
     }
   }
 }
@@ -56,7 +56,7 @@ function* serversWatchStopTask(action) {
       stop: take(actions.SERVERS_LIST_STOP),
     });
   } catch (error) {
-    console.log('servers watch stop task failed.', error);
+    console.error('servers watch stop task failed.', error);
   }
 }
 

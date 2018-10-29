@@ -15,10 +15,9 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons/faUpload';
 import { Contents, PathBar } from './projects';
 import * as actions from './projects/actions';
 import { getContents, getPath } from './reducers';
-import { jupyterhub } from './api';
 
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     contents: getContents(state),
     path: getPath(state),
@@ -76,17 +75,6 @@ class ProjectsController extends React.Component {
     // good place to trigger ajax data load
     // setState update will trigger render, but before browser updates => no flicker
     this.props.dispatch(actions.contentsPath({ path: '/' }));
-  }
-
-  componentDidUpdate(prevProps) {
-    // good place to trigger ajax, but should compare to props, to avoid
-    // unnecessary ajax calls
-    // const { project } = this.props;
-    // if (project && (project !== prevProps.project)) {
-    //   // project was not available on mount lifecycle, so we triffer loading contents
-    //   // during update lifecycle
-    //   this.props.dispatch(actions.contentsPath({ project: project.name, path: '/' }));
-    // }
   }
 
   onPath = (path) => {
@@ -167,8 +155,6 @@ class ProjectsController extends React.Component {
       addFolder, newFolder,
       addFile, newFile,
     } = this.state;
-
-    const huburl = jupyterhub.getHubUrl();
 
     return (
       <Container>

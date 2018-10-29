@@ -12,16 +12,6 @@ import * as actions from './actions';
 import { jupyterhub } from '../api';
 import { formatDate, formatTime } from '../utils';
 
-function mapStateToProps(state, ownProps) {
-  return {};
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
 /**
  * Renders a table cell for displaying the status of the server
  *
@@ -107,7 +97,12 @@ class ComputeTableBasic extends React.Component {
                 <>
                   <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>
                   {' '}
-                  <a className="btn btn-danger btn-sm" href="#" onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}>Terminate</a>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    type="button"
+                    onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}
+                  >Terminate
+                  </button>
                 </>
               )
             }
@@ -137,4 +132,5 @@ class ComputeTableBasic extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ComputeTableBasic);
+
+export default connect()(ComputeTableBasic);

@@ -127,22 +127,36 @@ export class SnippetItem extends React.Component {
     if (isCollapsed) {
       return (
         <li key={distId}>
-          <a className="selected-dataset" href="#" onClick={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}>
+          <span
+            className="selected-dataset"
+            role="button"
+            tabIndex="-1"
+            onClick={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}
+            onKeyPress={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}
+          >
             <FontAwesomeIcon className="arrow-icon" icon={faChevronRight} /> &nbsp;
             {dist.title}
-          </a>
+          </span>
         </li>
       );
     }
 
     return (
       <li key={distId}>
-        <a className="selected-dataset" href="#" onClick={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}>
+        <span
+          className="selected-dataset"
+          role="button"
+          tabIndex="-1"
+          onClick={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}
+          onKeyPress={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}
+        >
           <FontAwesomeIcon className="arrow-icon" icon={faChevronDown} /> &nbsp;
           {dist.title}
-        </a>
+        </span>
         <div className="float-right">
-          { /* <a className="btn btn-primary btn-sm"> Store in Workspace &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} /> </a> &nbsp; */ }
+          { /* <a className="btn btn-primary btn-sm">
+                 Store in Workspace &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} />
+               </a> &nbsp; */ }
           { url && (<a className="btn btn-primary btn-sm" href={url} target="_blank" rel="noopener noreferrer"> Download file <FontAwesomeIcon icon={faDownload} /></a>) }
         </div>
 
@@ -163,7 +177,7 @@ export class SnippetItem extends React.Component {
                   <div key={language}>
                     <div>
                       {language}
-                      <a href="#" className="float-right source" onClick={(e) => { selectElementText(snippetTextElementRef.current); copyTextToClipboard(snippetText); e.preventDefault(); }}> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></a>
+                      <button type="button" className="float-right source" onClick={(e) => { selectElementText(snippetTextElementRef.current); copyTextToClipboard(snippetText); e.preventDefault(); }}> Copy to Clipboard <FontAwesomeIcon icon={faCopy} /></button>
                     </div>
 
                     <div>
