@@ -116,7 +116,7 @@ const ToolsController = () => {
             These are external tools to the <em>ecocloud</em> Platform and the
             links will take you to the respective websites for each tool.
           </p>
-          <p>Think there’s a tool missing? Let us know <a href="https://www.ecocloud.org.au/contact/" target="_blank" rel="noopener noreferrer" title="Link to contact the ecocloud team">here</a>.</p>
+          <p>Think there’s a tool missing? Let us know <a href="https://ecocloud.org.au/contact/" target="_blank" rel="noopener noreferrer" title="Link to contact the ecocloud team">here</a>.</p>
           <Row>
             <Col>
               <ToolCard
