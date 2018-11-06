@@ -420,13 +420,17 @@ export class ExplorerController extends React.Component {
       }
 
       // Update state and trigger fetch once done
+      //
+      // Note that we should reset the page counter back so that we don't end up
+      // with changes in the facets causing users to be stranded on a page that
+      // is beyond the actual number of available pages
       switch (type) {
         case 'format':
-          this.setState({ selectedFormats: selectionSet }, () => this.getResults());
+          this.setState({ selectedFormats: selectionSet, page: 1 }, () => this.getResults());
           break;
 
         case 'publisher':
-          this.setState({ selectedPublishers: selectionSet }, () => this.getResults());
+          this.setState({ selectedPublishers: selectionSet, page: 1 }, () => this.getResults());
           break;
 
         default:
