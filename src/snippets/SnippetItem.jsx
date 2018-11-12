@@ -15,18 +15,20 @@ const snippetLanguages = ['Python', 'R', 'Bash', 'Web Access'];
  *
  * @param {string} language Target language to generate snippet for
  * @param {string} url URL of source data for snippet
+ * @param {string} filename Filename for downloaded file in snippet
  */
-function generateSnippetText(language, url) {
+function generateSnippetText(language, url, filename) {
   switch (language) {
     case 'Python':
       return `import urllib.request
 url = '${url.replace(/'/g, '\\\'')}'
-data = urllib.request.urlopen(url).read()`;
+filename = '${filename}'
+urllib.request.urlretrieve(url, filename)`;
 
     case 'R':
-      return `library(RCurl)
-url <- "${url.replace(/"/g, '\\"')}"
-data <- getURLContent(url)`;
+      return `url <- "${url.replace(/"/g, '\\"')}"
+filename <- "${filename}"
+download.file(url, destfile=filename)`;
 
     case 'Bash':
       return `curl -LO ${url}`;
@@ -37,6 +39,17 @@ data <- getURLContent(url)`;
     default:
       throw new Error(`Language "${language}" not supported`);
   }
+}
+
+/**
+ * Generates suggested filename for snippet
+ *
+ * @param {string} url URL of source data for snippet
+ */
+function generateSuggestedFilename(url) {
+  // Get the "filename" from the URL where possible, after removal of query
+  // string or anchor
+  return url.split(/[?#]/)[0].replace(/^.*[\\/]/, '');
 }
 
 /**
@@ -157,7 +170,7 @@ export class SnippetItem extends React.Component {
           { /* <a className="btn btn-primary btn-sm">
                  Store in Workspace &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} />
                </a> &nbsp; */ }
-          { url && (<a className="btn btn-primary btn-sm" href={url} target="_blank" rel="noopener noreferrer"> Download file <FontAwesomeIcon icon={faDownload} /></a>) }
+          {url && (<a className="btn btn-primary btn-sm" href={url} target="_blank" rel="noopener noreferrer"> Download file <FontAwesomeIcon icon={faDownload} /></a>)}
         </div>
 
         <div className="snippet-body">
@@ -170,8 +183,8 @@ export class SnippetItem extends React.Component {
                 // Creating a reference so that the actual <code> element may be
                 // referred to for copying text
                 const snippetTextElementRef = React.createRef();
-
-                const snippetText = generateSnippetText(language, url);
+                const filename = generateSuggestedFilename(url);
+                const snippetText = generateSnippetText(language, url, filename);
 
                 return (
                   <div key={language}>
