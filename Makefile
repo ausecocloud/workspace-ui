@@ -16,7 +16,7 @@
 
 PREFIX = hub.bccvl.org.au/ecocloud
 IMAGE = workspace-ui
-TAG = 0.5.1
+TAG = 0.5.2
 
 # prod commands
 
