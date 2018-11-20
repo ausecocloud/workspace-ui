@@ -17,7 +17,7 @@ import { formatDate, formatTime } from '../utils';
  *
  * @param {object} server Server status object
  */
-function renderStatusCell(server) {
+const StatusCell = ({ server }) => {
   // Termination is indicated by the value of the pending property
   if (server.pending === 'stop') {
     return (
@@ -42,18 +42,22 @@ function renderStatusCell(server) {
   return (
     <td><FontAwesomeIcon icon={faTimes} /> Terminating</td>
   );
-}
+};
+
+StatusCell.propTypes = {
+  server: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
 /**
  * Renders a nicer human readable value for the start date in a table cell
  *
  * @param {string} date Start date value as a string
  */
-function renderStartDateCell(date) {
-  return (
-    <td>{`${formatDate(date)} ${formatTime(date)}`}</td>
-  );
-}
+const StartDateCell = ({ date }) => (<td>{`${formatDate(date)} ${formatTime(date)}`}</td>);
+StartDateCell.propTypes = {
+  date: PropTypes.string.isRequired,
+};
+
 
 class ComputeTableBasic extends React.Component {
   static propTypes = {
@@ -88,8 +92,8 @@ class ComputeTableBasic extends React.Component {
       .map(server => (
         <tr key={server.name}>
           <td><a href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">{server.name || 'Server'}</a></td>
-          { renderStartDateCell(server.started) }
-          { renderStatusCell(server) }
+          <StartDateCell date={server.started} />
+          <StatusCell server={server} />
           <td className="right-align">
             {
               // Only render buttons if not in the process of spinning up or down
