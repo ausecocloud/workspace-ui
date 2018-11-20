@@ -108,3 +108,10 @@ export function terminateServer(username) {
   data[CANCEL] = cancel;
   return data;
 }
+
+export function getProfiles(username) {
+  const { promise, cancel } = callAPI({ url: 'services/ecocloud/profile_list' }, username);
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
+}

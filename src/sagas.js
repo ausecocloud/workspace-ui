@@ -2,6 +2,7 @@ import {
   call, put, takeEvery, fork,
 } from 'redux-saga/effects';
 import * as actions from './actions';
+import dashboardSaga from './dashboard/sagas';
 import projectsSaga from './projects/sagas';
 import computeSaga from './compute/sagas';
 import { getKeycloak, updateUserAccount } from './api';
@@ -68,6 +69,7 @@ export default function* rootSaga() {
   yield takeEvery(actions.LOGIN, loginTask);
   yield takeEvery(actions.LOGOUT, logoutTask);
   yield takeEvery(actions.AUTH_UPDATE, updateUserTask);
+  yield fork(dashboardSaga);
   yield fork(projectsSaga);
   yield fork(computeSaga);
 }
