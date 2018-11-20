@@ -59,6 +59,35 @@ StartDateCell.propTypes = {
 };
 
 
+const ServerRow = ({ server, huburl, terminateServer }) => (
+  <tr key={server.name}>
+    <td><a href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">{server.name || 'Server'}</a></td>
+    <StartDateCell date={server.started} />
+    <StatusCell server={server} />
+    <td className="right-align">
+      {
+        // Only render buttons if not in the process of spinning up or down
+        !server.pending && [
+          <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>,
+          ' ',
+          <button
+            className="btn btn-danger btn-sm"
+            type="button"
+            onClick={(e) => { e.preventDefault(); terminateServer(); }}
+          >Terminate
+          </button>,
+        ]
+      }
+    </td>
+  </tr>
+);
+ServerRow.propTypes = {
+  server: PropTypes.objectOf(PropTypes.any).isRequired,
+  huburl: PropTypes.string.isRequired,
+  terminateServer: PropTypes.func.isRequired,
+};
+
+
 class ComputeTableBasic extends React.Component {
   static propTypes = {
     servers: PropTypes.arrayOf(PropTypes.any).isRequired,
@@ -71,13 +100,14 @@ class ComputeTableBasic extends React.Component {
    *
    * @param {object} username User's username
    */
-  terminateServer(username) {
-    this.props.dispatch(actions.serverTerminate(username));
+  terminateServer = () => {
+    const { username, dispatch } = this.props;
+    dispatch(actions.serverTerminate(username));
   }
 
-  renderServers() {
+  renderServers = () => {
     const huburl = jupyterhub.getHubUrl();
-    const { username, servers } = this.props;
+    const { servers } = this.props;
 
     // If there are no servers, suggest to launch a notebook server
     if (servers.length === 0) {
@@ -88,31 +118,9 @@ class ComputeTableBasic extends React.Component {
       );
     }
 
-    return servers
-      .map(server => (
-        <tr key={server.name}>
-          <td><a href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">{server.name || 'Server'}</a></td>
-          <StartDateCell date={server.started} />
-          <StatusCell server={server} />
-          <td className="right-align">
-            {
-              // Only render buttons if not in the process of spinning up or down
-              !server.pending && (
-                <>
-                  <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>
-                  {' '}
-                  <button
-                    className="btn btn-danger btn-sm"
-                    type="button"
-                    onClick={(e) => { this.terminateServer(username); e.preventDefault(); }}
-                  >Terminate
-                  </button>
-                </>
-              )
-            }
-          </td>
-        </tr>
-      ));
+    return servers.map(server => (
+      <ServerRow server={server} huburl={huburl} terminateServer={this.terminateServer} />
+    ));
   }
 
   render() {
