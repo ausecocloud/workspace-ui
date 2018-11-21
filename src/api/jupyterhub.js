@@ -102,6 +102,16 @@ export function getUser(username) {
   return data;
 }
 
+export function launchServer({ username, profile }) {
+  const serverData = {
+    profile,
+  };
+  const { promise, cancel } = callAPI({ url: `hub/api/users/${username}/server`, method: 'POST', data: serverData }, username);
+  const data = promise.then(response => response.data);
+  data[CANCEL] = cancel;
+  return data;
+}
+
 export function terminateServer(username) {
   const { promise, cancel } = callAPI({ url: `hub/api/users/${username}/server`, method: 'DELETE' }, username);
   const data = promise.then(response => response.data);

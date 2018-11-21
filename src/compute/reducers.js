@@ -12,11 +12,26 @@ function servers(state = [], action) {
       return state;
   }
 }
+
+function profiles(state = [], action) {
+  switch (action.type) {
+    case actions.PROFILES_SUCCEEDED:
+      return action.payload;
+    case actions.PROFILES_FAILED:
+      return [];
+    default:
+      return state;
+  }
+}
+
+
 // export reducer as default ot be combined at unknown key at root level
 export default combineReducers({
   servers,
+  profiles,
 });
 
 // define selectors here as well, these should match the structure in
 // combined reducer.
 export const getServers = state => state.servers;
+export const getProfiles = state => state.profiles;

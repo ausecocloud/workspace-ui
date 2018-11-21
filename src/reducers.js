@@ -50,6 +50,8 @@ export const getUser = state => state.auth && state.auth.idTokenParsed;
 
 export const getAuthenticated = state => state.auth && state.auth.authenticated;
 
+export const getProfiles = state => compute.getProfiles(state.compute);
+
 export const getServers = state => compute.getServers(state.compute);
 
 export const getSelectedDistributions = state => snippets.getSelectedDistributions(state.snippets);

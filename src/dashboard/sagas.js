@@ -1,14 +1,13 @@
 import axios from 'axios';
 import { CANCEL } from 'redux-saga';
 import { put, takeLatest } from 'redux-saga/effects';
-
 import * as actions from './actions';
 import { formatDate } from '../utils';
 
 const FeedMe = require('feedme');
 
 
-function* fetchFeedTask(action) {
+function* fetchFeedTask() {
   try {
     const cancel = axios.CancelToken.source();
     const promise = axios.get('https://ecocloud.org.au/category/notifications/feed/', {
@@ -53,7 +52,6 @@ function* fetchFeedTask(action) {
     yield put(actions.feedFailed(error));
   }
 }
-
 
 export default function* dashboardSaga() {
   // start yourself

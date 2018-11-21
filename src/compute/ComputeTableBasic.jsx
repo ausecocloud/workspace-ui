@@ -7,8 +7,8 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 import { faEraser } from '@fortawesome/free-solid-svg-icons/faEraser';
-import { faServer } from '@fortawesome/free-solid-svg-icons/faServer';
 import * as actions from './actions';
+import LaunchServer from './LaunchServer';
 import { jupyterhub } from '../api';
 import { formatDate, formatTime } from '../utils';
 
@@ -89,21 +89,17 @@ ServerRow.propTypes = {
 };
 
 
-const LaunchServer = ({ huburl }) => (
-  <tr>
-    <td colSpan="4" className="text-center"><a className="btn btn-secondary btn-sm" href={`${huburl}/hub/home`} target="_blank" title="Launch notebook server" rel="noopener noreferrer"><FontAwesomeIcon icon={faServer} /> Launch notebook server</a></td>
-  </tr>
-);
-LaunchServer.propTypes = {
-  huburl: PropTypes.string.isRequired,
-};
-
-
 class ComputeTableBasic extends React.Component {
   static propTypes = {
     servers: PropTypes.arrayOf(PropTypes.any).isRequired,
     username: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
+  }
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+    // fetch profiles
+    dispatch(actions.profilesFetch());
   }
 
   /**
@@ -118,7 +114,7 @@ class ComputeTableBasic extends React.Component {
 
   render() {
     const huburl = jupyterhub.getHubUrl();
-    const { servers } = this.props;
+    const { username, servers } = this.props;
 
     return (
       <div>
@@ -132,7 +128,7 @@ class ComputeTableBasic extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { servers.length === 0 && <LaunchServer huburl={huburl} />}
+            { servers.length === 0 && <LaunchServer huburl={huburl} username={username} />}
             { servers.length >= 0 && servers.map(server => <ServerRow key={server.name} server={server} huburl={huburl} terminateServer={this.terminateServer} />) }
           </tbody>
         </Table>

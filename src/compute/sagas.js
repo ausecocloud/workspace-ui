@@ -6,6 +6,15 @@ import { jupyterhub } from '../api';
 import * as actions from './actions';
 
 
+function* fetchProfilesTask() {
+  try {
+    const profiles = yield call(jupyterhub.getProfiles);
+    yield put(actions.profilesSucceeded(profiles.profile_list));
+  } catch (error) {
+    yield put(actions.profilesFailed(error));
+  }
+}
+
 // fetch list of users servers
 // this could have been moved into serversPollTask, but having it separate
 // makes it reusable with the repeating poll
@@ -60,6 +69,18 @@ function* serversWatchStopTask(action) {
   }
 }
 
+function* serverLaunchTask(action) {
+  try {
+    yield call(jupyterhub.launchServer, action.payload);
+    yield put(actions.serverLaunchSucceeded());
+  } catch (error) {
+    yield put(actions.serverLaunchFailed(error));
+  } finally {
+    // Immediately update server status again
+    yield put(actions.serversList(action.payload.username));
+  }
+}
+
 /**
  * Task for terminating a given user's JupyterHub server
  *
@@ -78,9 +99,11 @@ function* serverTerminateTask(action) {
 }
 
 export default function* computeSaga() {
+  yield takeLatest(actions.PROFILES_FETCH, fetchProfilesTask);
   // start yourself
   yield takeLatest(actions.SERVERS_LIST, serversTask);
   // kick off servers list task, on restart it will cancel already running tasks
   yield takeLatest(actions.SERVERS_LIST_START, serversWatchStopTask);
+  yield takeLatest(actions.SERVER_LAUNCH, serverLaunchTask);
   yield takeEvery(actions.SERVER_TERMINATE, serverTerminateTask);
 }
