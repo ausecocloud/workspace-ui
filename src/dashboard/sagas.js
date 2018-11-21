@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { CANCEL } from 'redux-saga';
-import { put, takeLatest } from 'redux-saga/effects';
+import { cancelled, put, takeLatest } from 'redux-saga/effects';
 import * as actions from './actions';
 import { formatDate } from '../utils';
 
@@ -50,6 +50,10 @@ function* fetchFeedTask() {
     yield put(actions.feedSucceeded(feed));
   } catch (error) {
     yield put(actions.feedFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.feedFailed('fetchFeedTask cancelled'));
+    }
   }
 }
 

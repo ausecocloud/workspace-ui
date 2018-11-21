@@ -1,5 +1,5 @@
 import {
-  call, put, takeEvery, takeLatest,
+  call, cancelled, put, takeEvery, takeLatest,
 } from 'redux-saga/effects';
 import { workspace } from '../api';
 import * as actions from './actions';
@@ -11,6 +11,10 @@ function* contentsTask(action) {
     yield put(actions.contentsSucceeded(contents));
   } catch (error) {
     yield put(actions.contentsFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.contentsFailed('contentsTask cancelled'));
+    }
   }
 }
 
@@ -21,6 +25,10 @@ function* addFolderTask(action) {
     yield put(actions.contentsPath(action.payload));
   } catch (error) {
     yield put(actions.addFolderFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.addFolderFailed('addFolderTask cancelled'));
+    }
   }
 }
 
@@ -33,6 +41,10 @@ function* deleteFolderTask(action) {
     yield put(actions.contentsPath({ ...action.payload, path: newPath }));
   } catch (error) {
     yield put(actions.deleteFolderFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.deleteFolderFailed('deleteFolderTask cancelled'));
+    }
   }
 }
 
@@ -45,6 +57,10 @@ function* uploadFileTask(action) {
     yield put(actions.uploadFileSucceeded());
   } catch (error) {
     yield put(actions.uploadFileFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.uploadFileFailed('uploadFileTask cancelled'));
+    }
   }
 }
 
@@ -55,6 +71,10 @@ function* deleteFileTask(action) {
     yield put(actions.contentsPath(action.payload));
   } catch (error) {
     yield put(actions.deleteFileFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.deleteFileFailed('deleteFileTask cancelled'));
+    }
   }
 }
 
@@ -81,6 +101,10 @@ function* getStatsTask() {
     yield put(actions.getStatsSucceeded(stats));
   } catch (error) {
     yield put(actions.getStatsFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.getStatsFailed('getStatsTask cancelled'));
+    }
   }
 }
 

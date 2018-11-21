@@ -1,6 +1,6 @@
 import { delay } from 'redux-saga';
 import {
-  call, put, race, take, takeLatest, takeEvery,
+  call, cancelled, put, race, take, takeLatest,
 } from 'redux-saga/effects';
 import { jupyterhub } from '../api';
 import * as actions from './actions';
@@ -12,6 +12,10 @@ function* fetchProfilesTask() {
     yield put(actions.profilesSucceeded(profiles.profile_list));
   } catch (error) {
     yield put(actions.profilesFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.profilesFailed('fetchProfilesTask cancelled'));
+    }
   }
 }
 
@@ -31,6 +35,10 @@ function* serversTask(action) {
     yield put(actions.serversSucceeded(servers));
   } catch (error) {
     yield put(actions.serversFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.serversFailed('serversTask cancelled'));
+    }
   }
 }
 
@@ -77,7 +85,10 @@ function* serverLaunchTask(action) {
     yield put(actions.serverLaunchFailed(error));
   } finally {
     // Immediately update server status again
-    yield put(actions.serversList(action.payload.username));
+    yield put(actions.serversList(action.payload.username, { launch: true }));
+    if (yield cancelled()) {
+      yield put(actions.serverLaunchFailed('serverLaunchTask cancelled'));
+    }
   }
 }
 
@@ -95,6 +106,9 @@ function* serverTerminateTask(action) {
   } finally {
     // Immediately update server status again
     yield put(actions.serversList(action.payload));
+    if (yield cancelled()) {
+      yield put(actions.serverTerminateFailed('serverTerminateTaks cancelled'));
+    }
   }
 }
 
