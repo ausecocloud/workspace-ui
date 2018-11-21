@@ -46,14 +46,10 @@ function* serversPollTask(action) {
   while (true) {
     try {
       // Trigger a new fetch of the server list
-      yield put(actions.serversList(action.payload));
-
-      // Wait for response
-      yield take([
-        actions.SERVERS_LIST_SUCCEEDED,
-        actions.SERVERS_LIST_FAILED,
-      ]);
-
+      yield put(actions.serversList(action.payload, { poll: true }));
+      // TODO: if serversListSucceeded takes longer than 10 seconds, then we'll
+      //       never see a list result, because this task will trigger a new
+      //       serversList and cancels the previous one.
       // Wait 10 secconds and start over
       yield call(delay, 10000);
     } catch (error) {
