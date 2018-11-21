@@ -100,6 +100,17 @@ export class Dashboard extends React.Component {
       feedDisplay = ['No new notifications.'];
     }
 
+    const blockServers = [
+      computeActions.SERVERS_LIST,
+      computeActions.SERVER_LAUNCH,
+      computeActions.SERVER_TERMINATE,
+    ];
+    const unblockServers = [
+      computeActions.SERVERS_LIST_SUCCEEDED, computeActions.SERVERS_LIST_FAILED,
+      computeActions.SERVER_LAUNCH_SUCCEEDED, computeActions.SERVER_LAUNCH_FAILED,
+      computeActions.SERVER_TERMINATE_SUCCEEDED, computeActions.SERVER_TERMINATE_FAILED,
+    ];
+
     return (
       <Container className="dashboard">
         <Row>
@@ -122,7 +133,7 @@ export class Dashboard extends React.Component {
             <Row>
               <Col sm="12">
                 <h2>Servers</h2>
-                <ReduxBlockUi tag="div" block={[computeActions.SERVERS_LIST, computeActions.SERVER_TERMINATE]} unblock={[computeActions.SERVERS_LIST_SUCCEEDED, computeActions.SERVERS_LIST_FAILED, computeActions.SERVER_TERMINATE_SUCCEEDED, computeActions.SERVER_TERMINATE_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
+                <ReduxBlockUi tag="div" block={blockServers} unblock={unblockServers} loader={<Loader active type="ball-pulse" />} className="loader">
                   <ComputeTableBasic servers={servers} username={user.sub} />
                 </ReduxBlockUi>
               </Col>
