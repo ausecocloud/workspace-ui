@@ -7,8 +7,8 @@ import { applyMiddleware, createStore, combineReducers } from 'redux';
 import blockUiMiddleware from 'react-block-ui/reduxMiddleware';
 import createHistory from 'history/createBrowserHistory';
 import {
-  ConnectedRouter, routerReducer, routerMiddleware, LOCATION_CHANGE,
-} from 'react-router-redux';
+  ConnectedRouter, connectRouter, routerMiddleware, LOCATION_CHANGE,
+} from 'connected-react-router';
 import { createMiddleware } from 'redux-beacon';
 import GoogleAnalytics, { trackPageView } from '@redux-beacon/google-analytics';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
@@ -43,7 +43,7 @@ const middleware = [
 const store = createStore(
   combineReducers({
     ...reducers,
-    router: routerReducer,
+    router: connectRouter(history),
   }),
   composeWithDevTools(applyMiddleware(...middleware)),
 );

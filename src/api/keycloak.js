@@ -65,7 +65,7 @@ export function initAuth(config, store) {
   //        unser some circumstance, keycloak.ini may fail in a way
   //        (e.g. no '.' in JWT trefresh oken), so that we can't detect an
   //        error here. (Exception is thrown async and passed to the browser).
-  return keycloak.init({ onLoad: 'check-sso', ...tokens })
+  return keycloak.init({ onLoad: 'check-sso', promiseType: 'native', ...tokens })
     .then(x => x && store.dispatch(actions.loginSucceeded(keycloak)))
     .catch(e => console.error('E KC:', e));
 }
