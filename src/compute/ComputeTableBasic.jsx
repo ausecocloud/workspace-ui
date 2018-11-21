@@ -68,9 +68,10 @@ const ServerRow = ({ server, huburl, terminateServer }) => (
       {
         // Only render buttons if not in the process of spinning up or down
         !server.pending && [
-          <a className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>,
+          <a key="0" className="btn btn-primary btn-sm" href={`${huburl}${server.url}`} target="_blank" rel="noopener noreferrer">Open</a>,
           ' ',
           <button
+            key="1"
             className="btn btn-danger btn-sm"
             type="button"
             onClick={(e) => { e.preventDefault(); terminateServer(); }}
@@ -85,6 +86,16 @@ ServerRow.propTypes = {
   server: PropTypes.objectOf(PropTypes.any).isRequired,
   huburl: PropTypes.string.isRequired,
   terminateServer: PropTypes.func.isRequired,
+};
+
+
+const LaunchServer = ({ huburl }) => (
+  <tr>
+    <td colSpan="4" className="text-center"><a className="btn btn-secondary btn-sm" href={`${huburl}/hub/home`} target="_blank" title="Launch notebook server" rel="noopener noreferrer"><FontAwesomeIcon icon={faServer} /> Launch notebook server</a></td>
+  </tr>
+);
+LaunchServer.propTypes = {
+  huburl: PropTypes.string.isRequired,
 };
 
 
@@ -105,25 +116,10 @@ class ComputeTableBasic extends React.Component {
     dispatch(actions.serverTerminate(username));
   }
 
-  renderServers = () => {
+  render() {
     const huburl = jupyterhub.getHubUrl();
     const { servers } = this.props;
 
-    // If there are no servers, suggest to launch a notebook server
-    if (servers.length === 0) {
-      return (
-        <tr>
-          <td colSpan="4" className="text-center"><a className="btn btn-secondary btn-sm" href={`${huburl}/hub/home`} target="_blank" title="Launch notebook server" rel="noopener noreferrer"><FontAwesomeIcon icon={faServer} /> Launch notebook server</a></td>
-        </tr>
-      );
-    }
-
-    return servers.map(server => (
-      <ServerRow server={server} huburl={huburl} terminateServer={this.terminateServer} />
-    ));
-  }
-
-  render() {
     return (
       <div>
         <Table className="green-table">
@@ -136,7 +132,8 @@ class ComputeTableBasic extends React.Component {
             </tr>
           </thead>
           <tbody>
-            { this.renderServers() }
+            { servers.length === 0 && <LaunchServer huburl={huburl} />}
+            { servers.length >= 0 && servers.map(server => <ServerRow key={server.name} server={server} huburl={huburl} terminateServer={this.terminateServer} />) }
           </tbody>
         </Table>
       </div>
