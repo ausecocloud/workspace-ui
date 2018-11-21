@@ -115,5 +115,5 @@ export default function* computeSaga() {
   // kick off servers list task, on restart it will cancel already running tasks
   yield takeLatest(actions.SERVERS_LIST_START, serversWatchStopTask);
   yield takeLatest(actions.SERVER_LAUNCH, serverLaunchTask);
-  yield takeEvery(actions.SERVER_TERMINATE, serverTerminateTask);
+  yield takeLatest(actions.SERVER_TERMINATE, serverTerminateTask);
 }
