@@ -27,7 +27,7 @@ export const SERVER_LAUNCH_FAILED = 'SERVER/LAUNCH/FAILED';
 
 export const serverLaunch = action(SERVER_LAUNCH);
 export const serverLaunchSucceeded = action(SERVER_LAUNCH_SUCCEEDED);
-export const serverLaunchFailed = action(SERVER_LAUNCH_FAILED);
+export const serverLaunchFailed = action(SERVER_LAUNCH_FAILED, true);
 
 export const SERVER_TERMINATE = 'SERVER/TERMINATE';
 export const SERVER_TERMINATE_SUCCEEDED = 'SERVER/TERMINATE/SUCCEEDED';

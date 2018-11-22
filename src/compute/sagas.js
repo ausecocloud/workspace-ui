@@ -81,7 +81,7 @@ function* serverLaunchTask(action) {
     yield put(actions.serverLaunchFailed(error));
   } finally {
     // Immediately update server status again
-    yield put(actions.serversList(action.payload.username, { launch: true }));
+    yield put(actions.serversList(action.payload.username));
     if (yield cancelled()) {
       yield put(actions.serverLaunchFailed('serverLaunchTask cancelled'));
     }
@@ -107,6 +107,7 @@ function* serverTerminateTask(action) {
     }
   }
 }
+
 
 export default function* computeSaga() {
   yield takeLatest(actions.PROFILES_FETCH, fetchProfilesTask);
