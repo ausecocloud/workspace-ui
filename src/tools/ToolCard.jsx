@@ -10,7 +10,7 @@ import {
 class ToolCard extends React.PureComponent {
   static propTypes = {
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
     url: PropTypes.string.isRequired,
     imageSource: PropTypes.string,
     imageAltText: PropTypes.string,
@@ -18,6 +18,7 @@ class ToolCard extends React.PureComponent {
   }
 
   static defaultProps = {
+    description: undefined,
     imageSource: undefined,
     imageAltText: '',
     openInNewWindow: true,
@@ -38,9 +39,11 @@ class ToolCard extends React.PureComponent {
             {this.props.imageSource && <img className="card-logo" src={this.props.imageSource} alt={this.props.imageAltText} />}
             <a href={this.props.url} {...linkProps}>{this.props.title}</a>
           </CardTitle>
-          <CardText>
-            {this.props.description}
-          </CardText>
+          {this.props.description && (
+            <CardText>
+              {this.props.description}
+            </CardText>
+          )}
         </CardBody>
       </Card>
     );

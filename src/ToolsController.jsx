@@ -44,6 +44,7 @@ const ToolsController = () => {
                 <ul>
                   <li><a href="#interactive-coding-tools">Interactive Coding Tools</a></li>
                   <li><a href="#virtual-desktop">Virtual Desktop</a></li>
+                  <li><a href="#microservices">Microservices</a></li>
                   <li><a href="#point-and-click-tools">Point-and-click Tools</a></li>
                 </ul>
               </CardBody>
@@ -122,6 +123,27 @@ const ToolsController = () => {
                       </Row>
                     </CardBody>
                   </Card>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <h2 id="microservices" className="tools-section-header">Microservices</h2>
+              <Row>
+                <Col>
+                  <ToolCard
+                    title="Get daily weather values"
+                    url="#"
+                    imageSource={PythonLogo}
+                  />
+                </Col>
+                <Col>
+                  <ToolCard
+                    title="Clip data to geographic region"
+                    url="#"
+                    imageSource={PythonLogo}
+                  />
                 </Col>
               </Row>
             </Col>
