@@ -14,6 +14,8 @@ const rules = {
   // TODO: enable this rule again
   'react-redux/prefer-separate-component-file': 'off',
   'react/no-array-index-key': 'warn',
+  // TODO: allowed in react 16 (airbnb style update pending)
+  'react/no-did-update-set-state': 'off',
 }
 
 if (process.env.NODE_ENV === 'development' || process.NODE_ENV === undefined) {
