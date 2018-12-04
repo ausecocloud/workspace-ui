@@ -99,7 +99,6 @@ class ComputeTableBasic extends React.Component {
   componentWillMount() {
     const { dispatch } = this.props;
     // fetch profiles
-    dispatch(actions.profilesFetch());
   }
 
   /**
@@ -129,7 +128,14 @@ class ComputeTableBasic extends React.Component {
           </thead>
           <tbody>
             { servers.length === 0 && <LaunchServer huburl={huburl} username={username} />}
-            { servers.length >= 0 && servers.map(server => <ServerRow key={server.name} server={server} huburl={huburl} terminateServer={this.terminateServer} />) }
+            { servers.length >= 0 && servers.map(server => (
+              <ServerRow
+                key={server.name}
+                server={server}
+                huburl={huburl}
+                terminateServer={this.terminateServer}
+              />))
+            }
           </tbody>
         </Table>
       </div>
