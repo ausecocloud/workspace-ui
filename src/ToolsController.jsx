@@ -5,17 +5,12 @@ import {
   Row,
   Card,
   CardBody,
-  CardTitle,
 } from 'reactstrap';
 import Rlogo from './assets/images/Rlogo.svg';
 import PythonLogo from './assets/images/PythonLogo.png';
 import CoesraLogo from './assets/images/CoesraLogo.png';
 import ALALogo from './assets/images/ALAlogo.jpg';
 import BCCVLLogo from './assets/images/BCCVLlogo.png';
-import QGisLogo from './assets/images/QGisLogo.png';
-import PanoplyLogo from './assets/images/PanoplyLogo.png';
-import BiodiverseLogo from './assets/images/BiodiverseLogo.png';
-import KeplerLogo from './assets/images/KeplerLogo.png';
 import MCASSLogo from './assets/images/MCASSlogo.jpg';
 import AURINLogo from './assets/images/AURINlogo.png';
 import { jupyterhub } from './api';
@@ -57,7 +52,7 @@ const ToolsController = () => {
               <p>
                 <em>ecocloud</em> gives you access to servers with either R or Python.
                 These environments run in your browser and connect to virtual machines
-                in the Nectar cloud. Simply choose your preferred language and we’ll do the rest.
+                in the Nectar cloud.
               </p>
               <p>Read more about our servers <a href="https://support.ecocloud.org.au/support/solutions/articles/6000200389-using-jupyter-notebooks" target="_blank" rel="noopener noreferrer">here</a>.</p>
               <Row>

@@ -43,10 +43,12 @@ class ToolCard extends React.PureComponent {
     return (
       <Card className="tool-card">
         <CardBody>
-          <CardTitle>
+          <a href={this.props.url} {...linkProps}>
             {this.props.imageSource && <img className="card-logo" src={this.props.imageSource} alt={this.props.imageAltText} />}
-            <a href={this.props.url} {...linkProps}>{this.props.title}</a>
-          </CardTitle>
+            <CardTitle>
+              {this.props.title}
+            </CardTitle>
+          </a>
           {this.props.description && (
             <CardText>
               {this.props.description}
