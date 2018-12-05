@@ -766,6 +766,29 @@ section#main {
         }
     }
 
+    .tool-accordion {
+        & + .tool-accordion {
+            margin-top: 0.3em;
+        }
+
+        img.card-logo {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .title-link {
+            display: block;
+        }
+
+        .slot-wrapper {
+            margin-top: 0.7em;
+        }
+
+        .card-title {
+            margin: 0;
+        }
+    }
+
     .tools-section-header {
         margin: 0;
         padding: 1em 0 0.5em 0;
