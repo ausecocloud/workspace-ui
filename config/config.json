@@ -5,6 +5,9 @@
   "jupyterhub": {
     "url": "http://localhost:8010"
   },
+  "tokens": {
+    "url": "http://localhost:6544"
+  },
   "keycloak": {
     "url": "http://localhost:8080/auth",
     "realm": "local",

@@ -2,7 +2,7 @@ import { delay } from 'redux-saga';
 import {
   call, cancelled, put, race, take, takeLatest,
 } from 'redux-saga/effects';
-import { jupyterhub } from '../api';
+import { jupyterhub, tokens } from '../api';
 import * as actions from './actions';
 
 
@@ -15,6 +15,19 @@ function* fetchProfilesTask() {
   } finally {
     if (yield cancelled()) {
       yield put(actions.profilesFailed('fetchProfilesTask cancelled'));
+    }
+  }
+}
+
+function* fetchAuthorizationsTask() {
+  try {
+    const authorizations = yield call(tokens.authorizations);
+    yield put(actions.tokensAuthorizationsSucceeded(authorizations));
+  } catch (error) {
+    yield put(actions.tokensAuthorizationsFailed(error));
+  } finally {
+    if (yield cancelled()) {
+      yield put(actions.tokensAuthorizationsFailed('fetchAuthorizationsTask cancelled'));
     }
   }
 }
@@ -111,6 +124,7 @@ function* serverTerminateTask(action) {
 
 export default function* computeSaga() {
   yield takeLatest(actions.PROFILES_FETCH, fetchProfilesTask);
+  yield takeLatest(actions.TOKENS_AUTHORIZATIONS, fetchAuthorizationsTask);
   // start yourself
   yield takeLatest(actions.SERVERS_LIST, serversTask);
   // kick off servers list task, on restart it will cancel already running tasks

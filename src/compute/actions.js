@@ -36,3 +36,11 @@ export const SERVER_TERMINATE_FAILED = 'SERVER/TERMINATE/FAILED';
 export const serverTerminate = action(SERVER_TERMINATE);
 export const serverTerminateSucceeded = action(SERVER_TERMINATE_SUCCEEDED);
 export const serverTerminateFailed = action(SERVER_TERMINATE_FAILED);
+
+export const TOKENS_AUTHORIZATIONS = 'TOKENS/AUTHORIZATIONS';
+export const TOKENS_AUTHORIZATIONS_SUCCEEDED = 'TOKENS/AUTHORIZATIONS/SUCCEEDED';
+export const TOKENS_AUTHORIZATIONS_FAILED = 'TOKENS/AUTHORIZATIONS/FAILED';
+
+export const tokensAuthorizations = action(TOKENS_AUTHORIZATIONS);
+export const tokensAuthorizationsSucceeded = action(TOKENS_AUTHORIZATIONS_SUCCEEDED);
+export const tokensAuthorizationsFailed = action(TOKENS_AUTHORIZATIONS_FAILED);

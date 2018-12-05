@@ -54,4 +54,6 @@ export const getProfiles = state => compute.getProfiles(state.compute);
 
 export const getServers = state => compute.getServers(state.compute);
 
+export const getAuthorizations = state => compute.getAuthorizations(state.compute);
+
 export const getSelectedDistributions = state => snippets.getSelectedDistributions(state.snippets);
