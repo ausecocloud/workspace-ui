@@ -14,6 +14,7 @@ import ALALogo from './assets/images/ALAlogo.jpg';
 import BCCVLLogo from './assets/images/BCCVLlogo.png';
 import MCASSLogo from './assets/images/MCASSlogo.jpg';
 import AURINLogo from './assets/images/AURINlogo.png';
+import CloudNetworkProcessIcon from './assets/images/iconfinder_13-Cloud_Network-Process_2672701.svg';
 import { jupyterhub } from './api';
 import ToolCard from './tools/ToolCard';
 import ToolAccordion from './tools/ToolAccordion';
@@ -101,17 +102,22 @@ const ToolsController = () => {
                 <Col>
                   <ToolAccordion
                     title="Get daily weather values"
-                    imageSource={PythonLogo}
+                    imageSource={CloudNetworkProcessIcon}
                   >
                     <h5>Name</h5>
                     <p><code>anuclim_daily_extract</code></p>
                     <h5>Description</h5>
-                    <p>Extracts selected environmental variables at a specific location and time (from a given CSV file) from ANUClimate daily climate grids.</p>
+                    <p>
+                      Extracts selected environmental variables at a specific location and time
+                      (from a given CSV file) from ANUClimate daily climate grids.
+                    </p>
                     <Row>
                       <Col md={6}>
                         <h5>Inputs</h5>
                         <ul>
-                          <li><b>variables</b>: A set containing any combination of the following environmental variables for extraction:
+                          <li>
+                            <b>variables</b>: A set containing any combination of the following
+                            environmental variables for extraction:
                             <ul>
                               <li><code>rainfall</code></li>
                               <li><code>temp_max</code></li>
@@ -133,15 +139,21 @@ const ToolsController = () => {
                     <h5>Try it</h5>
                     <p>You can try this WPS process with <em>ecocloud Compute</em>:</p>
                     <ol>
-                      <li>Launch and open a SciPy notebook server from the <Link to="/"><em>ecocloud Dashboard</em></Link></li>
-                      <li>View the &quot;ausecocloud/training&quot; GitHub repository in the left sidebar</li>
+                      <li>
+                        Launch and open a SciPy notebook server from the
+                        <Link to="/"><em>ecocloud Dashboard</em></Link>
+                      </li>
+                      <li>
+                        View the &quot;ausecocloud/training&quot; GitHub repository in the
+                        left sidebar
+                      </li>
                       <li>Open &quot;examples&quot; directory</li>
                       <li>Open the &quot;WPS_anuclim_daily_extract.ipynb&quot; notebook</li>
                     </ol>
                   </ToolAccordion>
                   <ToolAccordion
                     title="Clip data to geographic region"
-                    imageSource={PythonLogo}
+                    imageSource={CloudNetworkProcessIcon}
                   >
                     <h5>Name</h5>
                     <ul>
@@ -158,24 +170,42 @@ const ToolsController = () => {
                         <h5>Inputs</h5>
                         <ul>
                           <li><b>datafile</b>: The data file (NetCDF or GeoTIFF)</li>
-                          <li><b>shapefile</b>: ZIP file containing the ESRI Shapefile representing the geometry to subset</li>
-                          <li><b>variable</b>: The variable to extract and subset over (applies to <code>spatial_subset_netcdf</code> only)</li>
+                          <li>
+                            <b>shapefile</b>: ZIP file containing the ESRI Shapefile representing
+                            the geometry to subset
+                          </li>
+                          <li>
+                            <b>variable</b>: The variable to extract and subset over (applies to
+                            <code>spatial_subset_netcdf</code> only)
+                          </li>
                         </ul>
                       </Col>
                       <Col md={6}>
                         <h5>Outputs</h5>
                         <ul>
-                          <li><b>output</b>: The subsetted file in the same format as the input data file (NetCDF or GeoTIFF)</li>
+                          <li>
+                            <b>output</b>: The subsetted file in the same format as the input
+                            data file (NetCDF or GeoTIFF)
+                          </li>
                         </ul>
                       </Col>
                     </Row>
                     <h5>Try it</h5>
                     <p>You can try this WPS process with <em>ecocloud Compute</em>:</p>
                     <ol>
-                      <li>Launch and open a SciPy notebook server from the <Link to="/"><em>ecocloud Dashboard</em></Link></li>
-                      <li>View the &quot;ausecocloud/training&quot; GitHub repository in the left sidebar</li>
+                      <li>
+                        Launch and open a SciPy notebook server from the
+                        <Link to="/"><em>ecocloud Dashboard</em></Link>
+                      </li>
+                      <li>
+                        View the &quot;ausecocloud/training&quot; GitHub repository in the
+                        left sidebar
+                      </li>
                       <li>Open &quot;examples&quot; directory</li>
-                      <li>Open either the &quot;WPS_spatial_subset_netcdf.ipynb&quot; or &quot;WPS_spatial_subset_geotiff.ipynb&quot; notebook</li>
+                      <li>
+                        Open either the &quot;WPS_spatial_subset_netcdf.ipynb&quot;
+                        or &quot;WPS_spatial_subset_geotiff.ipynb&quot; notebook
+                      </li>
                     </ol>
                   </ToolAccordion>
                 </Col>
