@@ -11,7 +11,7 @@ class ToolAccordion extends React.Component {
     title: PropTypes.string.isRequired,
     imageSource: PropTypes.string,
     imageAltText: PropTypes.string,
-    children: PropTypes.element,
+    children: PropTypes.node,
   }
 
   static defaultProps = {
