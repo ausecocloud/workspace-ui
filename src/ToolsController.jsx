@@ -6,7 +6,6 @@ import {
   Card,
   CardBody,
   CardTitle,
-  CardText,
 } from 'reactstrap';
 import Rlogo from './assets/images/Rlogo.svg';
 import PythonLogo from './assets/images/PythonLogo.png';
@@ -65,7 +64,6 @@ const ToolsController = () => {
                 <Col>
                   <ToolCard
                     title="R (RStudio and Jupyter)"
-                    description="R is a popular software environment for statistical computing and graphics. This server will run through a JupyterLab interface, with the added ability to run an RStudio server."
                     url={`${huburl}/hub/home`}
                     imageSource={Rlogo}
                     imageAltText="R Logo"
@@ -74,7 +72,6 @@ const ToolsController = () => {
                 <Col>
                   <ToolCard
                     title="Scientific Python (SciPy Jupyter)"
-                    description="SciPy is a Python-based ecosystem of open-source software for mathematics, science, and engineering. This server will run through a JupyterLab interface."
                     url={`${huburl}/hub/home`}
                     imageSource={PythonLogo}
                     imageAltText="Python Logo"
@@ -89,41 +86,14 @@ const ToolsController = () => {
               <p>The virtual desktop service provides you with a computer in the cloud. This service is provided by <a href="https://portal.coesra.org.au/strudel-web/" target="_blank" rel="noopener noreferrer">TERN</a>.</p>
               <Row>
                 <Col>
-                  <Card>
-                    <CardBody>
-                      <Row>
-                        <Col>
-                          <CardTitle>
-                            <img className="card-logo" src={CoesraLogo} alt="COESRA Logo" /><a href="https://portal.coesra.org.au/strudel-web/" target="_blank" rel="noopener noreferrer">Virtual Desktop</a>
-                          </CardTitle>
-                          <CardText>
-                            This Virtual Desktop environment provides a CentOS Linux based
-                            virtual desktop environment with tools like QGIS, Kepler Scientific
-                            Workflow, KNIME, Panoply, OpenRefine and Biodiverse.
-                          </CardText>
-                        </Col>
-                        <Col>
-                          <Row>
-                            <Col>
-                              <img className="card-logo" src={BiodiverseLogo} alt="Biodiverse Logo" />
-                            </Col>
-                            <Col>
-                              <img className="card-logo" src={QGisLogo} alt="QGIS Logo" />
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col>
-                              <img className="card-logo" src={KeplerLogo} alt="Kepler Logo" />
-                            </Col>
-                            <Col>
-                              <img className="card-logo" src={PanoplyLogo} alt="Panoply Logo" />
-                            </Col>
-                          </Row>
-                        </Col>
-                      </Row>
-                    </CardBody>
-                  </Card>
+                  <ToolCard
+                    title="Virtual Desktop"
+                    url="https://portal.coesra.org.au"
+                    imageSource={CoesraLogo}
+                    imageAltText="CoESRA Logo"
+                  />
                 </Col>
+                <Col />
               </Row>
             </Col>
           </Row>
@@ -134,14 +104,13 @@ const ToolsController = () => {
                 <Col>
                   <ToolCard
                     title="Get daily weather values"
-                    url="#"
+                    onLinkClick={(e) => { e.preventDefault(); /* TODO: Implement accordion */ }}
                     imageSource={PythonLogo}
                   />
                 </Col>
                 <Col>
                   <ToolCard
                     title="Clip data to geographic region"
-                    url="#"
                     imageSource={PythonLogo}
                   />
                 </Col>
@@ -161,7 +130,6 @@ const ToolsController = () => {
                 <Col>
                   <ToolCard
                     title="ALA Spatial Portal"
-                    description=" The Spatial Portal is a rich research interface to exploring and investigating the data held in the Atlas of Living Australia."
                     url="https://spatial.ala.org.au"
                     imageSource={ALALogo}
                     imageAltText="ALA Logo"
@@ -170,7 +138,6 @@ const ToolsController = () => {
                 <Col>
                   <ToolCard
                     title="BCCVL"
-                    description="The Biodiversity and Climate Change Virtual Laboratory (BCCVL) is a “one stop modelling shop” that simplifies the process of biodiversity-climate change modelling. It provides access to curated datasets, modelling workflows and support and training content."
                     url="http://www.bccvl.org.au"
                     imageSource={BCCVLLogo}
                     imageAltText="BCCVL Logo"
@@ -181,7 +148,6 @@ const ToolsController = () => {
                 <Col>
                   <ToolCard
                     title="MCAS-S"
-                    description="The Multi-Criteria Analysis Shell for Spatial Decision Support (MCAS-S) is a tool designed for decision-makers. It shows transparently how mapped information can be combined to meet an objective. MCAS-S allows stakeholders to see the effects that their decisions may have. Currently, MCAS-S is only available as a software download, however we’re working with the MCAS-S team to bring this into a cloud solution."
                     url="http://www.agriculture.gov.au/abares/aclump/multi-criteria-analysis"
                     imageSource={MCASSLogo}
                     imageAltText="MCAS-S Logo"
@@ -190,7 +156,6 @@ const ToolsController = () => {
                 <Col>
                   <ToolCard
                     title="AURIN"
-                    description="AURIN provides urban and built environment researchers with access to diverse sources of data, data integration capabilities, and capability for interrogating those data to make informed decisions about urban environments based on realistic scenarios and evidence-based analysis."
                     url="https://aurin.org.au"
                     imageSource={AURINLogo}
                     imageAltText="AURIN Logo"

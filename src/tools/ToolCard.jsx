@@ -11,25 +11,33 @@ class ToolCard extends React.PureComponent {
   static propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string,
-    url: PropTypes.string.isRequired,
+    url: PropTypes.string,
     imageSource: PropTypes.string,
     imageAltText: PropTypes.string,
     openInNewWindow: PropTypes.bool,
+    onLinkClick: PropTypes.func,
   }
 
   static defaultProps = {
     description: undefined,
+    url: '#',
     imageSource: undefined,
     imageAltText: '',
     openInNewWindow: true,
+    onLinkClick: undefined,
   }
 
   render() {
+    const { openInNewWindow, onLinkClick } = this.props;
     const linkProps = {};
 
-    if (this.props.openInNewWindow) {
+    if (openInNewWindow) {
       linkProps.target = '_blank';
       linkProps.rel = 'noopener noreferrer';
+    }
+
+    if (onLinkClick) {
+      linkProps.onClick = onLinkClick;
     }
 
     return (

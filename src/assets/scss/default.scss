@@ -759,6 +759,10 @@ section#main {
 
     .tool-card {
         margin-bottom: 0.5em;
+
+        .card-title {
+            margin: 0;
+        }
     }
 
     .tools-section-header {
