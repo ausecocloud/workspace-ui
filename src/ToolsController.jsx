@@ -83,7 +83,7 @@ const ToolsController = () => {
           <Row>
             <Col>
               <h2 id="virtual-desktop" className="tools-section-header">Virtual Desktop</h2>
-              <p>The virtual desktop service provides you with a computer in the cloud. This service is provided by <a href="https://portal.coesra.org.au/strudel-web/" target="_blank" rel="noopener noreferrer">TERN</a>.</p>
+              <p>The virtual desktop service provides you with a computer in the cloud. This service is provided by <a href="https://portal.coesra.org.au" target="_blank" rel="noopener noreferrer">TERN</a>.</p>
               <Row>
                 <Col>
                   <ToolCard
