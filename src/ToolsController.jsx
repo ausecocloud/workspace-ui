@@ -6,6 +6,8 @@ import {
   Card,
   CardBody,
 } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
 import { Link } from 'react-router-dom';
 import Rlogo from './assets/images/Rlogo.svg';
 import PythonLogo from './assets/images/PythonLogo.png';
@@ -140,12 +142,12 @@ const ToolsController = () => {
                     <p>You can try this WPS process with <em>ecocloud Compute</em>:</p>
                     <ol>
                       <li>
-                        Launch and open a SciPy notebook server from the
-                        <Link to="/"><em>ecocloud Dashboard</em></Link>
+                        Launch and open a SciPy notebook server from
+                        the <Link to="/"><em>ecocloud Dashboard</em></Link>
                       </li>
                       <li>
                         View the &quot;ausecocloud/training&quot; GitHub repository in the
-                        left sidebar
+                        left sidebar (click the <FontAwesomeIcon icon={faGithub} /> tab)
                       </li>
                       <li>Open &quot;examples&quot; directory</li>
                       <li>Open the &quot;WPS_anuclim_daily_extract.ipynb&quot; notebook</li>
@@ -175,8 +177,8 @@ const ToolsController = () => {
                             the geometry to subset
                           </li>
                           <li>
-                            <b>variable</b>: The variable to extract and subset over (applies to
-                            <code>spatial_subset_netcdf</code> only)
+                            <b>variable</b>: The variable to extract and subset over (applies
+                            to <code>spatial_subset_netcdf</code> only)
                           </li>
                         </ul>
                       </Col>
@@ -194,12 +196,12 @@ const ToolsController = () => {
                     <p>You can try this WPS process with <em>ecocloud Compute</em>:</p>
                     <ol>
                       <li>
-                        Launch and open a SciPy notebook server from the
-                        <Link to="/"><em>ecocloud Dashboard</em></Link>
+                        Launch and open a SciPy notebook server from
+                        the <Link to="/"><em>ecocloud Dashboard</em></Link>
                       </li>
                       <li>
                         View the &quot;ausecocloud/training&quot; GitHub repository in the
-                        left sidebar
+                        left sidebar (click the <FontAwesomeIcon icon={faGithub} /> tab)
                       </li>
                       <li>Open &quot;examples&quot; directory</li>
                       <li>
