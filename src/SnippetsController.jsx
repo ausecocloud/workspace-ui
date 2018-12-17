@@ -44,6 +44,14 @@ function renderSnippets(distributions, collapsedDataset, toggleCollapseDistribut
           <SnippetItem
             key={dist.identifier}
             distribution={dist}
+
+            // Note that these three `dist` properties are not included in
+            // the original distribution objects; they are added when the object
+            // is put into the store
+            publisher={dist.publisher}
+            contactPoint={dist.contactPoint}
+            landingPage={dist.landingPage}
+
             collapsed={collapsedDataset.has(dist.identifier)}
             toggleCollapsed={toggleCollapseDistribution}
           />
@@ -90,7 +98,7 @@ export class SnippetsController extends React.Component {
    *
    * @param {string} distId Distribution identifier
    */
-  toggleCollapseDistribution(distId) {
+  toggleCollapseDistribution = (distId) => {
     if (this.state.collapsedDataset.has(distId)) {
       // Distribution already exists in set, delete entry => "show distribution"
       this.setState(prevState => ({
@@ -129,12 +137,12 @@ export class SnippetsController extends React.Component {
         <hr />
         <Row className="snippets-body">
           <Col xs="12">
-            { distributionMap.size === 0
+            {distributionMap.size === 0
               ? renderNoSnippets()
               : renderSnippets(
                 distributionMap.valueSeq(),
                 this.state.collapsedDataset,
-                this.toggleCollapseDistribution.bind(this),
+                this.toggleCollapseDistribution,
               )
             }
           </Col>

@@ -16,25 +16,47 @@ const snippetLanguages = ['Python', 'R', 'Bash', 'Web Access'];
  * @param {string} language Target language to generate snippet for
  * @param {string} url URL of source data for snippet
  * @param {string} filename Filename for downloaded file in snippet
+ * @param {string} [publisher] Publisher of source data
+ * @param {string} [contact] Contact point (e.g. email address) for source data
+ * @param {string} [license] License governing use of source data
+ * @param {string} [landingPage] URL to landing page related to source data
  */
-function generateSnippetText(language, url, filename) {
+function generateSnippetText(language, url, filename, publisher, contact, license, landingPage) {
+  const commentBlockContents = [
+    publisher && `Publisher: ${publisher}`,
+    contact && `Contact point: ${contact}`,
+    license && `License: ${license}`,
+    landingPage && `Full page: ${landingPage}`,
+  ].filter(line => line); // Removes lines which we don't have any info for
+
+  /**
+   * @param {string} linePrefix
+   */
+  function getCommentBlock(linePrefix) {
+    return `${commentBlockContents.map(line => `${linePrefix} ${line}`).join('\n')} \n`;
+  }
+
   switch (language) {
     case 'Python':
-      return `import urllib.request
+      return `${getCommentBlock('#')}
+import urllib.request
 url = '${url.replace(/'/g, '\\\'')}'
 filename = '${filename}'
 urllib.request.urlretrieve(url, filename)`;
 
     case 'R':
-      return `url <- "${url.replace(/"/g, '\\"')}"
+      return `${getCommentBlock('#')}
+url <- "${url.replace(/"/g, '\\"')}"
 filename <- "${filename}"
 download.file(url, destfile=filename)`;
 
     case 'Bash':
-      return `curl -LO ${url}`;
+      return `${getCommentBlock('#')}
+curl -LO ${url}`;
 
     case 'Web Access':
-      return url;
+      return `${getCommentBlock('#')}
+${url}`;
 
     default:
       throw new Error(`Language "${language}" not supported`);
@@ -45,11 +67,14 @@ download.file(url, destfile=filename)`;
  * Generates suggested filename for snippet
  *
  * @param {string} url URL of source data for snippet
+ * @param {string} distId Distribution ID
  */
-function generateSuggestedFilename(url) {
+function generateSuggestedFilename(url, distId) {
   // Get the "filename" from the URL where possible, after removal of query
   // string or anchor
-  return url.split(/[?#]/)[0].replace(/^.*[\\/]/, '');
+  //
+  // If the string is blank, then we return the distribution ID
+  return url.split(/[?#]/)[0].replace(/^.*[\\/]/, '') || distId;
 }
 
 /**
@@ -118,16 +143,27 @@ function copyTextToClipboard(text) {
 export class SnippetItem extends React.Component {
   static propTypes = {
     distribution: PropTypes.objectOf(PropTypes.any).isRequired,
+    publisher: PropTypes.string,
+    contactPoint: PropTypes.string,
+    landingPage: PropTypes.string,
     collapsed: PropTypes.bool,
     toggleCollapsed: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
+    publisher: undefined,
+    contactPoint: undefined,
+    landingPage: undefined,
     collapsed: false,
   }
 
   render() {
-    const dist = this.props.distribution;
+    const {
+      distribution: dist,
+      publisher,
+      contactPoint,
+      landingPage,
+    } = this.props;
 
     /** @type {string | undefined} */
     const url = dist.downloadURL || dist.accessURL;
@@ -135,6 +171,8 @@ export class SnippetItem extends React.Component {
     const distId = dist.identifier;
     /** @type {boolean} */
     const isCollapsed = this.props.collapsed;
+    /** @type {string | undefined} */
+    const license = dist.license && dist.license.name;
 
     // If collapsed, render only the collapsed portion
     if (isCollapsed) {
@@ -183,8 +221,16 @@ export class SnippetItem extends React.Component {
                 // Creating a reference so that the actual <code> element may be
                 // referred to for copying text
                 const snippetTextElementRef = React.createRef();
-                const filename = generateSuggestedFilename(url);
-                const snippetText = generateSnippetText(language, url, filename);
+                const filename = generateSuggestedFilename(url, dist.identifier);
+                const snippetText = generateSnippetText(
+                  language,
+                  url,
+                  filename,
+                  publisher,
+                  contactPoint,
+                  license,
+                  landingPage,
+                );
 
                 return (
                   <div key={language}>
