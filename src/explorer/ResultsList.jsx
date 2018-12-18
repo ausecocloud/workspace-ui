@@ -47,7 +47,7 @@ export default class ResultsList extends React.Component {
    * @param {boolean} checked Whether the distribution has been checked to be
    *        added to the selection list
    */
-  handleDistributionCheckboxChange = (dist, recordMetadata, checked) => {
+  onDistributionCheckedChange = (dist, recordMetadata, checked) => {
     // If checked, add to selection, otherwise remove
     if (checked) {
       // The distribution object saved as a merged object with additional
@@ -125,16 +125,18 @@ export default class ResultsList extends React.Component {
                     <div className="distributions-container">
                       <strong>Data and Resources</strong>
                       <ul className="distributions">
-                        {r.distributions.map(distribution => (
+                        {r.distributions.map(dist => (
                           <ResultsListDistributionItem
-                            key={distribution.identifier}
-                            distribution={distribution}
+                            key={dist.identifier}
+                            distribution={dist}
                             publisher={r.publisher && r.publisher.name}
                             contactPoint={r.contactPoint && r.contactPoint.identifier}
                             landingPage={r.landingPage}
                             selectedDistributions={selectedDistributions}
                             licenseShortNameFunc={this.getLicenceShortName}
-                            onCheckedChange={checked => this.handleDistributionCheckboxChange(distribution, r, checked)}
+                            onCheckedChange={
+                              checked => this.onDistributionCheckedChange(dist, r, checked)
+                            }
                           />
                         ))}
                       </ul>
