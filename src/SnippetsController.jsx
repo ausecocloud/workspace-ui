@@ -90,7 +90,7 @@ export class SnippetsController extends React.Component {
    *
    * @param {string} distId Distribution identifier
    */
-  toggleCollapseDistribution(distId) {
+  toggleCollapseDistribution = (distId) => {
     if (this.state.collapsedDataset.has(distId)) {
       // Distribution already exists in set, delete entry => "show distribution"
       this.setState(prevState => ({
@@ -134,7 +134,7 @@ export class SnippetsController extends React.Component {
               : renderSnippets(
                 distributionMap.valueSeq(),
                 this.state.collapsedDataset,
-                this.toggleCollapseDistribution.bind(this),
+                this.toggleCollapseDistribution,
               )
             }
           </Col>

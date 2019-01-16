@@ -83,7 +83,13 @@ export function uploadFile(params, progress) {
     path: params.path.endsWith('/') ? `${params.path}${params.files[0].name}` : `${params.path}/${params.files[0].name}`,
   };
 
-  const logProgress = progressEvent => console.log('Upload Progress', progressEvent, Math.round((progressEvent.loaded * 100) / progressEvent.total));
+  // const logProgress = progressEvent => (
+  //   console.log(
+  //     'Upload Progress',
+  //     progressEvent,
+  //     Math.round((progressEvent.loaded * 100) / progressEvent.total),
+  //   )
+  // );
   const { promise, cancel } = callAPI({
     url: 'api/v1/files',
     method: 'POST',
@@ -92,7 +98,7 @@ export function uploadFile(params, progress) {
     headers: {
       'Content-Type': params.files[0].type,
     },
-    onUploadProgress: progress || logProgress,
+    onUploadProgress: progress || null, // logProgress
   });
   promise[CANCEL] = cancel;
   return promise;

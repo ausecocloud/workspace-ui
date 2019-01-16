@@ -126,6 +126,11 @@ export class SnippetItem extends React.Component {
     collapsed: false,
   }
 
+  toggleCollapsed = (e) => {
+    this.props.toggleCollapsed(this.props.distribution.identifier);
+    e.preventDefault();
+  }
+
   render() {
     const dist = this.props.distribution;
 
@@ -136,6 +141,7 @@ export class SnippetItem extends React.Component {
     /** @type {boolean} */
     const isCollapsed = this.props.collapsed;
 
+
     // If collapsed, render only the collapsed portion
     if (isCollapsed) {
       return (
@@ -144,8 +150,8 @@ export class SnippetItem extends React.Component {
             className="selected-dataset"
             role="button"
             tabIndex="-1"
-            onClick={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}
-            onKeyPress={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}
+            onClick={this.toggleCollapsed}
+            onKeyPress={this.toggleCollapsed}
           >
             <FontAwesomeIcon className="arrow-icon" icon={faChevronRight} /> &nbsp;
             {dist.title}
@@ -160,8 +166,8 @@ export class SnippetItem extends React.Component {
           className="selected-dataset"
           role="button"
           tabIndex="-1"
-          onClick={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}
-          onKeyPress={(e) => { this.props.toggleCollapsed(distId); e.preventDefault(); }}
+          onClick={this.toggleCollapsed}
+          onKeyPress={this.toggleCollapsed}
         >
           <FontAwesomeIcon className="arrow-icon" icon={faChevronDown} /> &nbsp;
           {dist.title}
@@ -177,7 +183,7 @@ export class SnippetItem extends React.Component {
           <div>
             <p>{dist.description}</p>
           </div>
-          {
+          { /* TODO: this should be a sub component */
             url
               ? snippetLanguages.map((language) => {
                 // Creating a reference so that the actual <code> element may be
