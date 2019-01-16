@@ -13,12 +13,54 @@ export function getHubUrl() {
   return getConfig('jupyterhub').url;
 }
 
+function getStoredToken(username) {
+  try {
+    const tokens = JSON.parse(localStorage.getItem('jupyterhub_api_token'));
+    if (typeof tokens !== 'object') {
+      return null;
+    }
+    return tokens[username];
+  } catch (error) {
+    return null;
+  }
+}
+
+function setStoredToken(username, token) {
+  let tokens = {};
+  try {
+    tokens = JSON.parse(localStorage.getItem('jupyterhub_api_token'));
+    if (typeof tokens !== 'object') {
+      tokens = {};
+    }
+  } catch (error) {
+    // nothing to do here ... just ignore stuff form localstorage
+    tokens = {};
+  }
+  tokens[username] = token;
+  localStorage.setItem('jupyterhub_api_token', JSON.stringify(tokens));
+}
+
+function delStoredToken(username) {
+  let tokens = {};
+  try {
+    tokens = JSON.parse(localStorage.getItem('jupyterhub_api_token'));
+    if (typeof tokens !== 'object') {
+      tokens = {};
+    }
+  } catch (error) {
+    // nothing to do here ... just ignore stuff form localstorage
+    tokens = {};
+  }
+  delete tokens[username];
+  localStorage.setItem('jupyterhub_api_token', JSON.stringify(tokens));
+}
+
 function getToken(username) {
   // return jupytrehub API token....
   const kc = getKeycloak();
   return kc.updateToken()
     .then(() => {
-      const token = localStorage.getItem('jupyterhub_api_token');
+      const token = getStoredToken(username);
       if (!token) {
         // we need a new jupyterhub api token
         return axios({
@@ -36,7 +78,7 @@ function getToken(username) {
           throw error;
         }).then((resp) => {
           // apiToken may have: created, id, kind, last_activity, note, token, user
-          localStorage.setItem('jupyterhub_api_token', resp.data.token);
+          setStoredToken(username, resp.data.token);
           return resp.data.token;
         });
       }
@@ -88,7 +130,7 @@ function callAPI(options, username) {
       // TODO: we probabsy should retry with fetching a new token
       //       if (error.request.status == 403) ...
       // TODO: any other errors we should handle here?
-      localStorage.removeItem('jupyterhub_api_token');
+      delStoredToken(username);
       throw error;
     });
   return { promise, cancel: cancel.cancel };
@@ -102,9 +144,9 @@ export function getUser(username) {
   return data;
 }
 
-export function launchServer({ username, profile }) {
+export function launchServer({ username, profile, flavour }) {
   const serverData = {
-    profile,
+    profile, flavour,
   };
   const { promise, cancel } = callAPI({ url: `hub/api/users/${username}/server`, method: 'POST', data: serverData }, username);
   const data = promise.then(response => response.data);
