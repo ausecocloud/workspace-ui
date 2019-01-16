@@ -9,7 +9,7 @@ import * as actions from './actions';
 function* fetchProfilesTask() {
   try {
     const profiles = yield call(jupyterhub.getProfiles);
-    yield put(actions.profilesSucceeded(profiles.profile_list));
+    yield put(actions.profilesSucceeded(profiles));
   } catch (error) {
     yield put(actions.profilesFailed(error));
   } finally {

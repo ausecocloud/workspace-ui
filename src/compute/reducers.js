@@ -16,7 +16,18 @@ function servers(state = [], action) {
 function profiles(state = [], action) {
   switch (action.type) {
     case actions.PROFILES_SUCCEEDED:
-      return action.payload;
+      return action.payload.profile_list;
+    case actions.PROFILES_FAILED:
+      return [];
+    default:
+      return state;
+  }
+}
+
+function flavours(state = [], action) {
+  switch (action.type) {
+    case actions.PROFILES_SUCCEEDED:
+      return action.payload.flavour_list || [];
     case actions.PROFILES_FAILED:
       return [];
     default:
@@ -40,6 +51,7 @@ function authorizations(state = [], action) {
 export default combineReducers({
   servers,
   profiles,
+  flavours,
   authorizations,
 });
 
@@ -47,4 +59,5 @@ export default combineReducers({
 // combined reducer.
 export const getServers = state => state.servers;
 export const getProfiles = state => state.profiles;
+export const getFlavours = state => state.flavours;
 export const getAuthorizations = state => state.authorizations;

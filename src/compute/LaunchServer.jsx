@@ -10,12 +10,13 @@ import {
   Form, FormGroup, Label, Input,
 } from 'reactstrap';
 import * as actions from './actions';
-import { getProfiles } from '../reducers';
+import { getProfiles, getFlavours } from '../reducers';
 
 
 class LaunchServer extends React.Component {
   static propTypes = {
     profiles: PropTypes.arrayOf(PropTypes.any).isRequired,
+    flavours: PropTypes.arrayOf(PropTypes.any).isRequired,
     username: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
   }
@@ -25,7 +26,8 @@ class LaunchServer extends React.Component {
 
     this.state = {
       modal: false,
-      selected: null,
+      selectedProfile: null,
+      selectedFlavour: null,
     };
   }
 
@@ -36,22 +38,23 @@ class LaunchServer extends React.Component {
       this.props.dispatch(actions.profilesFetch());
     }
     // check selected
-    const { selected } = this.state;
+    const { selectedProfile } = this.state;
     if (this.props.profiles.length === 0) {
-      if (selected) {
-        this.setState({ selected: null });
+      if (selectedProfile) {
+        this.setState({ selectedProfile: null });
       }
     } else {
-      let defaultSelected = this.props.profiles[0].display_name;
-      // is selected still valid?
+      let defaultSelected = this.props.profiles[0].id;
+      // is selectedProfile still valid?
       for (let i = 0; i < this.props.profiles.length; i += 1) {
-        if (selected === this.props.profiles[i].display_name) {
-          defaultSelected = selected;
+        if (selectedProfile === this.props.profiles[i].id) {
+          defaultSelected = selectedProfile;
           break;
         }
       }
-      if (defaultSelected !== selected) {
-        this.setState({ selected: this.props.profiles[0].display_name });
+      // TODO: should pick first entry with default set to true
+      if (defaultSelected !== selectedProfile) {
+        this.setState({ selectedProfile: this.props.profiles[0].id });
       }
     }
   }
@@ -60,43 +63,74 @@ class LaunchServer extends React.Component {
 
   launch = () => {
     const { username } = this.props;
-    const { selected } = this.state;
-    this.props.dispatch(actions.serverLaunch({ username, profile: selected }));
+    const { selectedProfile, selectedFlavour } = this.state;
+    this.props.dispatch(actions.serverLaunch({
+      username, profile: selectedProfile, flavour: selectedFlavour,
+    }));
     this.setState(prevState => ({ modal: !prevState.modal }));
   }
 
-  handleChange = e => this.setState({ selected: e.target.value });
+  handleProfileChange = e => this.setState({ selectedProfile: e.target.value });
+
+  handleFlavourChange = e => this.setState({ selectedFlavour: e.target.value });
 
   render() {
-    const { profiles } = this.props;
-    const { modal, selected } = this.state;
+    const { profiles, flavours } = this.props;
+    const { modal, selectedProfile, selectedFlavour } = this.state;
 
     return (
       <tr>
         <td colSpan="4" className="text-center">
           <Button color="secondary" size="sm" onClick={this.toggle}><FontAwesomeIcon icon={faServer} /> Launch notebook server</Button>
-          <Modal isOpen={modal} toggle={this.toggle} backdrop="static">
+          <Modal isOpen={modal} toggle={this.toggle} backdrop="static" size="lg">
             <ReduxBlockUi tag="div" block={actions.PROFILES_FETCH} unblock={[actions.PROFILES_SUCCEEDED, actions.PROFILES_FAILED]} loader={<Loader active type="ball-pulse" />} className="loader">
               <ModalHeader toggle={this.toggle}>Launch notebook server</ModalHeader>
               <ModalBody>
                 <Form>
-                  <FormGroup check>
+                  <FormGroup tag="fieldset">
+                    <legend>Server Type</legend>
                     {
                       profiles.map(profile => (
-                        <Label key={profile.display_name}>
-                          <Input
-                            type="radio"
-                            name="profile"
-                            checked={selected === profile.display_name}
-                            value={profile.display_name}
-                            onChange={this.handleChange}
-                          />{' '}
-                          <strong>{ profile.display_name }</strong>
-                          <div>{ profile.description }</div>
-                        </Label>
+                        <FormGroup check key={profile.id}>
+                          <Label>
+                            <Input
+                              type="radio"
+                              name="profile"
+                              checked={selectedProfile === profile.id}
+                              value={profile.id}
+                              onChange={this.handleProfileChange}
+                            />{' '}
+                            <strong>{ profile.display_name }</strong>
+                            <div>{ profile.description }</div>
+                          </Label>
+                        </FormGroup>
                       ))
                     }
                   </FormGroup>
+                  { flavours.length > 0 && (
+                    <FormGroup tag="fieldset">
+                      <legend>Server configuration</legend>
+                      {
+                        flavours.map(flavour => (
+                          <FormGroup check key={flavour.id}>
+                            <Label>
+                              <Input
+                                type="radio"
+                                name="flavour"
+                                checked={selectedFlavour
+                                  ? selectedFlavour === flavour.id
+                                  : flavour.default}
+                                value={flavour.id}
+                                onChange={this.handleFlavourChange}
+                              />{' '}
+                              <strong>{ flavour.display_name }</strong>
+                              <div>{ flavour.description }</div>
+                            </Label>
+                          </FormGroup>
+                        ))
+                      }
+                    </FormGroup>)
+                  }
                 </Form>
               </ModalBody>
               <ModalFooter>
@@ -114,6 +148,7 @@ class LaunchServer extends React.Component {
 function mapStateToProps(state) {
   return {
     profiles: getProfiles(state),
+    flavours: getFlavours(state),
   };
 }
 

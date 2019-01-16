@@ -52,6 +52,8 @@ export const getAuthenticated = state => state.auth && state.auth.authenticated;
 
 export const getProfiles = state => compute.getProfiles(state.compute);
 
+export const getFlavours = state => compute.getFlavours(state.compute);
+
 export const getServers = state => compute.getServers(state.compute);
 
 export const getAuthorizations = state => compute.getAuthorizations(state.compute);
