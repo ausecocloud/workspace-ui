@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  Button,
   Card,
   CardBody,
   CardTitle,
@@ -33,12 +34,12 @@ class ToolAccordion extends React.Component {
     return (
       <Card className="tool-accordion">
         <CardBody>
-          <a className="title-link" onClick={this.toggleAccordion} href="#">
+          <Button className="title-link" onClick={this.toggleAccordion}>
             <CardTitle>
               {this.props.imageSource && <img className="card-logo" src={this.props.imageSource} alt={this.props.imageAltText} />}
               {this.props.title}
             </CardTitle>
-          </a>
+          </Button>
           {this.state.expanded && (
             <div className="slot-wrapper">
               {this.props.children}

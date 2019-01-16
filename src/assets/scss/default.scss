@@ -778,6 +778,23 @@ section#main {
 
         .title-link {
             display: block;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            // display: inline;
+            // margin: 0;
+            padding: 0;
+            color:$primary-color;
+
+            &:hover {
+              color: darken($primary-color, 20%);
+              text-decoration: none;
+              text-decoration: underline;
+            }
+            &:focus {
+              box-shadow: none;
+            }
+
         }
 
         .slot-wrapper {
@@ -799,7 +816,7 @@ section#main {
         position: -moz-sticky;
         position: -ms-sticky;
         position: sticky;
-        
+
         top: 1.5rem;
         margin-top: 1.5rem;
 
