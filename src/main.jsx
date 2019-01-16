@@ -62,6 +62,14 @@ const load = () => render(
 );
 
 const initGA = (config) => {
+  // if no tracking id, skip the setup
+  if (!config.tracking_id) {
+    // setup dummy ga queue
+    window.ga = window.ga || function gaQueue() {
+      window.ga.q = window.ga.q || [];
+    };
+    return;
+  }
   // Analytics
   // Creates an initial ga() function.
   // The queued commands will be executed once analytics.js loads.
@@ -85,10 +93,10 @@ const initGA = (config) => {
 // to avoid at least one page flicker
 loadConfig('/config.json')
   .then((config) => {
-    initAuth(config.keycloak, store);
-    if (config.googleAnalytics.tracking_id) {
-      initGA(config.googleAnalytics);
-    }
+    // initAuth returns a promise
+    const auth = initAuth(config.keycloak, store);
+    initGA(config.googleAnalytics);
+    return auth;
   })
   .then(() => load());
 // load();
