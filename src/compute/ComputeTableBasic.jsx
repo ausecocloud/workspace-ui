@@ -74,7 +74,7 @@ const ServerRow = ({ server, huburl, terminateServer }) => (
             key="1"
             className="btn btn-danger btn-sm"
             type="button"
-            onClick={(e) => { e.preventDefault(); terminateServer(); }}
+            onClick={terminateServer}
           >Terminate
           </button>,
         ]
