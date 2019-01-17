@@ -96,11 +96,6 @@ class ComputeTableBasic extends React.Component {
     dispatch: PropTypes.func.isRequired,
   }
 
-  componentWillMount() {
-    const { dispatch } = this.props;
-    // fetch profiles
-  }
-
   /**
    * Terminates user's JupyterHub server
    *

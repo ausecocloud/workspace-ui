@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Row, Col, Alert, UncontrolledTooltip,
+  Row, Col, Alert,
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkSquareAlt';
 import { formatDate } from '../utils';
+import ResultsListDistributionItem from './ResultsListDistributionItem';
 
-export default
-class ResultsList extends React.Component {
+export default class ResultsList extends React.Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.any).isRequired,
     license: PropTypes.objectOf(PropTypes.any),
@@ -21,7 +21,10 @@ class ResultsList extends React.Component {
     license: null,
   }
 
-  getLicence(longName) {
+  /**
+   * @param {string} longName Full name of the license
+   */
+  getLicenceShortName = (longName) => {
     const { license } = this.props;
     const longKey = longName.trim().toLocaleLowerCase();
     if (license) {
@@ -40,50 +43,33 @@ class ResultsList extends React.Component {
    * Handler for adding/removing distributions through checkboxes
    *
    * @param {object} dist Distribution object
+   * @param {object} recordMetadata Record metadata (generally `_source`)
    * @param {boolean} checked Whether the distribution has been checked to be
    *        added to the selection list
    */
-  handleCheckboxChange(dist, checked) {
-    // TODO: Component needs to be split so the distribution ID doesn't need to
-    // be provided to the handler and instead should be read from the
-    // subcomponent's props
-
+  onDistributionCheckedChange = (dist, recordMetadata, checked) => {
     // If checked, add to selection, otherwise remove
-    if (checked === true) {
-      this.props.addDistToSelection(dist);
+    if (checked) {
+      // The distribution object saved as a merged object with additional
+      // properties from the record metadata
+      this.props.addDistToSelection({
+        ...dist,
+        publisher: recordMetadata.publisher && recordMetadata.publisher.name,
+        contactPoint: recordMetadata.contactPoint && recordMetadata.contactPoint.identifier,
+        landingPage: recordMetadata.landingPage,
+      });
     } else {
       this.props.deleteDistFromSelection(dist.identifier);
     }
   }
 
   renderResults() {
-    const { data } = this.props;
+    const { data, selectedDistributions } = this.props;
 
     if (data.length > 0) {
-      const results = data.map((record, ridx) => {
+      const results = data.map((record) => {
         const r = record._source;
-        let dists;
-        if (r.distributions && r.distributions.length > 0) {
-          dists = r.distributions.map((dist, didx) => {
-            const distSelectionId = `dist-select-${dist.identifier}`;
-            return (
-              <li key={dist.identifier}>
-                <label htmlFor={distSelectionId}>
-                  <input type="checkbox" id={distSelectionId} checked={this.props.selectedDistributions.has(dist.identifier)} onChange={e => this.handleCheckboxChange(dist, e.target.checked)} />
-                  <span className="title">{dist.title}</span>
-                </label>
-                <small className="licence-header"> Format </small>
-                <small className="format">{dist.format}</small>
-                <i className="licence-hover" id={`dist-${ridx}-${didx}`}> <small className="licence-header">  Licence </small>
-                  <small className="licence">{dist.license ? this.getLicence(dist.license.name) : 'unknown'}</small>
-                </i>
-                <UncontrolledTooltip placement="top" target={`dist-${ridx}-${didx}`}>
-                  {dist.license ? dist.license.name : 'None'}
-                </UncontrolledTooltip>
-              </li>
-            );
-          });
-        }
+
         return (
           <div className="result" key={record._id}>
             <Row>
@@ -133,12 +119,26 @@ class ResultsList extends React.Component {
                   r.catalog && r.catalog.length > 0
                   && <p><strong>Provider:</strong> {r.catalog}</p>
                 }
-                { dists
+                {
+                  (r.distributions && r.distributions.length > 0)
                   && (
                     <div className="distributions-container">
                       <strong>Data and Resources</strong>
                       <ul className="distributions">
-                        { dists }
+                        {r.distributions.map(dist => (
+                          <ResultsListDistributionItem
+                            key={dist.identifier}
+                            distribution={dist}
+                            publisher={r.publisher && r.publisher.name}
+                            contactPoint={r.contactPoint && r.contactPoint.identifier}
+                            landingPage={r.landingPage}
+                            selectedDistributions={selectedDistributions}
+                            licenseShortNameFunc={this.getLicenceShortName}
+                            onCheckedChange={
+                              checked => this.onDistributionCheckedChange(dist, r, checked)
+                            }
+                          />
+                        ))}
                       </ul>
                     </div>
                   )
@@ -167,7 +167,7 @@ class ResultsList extends React.Component {
   render() {
     return (
       <div className="results">
-        { this.renderResults() }
+        {this.renderResults()}
       </div>
     );
   }

@@ -26,47 +26,59 @@ class LaunchServer extends React.Component {
 
     this.state = {
       modal: false,
-      selectedProfile: null,
-      selectedFlavour: null,
+      selectedProfile: undefined,
+      selectedFlavour: undefined,
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // TODO: can we improve this? ... it seems to be a bit convoluted.
+    // When the modal is presented to the user, go fetch profiles
     if (this.state.modal && !prevState.modal) {
-      // made visible ... dispatch fetch.
       this.props.dispatch(actions.profilesFetch());
     }
-    // check selected
+  }
+
+  get selectedProfile() {
+    const { profiles } = this.props;
     const { selectedProfile } = this.state;
-    if (this.props.profiles.length === 0) {
-      if (selectedProfile) {
-        this.setState({ selectedProfile: null });
-      }
-    } else {
-      let defaultSelected = this.props.profiles[0].id;
-      // is selectedProfile still valid?
-      for (let i = 0; i < this.props.profiles.length; i += 1) {
-        if (selectedProfile === this.props.profiles[i].id) {
-          defaultSelected = selectedProfile;
-          break;
-        }
-      }
-      // TODO: should pick first entry with default set to true
-      if (defaultSelected !== selectedProfile) {
-        this.setState({ selectedProfile: this.props.profiles[0].id });
-      }
+
+    // Ensure that we only return the `selected` value from the state when it
+    // is still valid in the set of available profiles
+    if (!selectedProfile || !profiles.some(profile => profile.id === selectedProfile)) {
+      return undefined;
     }
+
+    return selectedProfile;
+  }
+
+  get selectedFlavour() {
+    const { flavours } = this.props;
+    const { selectedFlavour } = this.state;
+
+    // Ensure that we only return the `selected` value from the state when it
+    // is still valid in the set of available profiles
+    if (!selectedFlavour || !flavours.some(flavour => flavour.id === selectedFlavour)) {
+      return undefined;
+    }
+
+    return selectedFlavour;
   }
 
   toggle = () => this.setState(prevState => ({ modal: !prevState.modal }));
 
   launch = () => {
     const { username } = this.props;
-    const { selectedProfile, selectedFlavour } = this.state;
-    this.props.dispatch(actions.serverLaunch({
-      username, profile: selectedProfile, flavour: selectedFlavour,
-    }));
+    const profile = this.selectedProfile;
+    const flavour = this.selectedFlavour;
+
+    // Don't launch if there is no selected profile
+    if (!profile) {
+      return;
+    }
+
+    this.props.dispatch(actions.serverLaunch({ username, profile, flavour }));
+
+    // Close modal
     this.setState(prevState => ({ modal: !prevState.modal }));
   }
 
@@ -76,7 +88,8 @@ class LaunchServer extends React.Component {
 
   render() {
     const { profiles, flavours } = this.props;
-    const { modal, selectedProfile, selectedFlavour } = this.state;
+    const { modal } = this.state;
+    const { selectedProfile, selectedFlavour } = this;
 
     return (
       <tr>
@@ -134,7 +147,7 @@ class LaunchServer extends React.Component {
                 </Form>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onClick={this.launch}>Launch</Button>{' '}
+                <Button color="primary" onClick={this.launch} disabled={!selectedProfile}>Launch</Button>{' '}
                 <Button color="secondary" onClick={this.toggle}>Cancel</Button>
               </ModalFooter>
             </ReduxBlockUi>

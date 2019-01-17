@@ -313,8 +313,8 @@ export class ExplorerController extends React.Component {
   /**
    * Adds a given distribution to the selection set for snippets
    */
-  addDistToSelection = (dataset) => {
-    this.props.dispatch(snippetActions.selectionAddDistribution(dataset));
+  addDistToSelection = (distribution) => {
+    this.props.dispatch(snippetActions.selectionAddDistribution(distribution));
   }
 
   /**
@@ -615,13 +615,13 @@ export class ExplorerController extends React.Component {
           </Col>
           <Col lg="9" md="12">
             <div className="selected">
-              <h4>Datasets Selected: { this.props.selectedDistributions.size }</h4>
+              <h4>Datasets Selected: {this.props.selectedDistributions.size}</h4>
               <a href="https://support.ecocloud.org.au/support/solutions/articles/6000200678-code-snippets" target="_blank" rel="noopener noreferrer" className="help-link"><FontAwesomeIcon icon={faQuestionCircle} /> How Do I Use This Selection?</a>
-              <Link to="/snippets" params={{ selectedDistributions: this.state.selectedDistributions }} className="btn btn-primary float-right">View Snippets </Link>
+              <Link to="/snippets" className="btn btn-primary float-right">View Snippets </Link>
               <ul className="selected-datasets">
                 {
                   [...this.props.selectedDistributions.values()].map(dist => (
-                    <li key={dist.identifier}><a className="selected-dataset"> { dist.title } <FontAwesomeIcon onClick={() => this.deleteDistFromSelection(dist.identifier)} icon={faTimes} /></a></li>
+                    <li key={dist.identifier}><a className="selected-dataset"> {dist.title} <FontAwesomeIcon onClick={() => this.deleteDistFromSelection(dist.identifier)} icon={faTimes} /></a></li>
                   ))
                 }
               </ul>
@@ -630,8 +630,8 @@ export class ExplorerController extends React.Component {
               <div className="results-list">
                 <header>
                   <div className="pagination">
-                    <span className="pages">Page {this.state.page} / { Math.ceil(this.state.hits / this.state.perpage) }</span>
-                    { this.renderPageButtons() }
+                    <span className="pages">Page {this.state.page} / {Math.ceil(this.state.hits / this.state.perpage)}</span>
+                    {this.renderPageButtons()}
                   </div>
                 </header>
                 <ResultsList
@@ -644,8 +644,8 @@ export class ExplorerController extends React.Component {
 
                 <footer>
                   <div className="pagination">
-                    <span className="pages">Page {this.state.page} / { Math.ceil(this.state.hits / this.state.perpage) }</span>
-                    { this.renderPageButtons() }
+                    <span className="pages">Page {this.state.page} / {Math.ceil(this.state.hits / this.state.perpage)}</span>
+                    {this.renderPageButtons()}
                   </div>
                 </footer>
               </div>
