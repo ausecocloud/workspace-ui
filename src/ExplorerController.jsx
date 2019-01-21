@@ -514,6 +514,7 @@ export class ExplorerController extends React.Component {
     this.setState({ page }, () => this.getResults());
   }
 
+  // TODO: to avoid arrow functions in onClick we have to make the pager buttons their own component
   renderPageButtons() {
     const { page, hits, perpage } = this.state;
     const last = Math.ceil(hits / perpage);
