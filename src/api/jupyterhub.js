@@ -29,7 +29,7 @@ function setStoredToken(username, token) {
   let tokens = {};
   try {
     tokens = JSON.parse(localStorage.getItem('jupyterhub_api_token'));
-    if (typeof tokens !== 'object') {
+    if (!tokens || typeof tokens !== 'object') {
       tokens = {};
     }
   } catch (error) {
