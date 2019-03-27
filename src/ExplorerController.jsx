@@ -350,7 +350,8 @@ export class ExplorerController extends React.Component {
 
     // Populate selected search facets (formats, publishers)
     if (selectedFormats.size === 0) {
-      query.query.bool.must[1].nested.query = {};
+      // Delete the object at index 1 out of the `bool.must` array
+      query.query.bool.must.splice(1, 1);
     } else {
       query.query.bool.must[1].nested.query = {
         terms: {
