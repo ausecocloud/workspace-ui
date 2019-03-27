@@ -278,7 +278,7 @@ export class ExplorerController extends React.Component {
   getResults() {
     const query = this.generateQueryObject();
 
-    axios.post('https://es.knowledgenet.co/datasets32/_search', query)
+    axios.post('https://staging-es.knowledgenet.co/datasets32/_search', query)
       .then((res) => {
         this.setState((prevState) => {
           // reset the value to 0
