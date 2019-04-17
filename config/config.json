@@ -16,5 +16,8 @@
   },
   "googleAnalytics": {
     "tracking_id": null
+  },
+  "explorer": {
+    "esServerUrl": "https://staging.knowledgenet.co/api/v0/es-query/datasets"
   }
 }
