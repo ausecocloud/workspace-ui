@@ -65,7 +65,7 @@ export class SnippetItem extends React.Component {
     /** @type {string | undefined} */
     const license = dist.license && dist.license.name;
     /** @type {string | undefined} */
-    const format = dist.format;
+    const fileType = dist.format;
 
     // If collapsed, render only the collapsed portion
     if (isCollapsed) {
@@ -86,7 +86,7 @@ export class SnippetItem extends React.Component {
     }
 
     // TODO: Format specific snippets
-    switch (format) {
+    switch (fileType) {
       default: {
         // TODO:
       }
