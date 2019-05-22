@@ -64,7 +64,8 @@ export class SnippetItem extends React.Component {
     const isCollapsed = this.props.collapsed;
     /** @type {string | undefined} */
     const license = dist.license && dist.license.name;
-
+    /** @type {string | undefined} */
+    const format = dist.format;
 
     // If collapsed, render only the collapsed portion
     if (isCollapsed) {
@@ -82,6 +83,13 @@ export class SnippetItem extends React.Component {
           </span>
         </li>
       );
+    }
+
+    // TODO: Format specific snippets
+    switch (format) {
+      default: {
+        // TODO:
+      }
     }
 
     return (
