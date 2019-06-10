@@ -73,9 +73,7 @@ class SnippetItemCodeSection extends React.PureComponent {
     if (!url) {
       return (
         <div>
-          <div>
-            <code>No URL available for this resource</code>
-          </div>
+          <code>No URL available for this resource</code>
         </div>
       );
     }
@@ -104,15 +102,13 @@ class SnippetItemCodeSection extends React.PureComponent {
 
     return (
       <div>
-        <div>
-          <code>
-            # The file type of this resource is not supported; please download
-            by visiting the below URL.
-            <br />
-            <br />
-            {url}
-          </code>
-        </div>
+        <code>
+          # The file type of this resource is not supported; please download by
+          visiting the below URL.
+          <br />
+          <br />
+          {url}
+        </code>
       </div>
     );
   }
