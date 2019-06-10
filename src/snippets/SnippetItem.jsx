@@ -2,29 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faChevronDown, faChevronRight, faDownload,
+  faChevronDown,
+  faChevronRight,
+  faDownload,
 } from '@fortawesome/free-solid-svg-icons';
 
-import SnippetItemCodeBlock from "./SnippetItemCodeBlock";
-
-/**
- * Array of supported languages for snippets
- */
-const snippetLanguages = ['Python', 'R', 'Bash', 'Web Access'];
-
-/**
- * Generates suggested filename for snippet
- *
- * @param {string} url URL of source data for snippet
- * @param {string} distId Distribution ID
- */
-function generateSuggestedFilename(url, distId) {
-  // Get the "filename" from the URL where possible, after removal of query
-  // string or anchor
-  //
-  // If the string is blank, then we return the distribution ID
-  return url.split(/[?#]/)[0].replace(/^.*[\\/]/, '') || distId;
-}
+import SnippetItemCodeSection from './SnippetItemCodeSection';
 
 export class SnippetItem extends React.Component {
   static propTypes = {
@@ -34,19 +17,19 @@ export class SnippetItem extends React.Component {
     landingPage: PropTypes.string,
     collapsed: PropTypes.bool,
     toggleCollapsed: PropTypes.func.isRequired,
-  }
+  };
 
   static defaultProps = {
     publisher: undefined,
     contactPoint: undefined,
     landingPage: undefined,
     collapsed: false,
-  }
+  };
 
   toggleCollapsed = (e) => {
     this.props.toggleCollapsed(this.props.distribution.identifier);
     e.preventDefault();
-  }
+  };
 
   render() {
     const {
@@ -78,18 +61,12 @@ export class SnippetItem extends React.Component {
             onClick={this.toggleCollapsed}
             onKeyPress={this.toggleCollapsed}
           >
-            <FontAwesomeIcon className="arrow-icon" icon={faChevronRight} /> &nbsp;
+            <FontAwesomeIcon className="arrow-icon" icon={faChevronRight} />
+            &nbsp;
             {dist.title}
           </span>
         </li>
       );
-    }
-
-    // TODO: Format specific snippets
-    switch (fileType) {
-      default: {
-        // TODO:
-      }
     }
 
     return (
@@ -105,40 +82,36 @@ export class SnippetItem extends React.Component {
           {dist.title}
         </span>
         <div className="float-right">
-          { /* <a className="btn btn-primary btn-sm">
+          {/* <a className="btn btn-primary btn-sm">
                  Store in Workspace &nbsp; <FontAwesomeIcon icon={faCloudUploadAlt} />
-               </a> &nbsp; */ }
-          {url && (<a className="btn btn-primary btn-sm" href={url} target="_blank" rel="noopener noreferrer"> Download file <FontAwesomeIcon icon={faDownload} /></a>)}
+               </a> &nbsp; */}
+          {url && (
+            <a
+              className="btn btn-primary btn-sm"
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download file <FontAwesomeIcon icon={faDownload} />
+            </a>
+          )}
         </div>
 
         <div className="snippet-body">
           <div>
             <p>{dist.description}</p>
           </div>
-          { /* TODO: this should be a sub component */
-            url
-              ? snippetLanguages.map((language) => {
-                const filename = generateSuggestedFilename(url, dist.identifier);
-                return (
-                  <SnippetItemCodeBlock
-                    language={language}
-                    url={url}
-                    filename={filename}
-                    publisher={publisher}
-                    contact={contactPoint}
-                    license={license}
-                    landingPage={landingPage}
-                  />
-                );
-              })
-              : (
-                <div>
-                  <div>
-                    <code>No URL available for this resource</code>
-                  </div>
-                </div>
-              )
-          }
+          <SnippetItemCodeSection
+            {...{
+              url,
+              distId,
+              fileType,
+              publisher,
+              license,
+              landingPage,
+              contactPoint,
+            }}
+          />
         </div>
       </li>
     );
