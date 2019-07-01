@@ -1,6 +1,7 @@
 
 // override rules
 const rules = {
+  'arrow-parens': 'off',
   'no-prototype-builtins': 'off',
   'no-restricted-syntax': 'warn',
   'no-underscore-dangle': ['warn', { 'allow': ['_source', '_id']}],
