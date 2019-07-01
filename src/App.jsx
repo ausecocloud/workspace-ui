@@ -193,6 +193,8 @@ class App extends React.Component {
       </Navbar>
     );
 
+    const SignInBlock = () => <SignInPrompt onLaunchLogin={this.onLogin} />;
+
     return (
       <div className="App">
         <header id="header">
@@ -212,25 +214,25 @@ class App extends React.Component {
             exact
             path="/workspace"
             component={ProjectsController}
-            fallbackComponent={SignInPrompt}
+            fallbackComponent={SignInBlock}
           />
           <AuthRoute
             exact
             path="/explorer"
             component={ExplorerController}
-            fallbackComponent={SignInPrompt}
+            fallbackComponent={SignInBlock}
           />
           <AuthRoute
             exact
             path="/snippets"
             component={SnippetsController}
-            fallbackComponent={SignInPrompt}
+            fallbackComponent={SignInBlock}
           />
           <AuthRoute
             exact
             path="/tools"
             component={ToolsController}
-            fallbackComponent={SignInPrompt}
+            fallbackComponent={SignInBlock}
           />
         </section>
         <Footer />
