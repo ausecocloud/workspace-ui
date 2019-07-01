@@ -77,60 +77,60 @@ class App extends React.Component {
   render() {
     const { isAuthenticated, user } = this.props;
 
-    const anonLinks = () => (
-      <Nav className="ml-auto" navbar>
-        <NavItem>
-          <NavLink to="/login" onClick={this.onLogin}>
-            Sign in <i className="fa fa-user-circle" />
-          </NavLink>
-        </NavItem>
-      </Nav>
-    );
-
-    const userLinks = () => (
-      <Nav className="ml-auto" navbar>
-        <NavItem active>
-          <NavLink exact to="/" onClick={this.closeNavBar}>
-            Dashboard
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink exact to="/workspace" onClick={this.closeNavBar}>
-            Workspace
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink exact to="/explorer" onClick={this.closeNavBar}>
-            Explorer
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink exact to="/tools" onClick={this.closeNavBar}>
-            Tools
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <ExtNavLink
-            target="_blank"
-            href="https://support.ecocloud.org.au/support/solutions"
-            onClick={this.closeNavBar}
-          >
-            Support
-          </ExtNavLink>
-        </NavItem>
-        <UncontrolledDropdown nav inNavbar>
-          <DropdownToggle nav>
-            {user.name} <i className="fa fa-user-circle" />
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem tag="span">
-              <NavLink to="/logout" onClick={this.onLogout}>
-                Sign out
+    const navbarLinksSection = (
+      <Collapse isOpen={this.state.isOpen} navbar>
+        <Nav className="ml-auto" navbar>
+          <NavItem active>
+            <NavLink exact to="/" onClick={this.closeNavBar}>
+              Dashboard
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink exact to="/workspace" onClick={this.closeNavBar}>
+              Workspace
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink exact to="/explorer" onClick={this.closeNavBar}>
+              Explorer
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink exact to="/tools" onClick={this.closeNavBar}>
+              Tools
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <ExtNavLink
+              target="_blank"
+              href="https://support.ecocloud.org.au/support/solutions"
+              onClick={this.closeNavBar}
+            >
+              Support
+            </ExtNavLink>
+          </NavItem>
+          {isAuthenticated ? (
+            <UncontrolledDropdown nav inNavbar>
+              <DropdownToggle nav>
+                {user.name} <i className="fa fa-user-circle" />
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem tag="span">
+                  <NavLink to="/logout" onClick={this.onLogout}>
+                    Sign out
+                  </NavLink>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          ) : (
+            <NavItem>
+              <NavLink to="/login" onClick={this.onLogin}>
+                Sign in <i className="fa fa-user-circle" />
               </NavLink>
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      </Nav>
+            </NavItem>
+          )}
+        </Nav>
+      </Collapse>
     );
 
     const MainNavbar = () => (
@@ -187,9 +187,7 @@ class App extends React.Component {
           />
         </NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
-        <Collapse isOpen={this.state.isOpen} navbar>
-          {isAuthenticated ? userLinks() : anonLinks()}
-        </Collapse>
+        {navbarLinksSection}
       </Navbar>
     );
 
@@ -217,18 +215,8 @@ class App extends React.Component {
             component={ProjectsController}
             fallbackComponent={SignIn}
           />
-          <AuthRoute
-            exact
-            path="/explorer"
-            component={ExplorerController}
-            fallbackComponent={SignIn}
-          />
-          <AuthRoute
-            exact
-            path="/snippets"
-            component={SnippetsController}
-            fallbackComponent={SignIn}
-          />
+          <Route exact path="/explorer" component={ExplorerController} />
+          <Route exact path="/snippets" component={SnippetsController} />
           <AuthRoute
             exact
             path="/tools"
