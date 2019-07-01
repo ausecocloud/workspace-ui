@@ -1,12 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Container,
   Row,
   Col,
   Button,
 } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 
-function IntroBlock() {
+function IntroBlock({ onLaunchLogin }) {
   return (
     <Container className="intro-block">
       <Row>
@@ -23,7 +26,10 @@ function IntroBlock() {
               browser!
             </p>
             <p>
-              <Button color="primary" tag="a" href="https://ecocloud.org.au">Find out more</Button>
+              <Button color="primary" onClick={onLaunchLogin}>
+                Sign in to get started{' '}
+                <FontAwesomeIcon icon={faArrowCircleRight} />
+              </Button>
             </p>
           </div>
         </Col>
@@ -106,5 +112,13 @@ function IntroBlock() {
     </Container>
   );
 }
+
+IntroBlock.propTypes = {
+  onLaunchLogin: PropTypes.func,
+};
+
+IntroBlock.defaultProps = {
+  onLaunchLogin: () => {},
+};
 
 export default IntroBlock;
