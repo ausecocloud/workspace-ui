@@ -883,6 +883,61 @@ footer#footer {
         }
     }
 }
+
+.intro-block {
+    h1 {
+        color: #a3c76e;
+        display: block;
+        position: relative;
+    }
+
+    p {
+        line-height: 1.8;
+    }
+
+    
+    .intro-desc-text-wrapper {
+        padding: 0 1.2em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .features-panel-wrapper {
+        box-shadow: 0px 10px 60px 0px rgba(71,74,182,0.12);
+        background-color: #f2f2f2;
+
+        h4 {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 0.85rem;
+        }
+    }
+
+    .features-panel-col > * {
+        position: relative;
+        box-shadow: inset -1px -1px 0px 0px rgba(71,74,182,0.12);
+        background: #fff;
+        padding: 30px;
+        padding-left: 115px;
+
+        p {
+            margin: 0;
+        }
+
+        & > img {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 64px;
+            font-size: 0.5em;
+        }
+    }
+}
+
 @media only screen and (min-width: 960px) {
     .explorer .search-header {
         .sorts {
