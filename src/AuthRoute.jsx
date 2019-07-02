@@ -26,7 +26,7 @@ function AuthRoute(props) {
 
 AuthRoute.propTypes = {
   isAuthenticated: PropTypes.bool,
-  fallbackComponent: PropTypes.node,
+  fallbackComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
 };
 
 AuthRoute.defaultProps = {
