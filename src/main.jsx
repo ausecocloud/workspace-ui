@@ -25,7 +25,7 @@ const sagaMiddleware = createSagaMiddleware();
 // Google analytics redux beacon init
 const eventsMap = {
   [LOCATION_CHANGE]: trackPageView(action => ({
-    page: action.payload.pathname,
+    page: action.payload.location.pathname,
   })),
 };
 const gaMiddleware = createMiddleware(eventsMap, GoogleAnalytics());
